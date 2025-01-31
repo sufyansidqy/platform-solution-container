@@ -16,7 +16,7 @@ docker build . -t localhost:5000/actone10:latest
 docker push localhost:5000/actone10:latest
 
 rem delete all image with name <none>
-docker rmi $(docker images -f "dangling=true" -q)
+docker rmi $(docker images -f "dangling=true")
 
 rem delete pod with label kum-app
 kubectl delete pod -l app=actone10-deployment
