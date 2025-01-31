@@ -1,0 +1,15 @@
+# use this service so the app can be accessed from local without port-forwarder to kubernetes
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: actone10-service
+spec:
+  type: LoadBalancer  # Expose the service outside the cluster
+  selector:
+    app: actone10-deployment
+  ports:
+    - protocol: TCP
+      port: 9090 
+      targetPort: 9090  
+      nodePort: 30080 

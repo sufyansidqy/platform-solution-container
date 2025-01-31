@@ -1,0 +1,68 @@
+<license licenseIdentifier="Actimize PT Q2 (CIMB) Exhibit C-2024-2 (OP 00438108) Corporate Banking" issueDate="2024-12-22" licenseVersion="1.0">
+  <customerName>CIMB</customerName>
+  <products>
+    <product identifier="AIS" expirationDate="2029-12-29" grace="14" isNodeLock="false">
+      <version>10.*</version>
+      <attributes>
+        <attribute name="Cpu" value="99" internal="false"/>
+        <attribute name="named_users" value="2" internal="false"/>
+        <attribute name="functionality_level" value="Enterprise" internal="false"/>
+        <attribute name="PMML_Execution" value="false" internal="false"/>
+        <attribute name="allow_user_concurrency" value="false" internal="false"/>
+        <attribute name="internal" value="false" internal="true"/>
+        <attribute name="self_development" value="false" internal="true"/>
+        <attribute name="customization" value="false" internal="true"/>
+        <attribute name="configuration" value="true" internal="true"/>
+        <attribute name="additional_customization_size" value="999999" internal="true"/>
+        <attribute name="allowed_alert_types" value="0" internal="true"/>
+        <attribute name="unlimeted_instances" value="true" internal="true"/>
+        <attribute name="financial_institutions_add_on" value="true" internal="false"/>
+        <attribute name="name_matching_add_on" value="false" internal="false"/>
+        <attribute name="address_parse_add_on" value="false" internal="false"/>
+        <attribute name="ip_enrichment_add_on" value="true" internal="false"/>
+        <attribute name="address_parsing_correctAddress_add_on" value="true" internal="false"/>
+        <attribute name="policy_manager_advanced_logs" value="false" internal="false"/>
+        <attribute name="Run_In_Containers" value="false" internal="false"/>
+        <attribute name="customerPassword" value="eNtl45nLmzxNKurG/4niQhC9aQs=" internal="true"/>
+      </attributes>
+    </product>
+    <product identifier="ACM" expirationDate="2029-12-29" isNodeLock="false">
+      <version>10.*</version>
+      <attributes>
+        <attribute name="DashboardDevelopment" value="false" internal="false"/>
+        <attribute name="policy_manager_advanced" value="false" internal="false"/>
+        <attribute name="Relations" value="true" internal="false"/>
+        <attribute name="Network_Analytics" value="false" internal="false"/>
+        <attribute name="OutgoingForms" value="false" internal="false"/>
+        <attribute name="named_users" value="25" internal="false"/>
+        <attribute name="Self_Service" value="false" internal="false"/>
+        <attribute name="VLA" value="false" internal="false"/>
+        <attribute name="XSight_Entity_Risk" value="false" internal="false"/>
+        <attribute name="entity_matching_design_time" value="false" internal="false"/>
+        <attribute name="entity_matching_run_time" value="false" internal="false"/>
+        <attribute name="policy_manager_run_time" value="false" internal="false"/>
+        <attribute name="big_data_extension" value="false" internal="false"/>
+        <attribute name="investigation" value="false" internal="false"/>
+        <attribute name="email_to_work_item" value="false" internal="false"/>
+        <attribute name="high_focus" value="false" internal="false"/>
+        <attribute name="AVA_users" value="25" internal="false"/>
+        <attribute name="PDF-Extended Language Support" value="false" internal="false"/>
+        <attribute name="AVA_designer" value="0" internal="false"/>
+        <attribute name="Dashboard" value="false" internal="false"/>
+        <attribute name="ERCM_IMNG" value="false" internal="false"/>
+        <attribute name="hosted_platform" value="true" internal="false"/>
+        <attribute name="alert_custom_layout" value="false" internal="false"/>
+        <attribute name="ERCM_QAS" value="false" internal="false"/>
+        <attribute name="manual_alerts" value="false" internal="false"/>
+        <attribute name="Advanced_Automation" value="false" internal="false"/>
+        <attribute name="policy_manager" value="true" internal="false"/>
+        <attribute name="ActOne_Extend" value="false" internal="false"/>
+        <attribute name="sar_ctr" value="false" internal="false"/>
+        <attribute name="rtap" value="false" internal="false"/>
+        <attribute name="trade_blotter" value="false" internal="false"/>
+        <attribute name="customerPassword" value="eNtl45nLmzxNKurG/4niQhC9aQs=" internal="true"/>
+      </attributes>
+    </product>
+  </products>
+  <signature>MCwCFGxgeQW9H3dj80xo6l2nXwEjUTqyAhQEIMOYvJK3jqjXQMw/HO3E1XbzQQ==</signature>
+</license>

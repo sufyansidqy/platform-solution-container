@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: actone10-deployment
+  labels:
+    app: actone10-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: actone10-deployment
+  template:
+    metadata:
+      labels:
+        app: actone10-deployment
+    spec:
+      containers:
+      - name: actone10-container
+        image: localhost:5000/actone10:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 9090
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "250m"
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
