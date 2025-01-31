@@ -25,14 +25,14 @@ spec:
         - containerPort: 9090
         resources:
           requests:
-            memory: "128Mi"
-            cpu: "250m"
-          limits:
             memory: "256Mi"
             cpu: "500m"
+          limits:
+            memory: "1024Mi"
+            cpu: "1000m"
         volumeMounts:
         - name: actone10-workdir
-          mountPath: /data/actone-working-dir
+          mountPath: /data/actone-workdir
       volumes:
       - name: actone10-workdir
         persistentVolumeClaim:
