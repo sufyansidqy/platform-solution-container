@@ -14,4 +14,5 @@ COPY required/acm.ini /usr/local/tomcat/actone-workdir/config
 COPY required/actone.lic /usr/local/tomcat/actone-workdir/config 
 COPY required/ACTONE.war /usr/local/tomcat/webapps
 
-CMD ["catalina.sh", "run"]
+#CMD ["catalina.sh", "run"]
+ENTRYPOINT ["/usr/local/tomcat/bin/catalina.sh", "run"]
