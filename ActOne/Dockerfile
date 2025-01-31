@@ -3,11 +3,11 @@ FROM tomcat:9.0.98 as tomcat
 RUN mkdir -p /usr/local/tomcat/actone-workdir \
 && mkdir /usr/local/tomcat/actone-workdir/config 
 
-RUN apt-get update && apt-get install -y \
-unzip \
-telnet \
-vim \
-rsync 
+# RUN apt-get update && apt-get install -y \
+# unzip \
+# telnet \
+# vim \
+# rsync 
 
 COPY required/acm.ini /usr/local/tomcat
 COPY required/acm.ini /usr/local/tomcat/actone-workdir/config 
