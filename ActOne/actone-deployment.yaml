@@ -32,7 +32,7 @@ spec:
             cpu: "1000m"
         volumeMounts:
         - name: actone10-workdir
-          mountPath: /actone-workdir
+          mountPath: /usr/local/tomcat
       volumes:
       - name: actone10-workdir
         persistentVolumeClaim:
