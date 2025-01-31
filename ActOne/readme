@@ -1,6 +1,9 @@
-1. Put RCM.war files under required folder
-2. Apply kubernetes object as below sequence:
-    - actone-service
-    - actone-workdir-pv
-    - actone-workdir-pvc
-    - actone-deployment
+1. Put below files under folder "required":
+    - ACTONE.war
+    - acm.ini
+    - actone.lic
+2. Apply kubernetes object as below sequence by syntax "kubectl apply -f [filename]":
+    - actone-service.yaml
+    - actone-workdir-pv.yaml
+    - actone-workdir-pvc.yaml
+    - actone-deployment.yaml

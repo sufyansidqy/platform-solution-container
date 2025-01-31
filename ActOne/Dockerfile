@@ -6,6 +6,6 @@ RUN mkdir -p /usr/local/tomcat/actone-workdir \
 COPY acm.ini /usr/local/tomcat
 COPY acm.ini /usr/local/tomcat/actone-workdir/config 
 COPY actone.lic /usr/local/tomcat/actone-workdir/config 
-COPY required/RCM.war /usr/local/tomcat/webapps
+COPY required/ACTONE.war /usr/local/tomcat/webapps
 
 CMD ["catalina.sh", "run"]
