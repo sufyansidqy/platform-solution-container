@@ -21,5 +21,6 @@ docker rmi $(docker images -f "dangling=true" -q)
 rem delete pod with label kum-app
 kubectl delete pod -l app=actone10-deployment
 
+timeout 30
 rem open pod log
 kubectl logs -f -l app=actone10-deployment
