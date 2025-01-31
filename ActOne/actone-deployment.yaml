@@ -19,8 +19,8 @@ spec:
         image: localhost:5000/actone10:latest
         imagePullPolicy: Always
         env:
-            - name: -Dactimize.ini.location
-              value: /data/actone-workdir/config/acm.ini
+            - name: CATALINA_OPTS
+              value: -Dactimize.ini.location=/data/actone-workdir/config/acm.ini;-Dactimize.jreport.home=/data/actone-workdir/jreport
         ports:
         - containerPort: 9090
         resources:
