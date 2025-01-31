@@ -1,0 +1,6 @@
+1. Put RCM.war files under required folder
+2. Apply kubernetes object as below sequence:
+    - actone-service
+    - actone-workdir-pv
+    - actone-workdir-pvc
+    - actone-deployment

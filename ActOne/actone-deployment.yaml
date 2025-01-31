@@ -22,7 +22,7 @@ spec:
         #    - name: CATALINA_OPTS
         #      value: -Dactimize.ini.location=/data/actone-workdir/config/acm.ini;-Dactimize.jreport.home=/data/actone-workdir/jreport
         ports:
-        - containerPort: 9090
+        - containerPort: 8080
         resources:
           requests:
             memory: "256Mi"
@@ -32,7 +32,7 @@ spec:
             cpu: "1000m"
         volumeMounts:
         - name: actone10-workdir
-          mountPath: /data/actone-workdir
+          mountPath: /actone-workdir
       volumes:
       - name: actone10-workdir
         persistentVolumeClaim:
