@@ -1,8 +1,9 @@
-1. Put below files under folder "required":
+1. Create folder "required" under ActOne folder 
+2. Put below files under folder "required":
     - ACTONE.war
     - acm.ini
     - actone.lic
-2. Apply kubernetes object as below sequence by syntax "kubectl apply -f [filename]":
+3. Apply kubernetes object as below sequence by syntax "kubectl apply -f [filename]":
     - actone-service.yaml
     - actone-workdir-pv.yaml
     - actone-workdir-pvc.yaml
