@@ -18,6 +18,9 @@ spec:
       - name: actone10-container
         image: localhost:5000/actone10:latest
         imagePullPolicy: Always
+        env:
+          - name: JAVA_OPTS
+            value: "-Xms256m -Xmx2048m"
         ports:
         - containerPort: 8080
         resources:
@@ -25,7 +28,7 @@ spec:
             memory: "256Mi"
             cpu: "500m"
           limits:
-            memory: "1024Mi"
+            memory: "2048Mi"
             cpu: "1000m"
         volumeMounts:
         - name: actone10-workdir

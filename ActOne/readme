@@ -1,3 +1,6 @@
+NOTE: 
+a. Make sure you have at least free 2GB of RAM to run ActOne pod
+
 1. Create folder "required" under ActOne folder 
 2. Put below files under folder "required":
     - ACTONE.war
