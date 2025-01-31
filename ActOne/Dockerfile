@@ -1,5 +1,6 @@
 FROM tomcat:9.0.98 as tomcat
 
+RUN mkdir -p /data/actone-workdir
 RUN mkdir -p /data/actone-workdir/config
 
 COPY acm.ini /usr/local/tomcat
