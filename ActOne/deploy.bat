@@ -24,4 +24,4 @@ kubectl delete pod -l app=actone10-deployment
 timeout 5
 rem open pod log
 kubectl logs -f -l app=actone10-deployment
-rem kubectl exec actone10-deployment-566bffdd7b-n9wmc -c actone10-container -i -t -- bash
+rem kubectl exec actone10-deployment-566bffdd7b-vk9mn -c actone10-container -i -t -- bash
