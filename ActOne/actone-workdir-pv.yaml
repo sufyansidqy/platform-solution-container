@@ -7,12 +7,10 @@ spec:
   - ReadWriteMany
   capacity:
     storage: 5Gi
-  storageClassName: actone10-workdir-pvc
+  storageClassName: hostpath
   claimRef:
     namespace: default
     name: actone10-workdir-pvc
-  mountOptions:
-    - implicit-dirs
   hostPath:
     path: /mnt/data/actone10-workdir
     type: DirectoryOrCreate
