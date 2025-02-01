@@ -20,7 +20,7 @@ spec:
         imagePullPolicy: Always
         env:
           - name: JAVA_OPTS
-            value: "-Xms256m -Xmx2048m"
+            value: "-Xms256m -Xmx4096m"
         ports:
         - containerPort: 8080
         resources:
@@ -28,7 +28,7 @@ spec:
             memory: "256Mi"
             cpu: "500m"
           limits:
-            memory: "2048Mi"
+            memory: "4096Mi"
             cpu: "1000m"
         volumeMounts:
         - name: actone10-workdir
