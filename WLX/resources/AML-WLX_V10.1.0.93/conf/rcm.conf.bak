@@ -38,7 +38,7 @@ rcm.app.use-windows-auth= 0
 rcm.app.connection-timeout = 12000
 
 ## URL example: http://localhost:8080/RCM
-rcm.app.url = <RCM_App_URL>
+rcm.app.url = http://
 
 ## The path to the RCM application's working directory
 rcm.working-dir = <RCM_Application_Directory>

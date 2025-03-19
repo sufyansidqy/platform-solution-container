@@ -35,6 +35,8 @@ spec:
                 secretKeyRef:
                   name: q2-actimize-db-secret
                   key: SA_PASSWORD
+            - name: MSSQL_AGENT_ENABLED
+              value: "True"
           volumeMounts:
             - name: q2-actimize-db-storage
               mountPath: "/var/opt/mssql"

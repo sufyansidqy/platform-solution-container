@@ -7,7 +7,7 @@ metadata:
 spec:
   type: LoadBalancer  # Expose the service outside the cluster
   selector:
-    app: actone10-deployment
+    app: q2-actone10-deployment
   ports:
     - protocol: TCP
       port: 9090 
