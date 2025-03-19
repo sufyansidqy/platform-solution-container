@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: q2-actimize-db-service
+spec:
+  selector:
+    app: q2-actimize-db-statefulset
+  ports:
+    - protocol: TCP
+      port: 1433
+      targetPort: 1433
+  type: LoadBalancer  # Ubah ke LoadBalancer atau NodePort jika ingin diakses dari luar cluster

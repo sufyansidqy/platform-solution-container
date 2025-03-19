@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: q2-actimize-db-statefulset
+spec:
+  volumeClaimTemplates:
+  - metadata:
+      name: q2-actimize-db-storage
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "hostpath" 
+      resources:
+        requests:
+          storage: 10Gi
+  serviceName: q2-actimize-db-service
+  replicas: 1
+  selector:
+    matchLabels:
+      app: q2-actimize-db-statefulset
+  template:
+    metadata:
+      labels:
+        app: q2-actimize-db-statefulset
+    spec:
+      containers:
+        - name: mssql
+          image: mcr.microsoft.com/mssql/server:2022-latest
+          ports:
+            - containerPort: 1433
+          env:
+            - name: ACCEPT_EULA
+              value: "Y"
+            - name: SA_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: q2-actimize-db-secret
+                  key: SA_PASSWORD
+          volumeMounts:
+            - name: q2-actimize-db-storage
+              mountPath: "/var/opt/mssql"
+      volumes:
+        - name: q2-actimize-db-storage
+          persistentVolumeClaim:
+            claimName: q2-actimize-db-pvc
