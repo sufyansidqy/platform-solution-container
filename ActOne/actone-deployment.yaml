@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: actone10-deployment
+  name: q2-actone10-deployment
   labels:
-    app: actone10-deployment
+    app: q2-actone10-deployment
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: actone10-deployment
+      app: q2-actone10-deployment
   template:
     metadata:
       labels:
-        app: actone10-deployment
+        app: q2-actone10-deployment
     spec:
       containers:
       - name: actone10-container
@@ -31,10 +31,10 @@ spec:
             memory: "4096Mi"
             cpu: "1000m"
         volumeMounts:
-        - name: actone10-workdir
+        - name: q2-actone10-workdir
           mountPath: /usr/local/tomcat/actone-workdir
       volumes:
-      - name: actone10-workdir
+      - name: q2-actone10-workdir
         persistentVolumeClaim:
-          claimName: actone10-workdir-pvc
+          claimName: q2-actone10-workdir-pvc
           readOnly: false

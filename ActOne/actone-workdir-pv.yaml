@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: actone10-workdir-pv
+  name: q2-actone10-workdir-pv
 spec:
   accessModes:
   - ReadWriteMany
@@ -10,7 +10,7 @@ spec:
   storageClassName: hostpath
   claimRef:
     namespace: default
-    name: actone10-workdir-pvc
+    name: q2-actone10-workdir-pvc
   hostPath:
     path: /mnt/data/actone10-workdir
     type: DirectoryOrCreate
