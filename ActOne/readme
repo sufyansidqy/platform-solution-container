@@ -11,3 +11,11 @@ a. Make sure you have at least free 2GB of RAM to run ActOne pod
     - actone-workdir-pv.yaml
     - actone-workdir-pvc.yaml
     - actone-deployment.yaml
+
+
+DB Credentials
+ACTONE_USER     : P@ssword
+ACTONE_USER_APP : P@ssword
+
+Web Credentials
+admin           : password

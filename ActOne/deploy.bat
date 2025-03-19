@@ -19,7 +19,7 @@ rem delete all image with name <none>
 docker rmi $(docker images -f "dangling=true" -q)
 
 rem delete pod with label kum-app
-kubectl delete pod -l app=actone10-deployment
+kubectl delete pod -l app=q2-actone10-deployment
 
 timeout 5
 rem open pod log
