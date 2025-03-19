@@ -1,21 +1,37 @@
 NOTE: 
 a. Make sure you have at least free 2GB of RAM to run ActOne pod
+b. DB Credentials
+    ACTONE_USER     : P@ssword
+    ACTONE_USER_APP : P@ssword
 
+c. Web Credentials
+    admin           : password
+
+##INSTALLATION##
 1. Create folder "required" under ActOne folder 
-2. Put below files under folder "required":
+2. Put below files under folder "required"
     - ACTONE.war
     - acm.ini
     - actone.lic
-3. Apply kubernetes object as below sequence by syntax "kubectl apply -f [filename]":
+3. Apply kubernetes object as below sequence by syntax "kubectl apply -f [filename]"
     - actone-service.yaml
     - actone-workdir-pv.yaml
     - actone-workdir-pvc.yaml
     - actone-deployment.yaml
+4. Follow "Post Installation Activities" in ActOne Installation Guide
 
 
-DB Credentials
-ACTONE_USER     : P@ssword
-ACTONE_USER_APP : P@ssword
 
-Web Credentials
-admin           : password
+##ELASTIC SEARCH##
+1. Add helm repository
+    helm repo add elastic https://helm.elastic.co
+    helm repo update
+2. Install Elastic Search
+    helm install elasticsearch elastic/elasticsearch --namespace elastic --create-namespace
+    helm install elasticsearch elastic/elasticsearch --namespace elk --create-namespace --set replicas=1 --set resources.requests.memory=512Mi --set resources.requests.cpu=250m --set resources.limits.memory=1Gi --set resources.limits.cpu=500m
+3. Check if elastic pod run already
+    kubectl get pods -n elastic
+4. Update replica from 3 to 1 (minimize resource usage)
+    kubectl scale statefulset elasticsearch-master --replicas=1 -n elastic
+
+
