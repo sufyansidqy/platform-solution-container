@@ -1,0 +1,60 @@
+#####################################################################################
+#       __      __.____     ____  ___
+#      /  \    /  \    |    \   \/  /
+#      \   \/\/   /    |     \     /    WLX Nice Actimize
+#       \        /|    |___  /     \
+#        \__/\  / |_______ \/___/\  \
+#             \/          \/      \_/
+#
+#####################################################################################
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.app.wlxCustomerName }}-{{ .Values.app.name }}-realtime
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-additional-resource-tags:
+        Name={{ .Values.app.wlxCustomerName }}-{{ .Values.app.name }}-realtime,
+        Created_By={{ .Values.tags.createdBy }},
+        BudgetTeam={{ .Values.tags.budgetTeam }},
+        EnvType={{ .Values.tags.envType }},
+        Environment={{ .Values.tags.environment }},
+        Service={{ .Values.tags.service }},
+        Team={{ .Values.tags.team }}
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: tcp
+    service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: "60"
+    service.beta.kubernetes.io/aws-load-balancer-internal: 0.0.0.0/0
+    service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
+spec:
+  type: {{ .Values.service.type }}
+  externalTrafficPolicy: Local
+  selector:
+    app: {{ .Values.app.wlxCustomerName }}-{{ .Values.app.name }}-realtime
+  ports:
+  - protocol: TCP
+    port: {{ .Values.service.listenerPort }}
+    targetPort: {{ .Values.service.listenerPort }}
+    name: listener-port
+  - protocol: TCP
+    port: {{ .Values.service.gsoapPort }}
+    targetPort: {{ .Values.service.gsoapPort }}
+    name: gsoap-web-server-port
+  - protocol: TCP
+    port: {{ .Values.service.webServerPort }}
+    targetPort: {{ .Values.service.webServerPort }}
+    name: web-server-port
+  - protocol: TCP
+    port: {{ .Values.service.aisBrokerPort }}
+    targetPort: {{ .Values.service.aisBrokerPort }}
+    name: ais-broker-port
+  {{- if .Values.app.use_ssl }}
+  - protocol: TCP
+    port: {{ .Values.service.https }}
+    targetPort: {{ .Values.service.https }}
+    name: https-port
+  {{- else }}
+  - protocol: TCP
+    port: {{ .Values.service.http }}
+    targetPort: {{ .Values.service.http }}
+    name: http-port
+  {{- end }}

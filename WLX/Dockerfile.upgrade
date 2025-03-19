@@ -1,0 +1,122 @@
+# syntax = docker/dockerfile:1.2.0
+#####################################################################################
+#
+# Description: This docker file upgrade a container for CDD
+#
+# Components:
+#   - AIS server + WLX Solution (upgraded)
+#
+# Prerequisites:
+#  - The following items must be provided/present when building the image:
+#
+#       1.)     ./upgrade/license.lic
+#               - Directory containing the solution/PS license.lic
+#
+#       2.)     ./upgrade/WLX_Config
+#               - Directory containing the configs
+#
+#       3.)     ./upgrade/java_solutions
+#               - Directory containing the java solutions
+#
+#       4.)     ./upgrade/ais-packages
+#               - Directory containing the AIS objects
+#
+# Docker folder structure should be like:
+#   ./root_folder
+#        ├── license.lic
+#        └── upgrade
+#            ├── WLX_Config
+#            |   └── *.ini
+#            ├── java_solutions
+#            |   └── java-solution-folder
+#            |       └── *.jar
+#            └── ais-packages
+#                └── *.apk
+#
+#
+# Written by : WLX team
+#
+#####################################################################################
+
+#####################################################################################
+# Build inputs
+#####################################################################################
+ARG CONTAINER
+FROM ${CONTAINER}
+
+#####################################################################################
+#  Arguments
+#####################################################################################
+ARG RESOURCE_DIR=upgrade
+ARG AIS_SERVER_DEFAULT_USER=admin
+ARG AIS_SERVER_DEFAULT_PWD=password
+ARG AIS_SERVER_DEFAULT_PORT=2345
+ARG CUSTOM_APK_DIR=${RESOURCE_DIR}/ais-packages
+ARG CUSTOM_CONF_DIR=${RESOURCE_DIR}/WLX_Config
+ARG CUSTOM_JAVA_DIR=${RESOURCE_DIR}/java_solutions
+ARG CUSTOM_APK_TEMP_DIR=/tmp/upgrade/ais-packages
+ARG CUSTOM_CONF_TEMP_DIR=/tmp/upgrade/WLX_Config
+ARG CUSTOM_JAVA_TEMP_DIR=/tmp/upgrade/java_solutions
+#####################################################################################
+# Inject license for installation
+#####################################################################################
+USER ais_user
+COPY license.lic $AIS_SERVER_DIR/Instances/actimize_server_1/license/license.lic
+#####################################################################################
+
+#####################################################################################
+# Copy upgraded and customized configuration
+#####################################################################################
+COPY ["${CUSTOM_CONF_DIR}/","${CUSTOM_CONF_TEMP_DIR}/"]
+RUN rsync -avh --ignore-existing ${CUSTOM_CONF_TEMP_DIR}/ /opt/actimize/ais_server/Instances/actimize_server_1/WLX_Config
+
+#####################################################################################
+# Copy upgraded and customized java solutions
+#####################################################################################
+COPY ["${CUSTOM_JAVA_DIR}/","${CUSTOM_JAVA_TEMP_DIR}/"]
+RUN rsync -avh --ignore-existing ${CUSTOM_JAVA_TEMP_DIR}/ /opt/actimize/ais_server/Instances/actimize_server_1/java_solutions
+
+#####################################################################################
+# Import new and customized packages
+#####################################################################################
+COPY ["${CUSTOM_APK_DIR}/","${CUSTOM_APK_TEMP_DIR}/"]
+
+# Uncomment below lines if using:  package-import.sh
+# COPY upgrade/package-import.sh /tmp/upgrade/
+# USER root
+# RUN chmod a+x /tmp/upgrade/package-import.sh
+
+RUN $AIS_SERVER_DIR/instances_manager/instances_manager $AIS_SERVER_DIR start --name actimize_server_1 && \
+    #
+    # Importing packages (opt1) - using a script - delete and import
+    # Uncomment below lines if using:  package-import.sh
+    # /tmp/upgrade/package-import.sh && \
+    #
+    # Importing packages (opt2) - calling directly the ais_admin - delete and import \
+    if [ "$(ls -A ${CUSTOM_APK_TEMP_DIR})" ]; then \
+        for i in ${CUSTOM_APK_TEMP_DIR}/*;\
+        do \
+           fname=$( basename "$i"); \
+           fname="${fname%.*}"; \
+           $AIS_SERVER_DIR/ais_admin --delete-package --name "$fname" --server localhost --port ${AIS_SERVER_DEFAULT_PORT} --user ${AIS_SERVER_DEFAULT_USER} --password ${AIS_SERVER_DEFAULT_PWD}; \
+           echo  "$fname"; \
+           $AIS_SERVER_DIR/ais_admin --import --server localhost --port ${AIS_SERVER_DEFAULT_PORT} --user ${AIS_SERVER_DEFAULT_USER} --password ${AIS_SERVER_DEFAULT_PWD} -f ${CUSTOM_APK_TEMP_DIR}/"$( basename "$i")" -w; \
+           echo "added"; \
+        done \
+    fi && \
+    $AIS_SERVER_DIR/instances_manager/instances_manager $AIS_SERVER_DIR stop --name actimize_server_1
+
+#####################################################################################
+
+# Method 2 for extracting AIS packages , pending AIS formalization
+# pending AIS implementation of inject metadata functionality
+
+#####################################################################################
+# Clean up after build
+#####################################################################################
+USER root
+RUN rm -rf $AIS_SERVER_DIR/Instances/actimize_server_1/license/license.lic
+RUN rm -rf /tmp/upgrade/
+USER ais_user
+#####################################################################################
+

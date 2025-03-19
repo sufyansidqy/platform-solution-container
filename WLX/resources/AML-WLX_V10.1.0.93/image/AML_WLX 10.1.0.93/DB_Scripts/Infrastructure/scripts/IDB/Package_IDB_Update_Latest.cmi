@@ -1,0 +1,3279 @@
+version 10.1.0.4 ADD {
+	CREATE TABLE @env:idw_schema_name@.WLX_CF_ISSUES
+	(
+        ISSUE_KEY @ustring@(50) NOT NULL,
+        TENANT_CD @ustring@(50) NOT NULL,
+        SCORE @float@ NULL,
+        INSERT_DATE_TIME @datetime@ NOT NULL,
+        IS_DELETED @tinyint@ NULL,
+        ISSUE_TYPE @ustring@(50) NOT NULL,
+        RECORD_TYPE @ustring@(50) NOT NULL,
+        STATUS @ustring@(50) NOT NULL,
+        PARTY_KEY @ustring@(255) NULL,
+        LIST_ID @ustring@(255) NULL,
+        LIST_NAME @ustring@(255) NULL,
+        BUSINESS_UNIT @ustring@(255) NULL,
+        SEARCH_DEF_ID @ustring@(255) NULL,
+        SEARCH_DEF_DESC @ustring@(1000) NULL,
+        ENTRY_KEY @ustring@(500)  NULL,
+        ENTRY_UPDATE_DATE @datetime@  NULL,
+        ENTRY_CREATE_DATE @datetime@  NULL,
+        ENTRY_TYPE @ustring@(50)  NULL,
+        POSITION @ustring@(255)  NULL,
+        TITLE @ustring@(255)  NULL,
+        DISPLAY_NAME @ustring@(255)  NULL,
+        MATCHED_NAME @ustring@(255)  NULL,
+        IS_DECEASED @tinyint@  NULL,
+        DECEASED @datetime@  NULL,
+        GENDER @ustring@(50)  NULL,
+        ISSUE_HASH_KEY @ustring@(255)  NULL,
+        REGION @ustring@(255)  NULL,
+        PARTY_MATCH_HASH @ustring@(255)  NULL,
+        ISSUE_MATCH_HASH @ustring@(255)  NULL,
+        AGE @int@ NULL,
+        AGE_AS_OF_DATE @datetime@ NULL,
+        FIRST_NAME @ustring@(255) NULL,
+        MIDDLE_NAME @ustring@(255) NULL,
+        LAST_NAME @ustring@(255) NULL,
+        CUSTOM_FIELD_1  @ustring@(255)  NULL,
+        CUSTOM_FIELD_2  @ustring@(255)  NULL,
+        CUSTOM_FIELD_3  @ustring@(255)  NULL,
+        CUSTOM_FIELD_4  @ustring@(255)  NULL,
+        CUSTOM_FIELD_5  @ustring@(255)  NULL,
+        CUSTOM_FIELD_6 	@tinyint@   NULL,
+        CUSTOM_FIELD_7  @tinyint@   NULL,
+        CUSTOM_FIELD_8  @tinyint@   NULL,
+        CUSTOM_FIELD_9 	@tinyint@   NULL,
+        CUSTOM_FIELD_10 @tinyint@   NULL,
+        CUSTOM_FIELD_11 @datetime@   NULL,
+        CUSTOM_FIELD_12 @datetime@   NULL,
+        CUSTOM_FIELD_13 @datetime@   NULL,
+        CUSTOM_FIELD_14 @datetime@   NULL,
+        CUSTOM_FIELD_15 @datetime@   NULL,
+        CUSTOM_FIELD_16 @ustring@(4000)   NULL,
+        CUSTOM_FIELD_17 @ustring@(4000)   NULL,
+        CUSTOM_FIELD_18 @ustring@(4000)   NULL,
+        CUSTOM_FIELD_19 @ustring@(4000)   NULL,
+        CUSTOM_FIELD_20 @ustring@(4000)   NULL,
+        CUSTOM_FIELD_21 @ustring@(4000)   NULL,
+        CUSTOM_FIELD_22 @ustring@(4000)   NULL,
+        CUSTOM_FIELD_23 @ustring@(4000)   NULL,
+        CUSTOM_FIELD_24 @ustring@(4000)   NULL,
+        CUSTOM_FIELD_25 @ustring@(4000)   NULL,
+        CUSTOM_FIELD_26 @ustring@(4000)   NULL,
+        CUSTOM_FIELD_27 @ustring@(4000)   NULL,
+        CUSTOM_FIELD_28 @ustring@(4000)   NULL,
+        CUSTOM_FIELD_29 @ustring@(4000)   NULL,
+        CUSTOM_FIELD_30 @ustring@(4000)   NULL,
+        CUSTOM_FIELD_31 @ustring@(4000)   NULL,
+        CUSTOM_FIELD_32 @ustring@(4000)   NULL,
+        CUSTOM_FIELD_33 @ustring@(4000)   NULL
+     )
+
+    @storage_params_insert_update @env:idw_table_tablespace@ default@
+	@go@
+
+    ALTER TABLE @env:idw_schema_name@.WLX_CF_ISSUES ADD
+    CONSTRAINT PK_WLX_CF_ISSUES PRIMARY KEY @nonclustered@
+    (
+        ISSUE_KEY,
+        TENANT_CD
+    )
+    @storage_primary_insert_update @env:idw_index_tablespace@ default@
+    @go@
+
+    GRANT SELECT ON @env:idw_schema_name@.WLX_CF_ISSUES TO @env:idw_read_role@
+    @go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_CF_ISSUES TO @env:idw_app_read_role@
+    @go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_CF_ISSUES TO @env:idw_write_role@
+    @go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_CF_ISSUES TO @env:idw_app_write_role@
+    @go@
+
+    CREATE TABLE @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_ALIASES
+	(
+         ISSUE_KEY @ustring@(50) NOT NULL,
+         TENANT_CD @ustring@(50) NOT NULL,
+         ITEM_ID @ustring@(50) NOT NULL,
+         DISPLAY_NAME @ustring@(255) NULL,
+         MATCHED_NAME @ustring@(255) NULL,
+         IS_NAME_BROKEN @tinyint@ NULL,
+         MATCH_STRENGTH @ustring@(255) NULL
+     )
+    @storage_params_insert_update @env:idw_table_tablespace@ default@
+	@go@
+
+    ALTER TABLE @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_ALIASES  ADD
+    CONSTRAINT PK_WLX_CF_ISSUE_ITEM_ALIASES PRIMARY KEY @nonclustered@
+    (
+        ISSUE_KEY,
+        TENANT_CD,
+		ITEM_ID
+    )
+    @storage_primary_insert_update @env:idw_index_tablespace@ default@
+    @go@
+
+	CREATE INDEX IDX_WLX_CF_ISSUE_ITEM_ALIAS_1 ON @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_ALIASES(ISSUE_KEY, TENANT_CD)
+	@storage_index_insert_update @env:tablespace_index@ default@
+	@go@
+
+    CREATE TABLE @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_ADDINFO
+	(
+         ISSUE_KEY @ustring@(50) NOT NULL,
+         TENANT_CD @ustring@(50) NOT NULL,
+         ITEM_ID @ustring@(50) NOT NULL,
+         NAME @ustring@(255) NULL,
+         VALUE @clob@ NULL
+     )
+    @storage_params_insert_update @env:idw_table_tablespace@ default@
+	@go@
+
+	ALTER TABLE @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_ADDINFO  ADD
+    CONSTRAINT PK_WLX_CF_ISSUE_ITEM_ADDINFO PRIMARY KEY @nonclustered@
+    (
+        ISSUE_KEY,
+        TENANT_CD,
+		ITEM_ID
+    )
+    @storage_primary_insert_update @env:idw_index_tablespace@ default@
+    @go@
+
+	CREATE INDEX IDX_WLX_CF_ISSUE_ITEM_ADDINF_1 ON @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_ADDINFO(ISSUE_KEY, TENANT_CD)
+	@storage_index_insert_update @env:tablespace_index@ default@
+	@go@
+
+	CREATE TABLE @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_IDS
+	(
+         ISSUE_KEY @ustring@(50) NOT NULL,
+         TENANT_CD @ustring@(50) NOT NULL,
+         ITEM_ID @ustring@(50) NOT NULL,
+         ID_TYPE @ustring@(255)	NULL,
+         ID_NUMBER @ustring@(255)	NULL,
+         ID_COUNTRY @ustring@(255)	NULL
+     )
+    @storage_params_insert_update @env:idw_table_tablespace@ default@
+	@go@
+	
+	ALTER TABLE @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_IDS  ADD
+    CONSTRAINT PK_WLX_CF_ISSUE_ITEM_IDS PRIMARY KEY @nonclustered@
+    (
+        ISSUE_KEY,
+        TENANT_CD,
+		ITEM_ID
+    )
+    @storage_primary_insert_update @env:idw_index_tablespace@ default@
+    @go@
+
+	CREATE INDEX IDX_WLX_CF_ISSUE_ITEM_IDS_1 ON @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_IDS(ISSUE_KEY, TENANT_CD)
+	@storage_index_insert_update @env:tablespace_index@ default@
+	@go@
+	
+	CREATE TABLE @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_POB
+	(
+         ISSUE_KEY @ustring@(50) NOT NULL,
+         TENANT_CD @ustring@(50) NOT NULL,
+         ITEM_ID @ustring@(50) NOT NULL,
+         PLACE_OF_BIRTH @ustring@(255)	NULL,
+         COUNTRY @ustring@(255)	NULL
+     )
+    @storage_params_insert_update @env:idw_table_tablespace@ default@
+	@go@
+	
+	ALTER TABLE @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_POB ADD
+    CONSTRAINT PK_WLX_CF_ISSUE_ITEM_POB PRIMARY KEY @nonclustered@
+    (
+        ISSUE_KEY,
+        TENANT_CD,
+		ITEM_ID
+    )
+    @storage_primary_insert_update @env:idw_index_tablespace@ default@
+    @go@
+
+	CREATE INDEX IDX_WLX_CF_ISSUE_ITEM_POB_1 ON @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_POB(ISSUE_KEY, TENANT_CD)
+	@storage_index_insert_update @env:tablespace_index@ default@
+	@go@
+		
+	CREATE TABLE @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_DOB
+	(
+         ISSUE_KEY @ustring@(50) NOT NULL,
+         TENANT_CD @ustring@(50) NOT NULL,
+         ITEM_ID @ustring@(50) NOT NULL,
+         BIRTH_DATE @ustring@(50) NULL,
+         YEAR_OF_BIRTH @ustring@(50) NULL
+     )
+    @storage_params_insert_update @env:idw_table_tablespace@ default@
+	@go@
+	
+	ALTER TABLE @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_DOB  ADD
+    CONSTRAINT PK_WLX_CF_ISSUE_ITEM_DOB PRIMARY KEY @nonclustered@
+    (
+        ISSUE_KEY,
+        TENANT_CD,
+		ITEM_ID
+    )
+    @storage_primary_insert_update @env:idw_index_tablespace@ default@
+    @go@
+
+	CREATE INDEX IDX_WLX_CF_ISSUE_ITEM_DOB_1 ON @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_DOB(ISSUE_KEY, TENANT_CD)
+	@storage_index_insert_update @env:tablespace_index@ default@
+	@go@
+	
+	CREATE TABLE @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_ADDRESSES
+	(
+         ISSUE_KEY @ustring@(50) NOT NULL,
+         TENANT_CD @ustring@(50) NOT NULL,
+         ITEM_ID @ustring@(50) NOT NULL,
+         STREET_ADDR1 @ustring@(255)	NULL,
+         STREET_ADDR2 @ustring@(255)	NULL,
+         CITY @ustring@(255)	NULL,
+		 STATE @ustring@(255)	NULL,
+		 COUNTRY @ustring@(255)	NULL,
+		 POSTAL_CODE @ustring@(255)	NULL		 
+     )
+    @storage_params_insert_update @env:idw_table_tablespace@ default@
+	@go@
+	
+	ALTER TABLE @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_ADDRESSES ADD
+    CONSTRAINT PK_WLX_CF_ISSUE_ITEM_ADDRESSES PRIMARY KEY @nonclustered@
+    (
+        ISSUE_KEY,
+        TENANT_CD,
+		ITEM_ID
+    )
+    @storage_primary_insert_update @env:idw_index_tablespace@ default@
+    @go@
+
+	CREATE INDEX IDX_WLX_CF_ISSUE_ITEM_ADDRS_1 ON @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_ADDRESSES(ISSUE_KEY, TENANT_CD)
+	@storage_index_insert_update @env:tablespace_index@ default@
+	@go@
+		
+	CREATE TABLE @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_NCOUNTRIES
+	(
+         ISSUE_KEY @ustring@(50) NOT NULL,
+         TENANT_CD @ustring@(50) NOT NULL,
+         ITEM_ID @ustring@(50) NOT NULL,
+         COUNTRY @ustring@(255)	NULL
+     )
+    @storage_params_insert_update @env:idw_table_tablespace@ default@
+	@go@
+	
+	ALTER TABLE @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_NCOUNTRIES ADD
+    CONSTRAINT PK_WLX_CF_ISSUE_ITEM_NCOUNTR PRIMARY KEY @nonclustered@
+    (
+        ISSUE_KEY,
+        TENANT_CD,
+		ITEM_ID
+    )
+    @storage_primary_insert_update @env:idw_index_tablespace@ default@
+    @go@
+	
+	CREATE INDEX IDX_WLX_CF_ISSUE_ITEM_NCNTR_1 ON @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_NCOUNTRIES(ISSUE_KEY, TENANT_CD)
+	@storage_index_insert_update @env:tablespace_index@ default@
+	@go@
+	
+	CREATE TABLE @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_KEYWORDS
+	(
+         ISSUE_KEY @ustring@(50) NOT NULL,
+         TENANT_CD @ustring@(50) NOT NULL,
+         ITEM_ID @ustring@(50) NOT NULL,
+         KEYWORD @ustring@(255)	NULL
+     )
+    @storage_params_insert_update @env:idw_table_tablespace@ default@
+	@go@
+	
+	ALTER TABLE @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_KEYWORDS ADD
+    CONSTRAINT PK_WLX_CF_ISSUE_ITEM_KEYWORDS PRIMARY KEY @nonclustered@
+    (
+        ISSUE_KEY,
+        TENANT_CD,
+		ITEM_ID
+    )
+    @storage_primary_insert_update @env:idw_index_tablespace@ default@
+    @go@
+
+	CREATE INDEX IDX_WLX_CF_ISSUE_ITEM_KEYWRD_1 ON @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_KEYWORDS(ISSUE_KEY, TENANT_CD)
+	@storage_index_insert_update @env:tablespace_index@ default@
+	@go@
+		
+	CREATE TABLE @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_CATEGORY
+	(
+         ISSUE_KEY @ustring@(50) NOT NULL,
+         TENANT_CD @ustring@(50) NOT NULL,
+         ITEM_ID @ustring@(50) NOT NULL,
+         CATEGORY @ustring@(255) NULL
+     )
+    @storage_params_insert_update @env:idw_table_tablespace@ default@
+	@go@
+	
+	ALTER TABLE @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_CATEGORY ADD
+    CONSTRAINT PK_WLX_CF_ISSUE_ITEM_CATEGORY PRIMARY KEY @nonclustered@
+    (
+        ISSUE_KEY,
+        TENANT_CD,
+		ITEM_ID
+    )
+    @storage_primary_insert_update @env:idw_index_tablespace@ default@
+    @go@
+	
+	CREATE INDEX IDX_WLX_CF_ISSUE_ITEM_CAT_1 ON @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_CATEGORY(ISSUE_KEY, TENANT_CD)
+	@storage_index_insert_update @env:tablespace_index@ default@
+	@go@
+			
+	CREATE TABLE @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_SF
+	(
+         ISSUE_KEY @ustring@(50) NOT NULL,
+         TENANT_CD @ustring@(50) NOT NULL,
+         ITEM_ID @ustring@(50) NOT NULL,
+         SCORE_FACTOR_ID @ustring@(100) NOT NULL,
+         VALUE @ustring@(50) NULL,
+         SCORE @int@ NULL,
+		 IMPACT @ustring@(50) NULL, 
+		 SF_DESCR @ustring@(500) NULL
+     )
+    @storage_params_insert_update @env:idw_table_tablespace@ default@
+	@go@
+	
+	ALTER TABLE @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_SF ADD
+    CONSTRAINT PK_WLX_CF_ISSUE_ITEM_SF PRIMARY KEY @nonclustered@
+    (
+        ISSUE_KEY,
+        TENANT_CD,
+		ITEM_ID
+    )
+    @storage_primary_insert_update @env:idw_index_tablespace@ default@
+    @go@
+
+	CREATE INDEX IDX_WLX_CF_ISSUE_ITEM_SF_1 ON @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_SF(ISSUE_KEY, TENANT_CD)
+	@storage_index_insert_update @env:tablespace_index@ default@
+	@go@
+		
+	CREATE TABLE @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_MATCHES
+	(
+         ISSUE_KEY @ustring@(50) NOT NULL,
+         TENANT_CD @ustring@(50) NOT NULL,
+         ITEM_ID @ustring@(50) NOT NULL,
+         INPUT_MATCHED_VALUE @ustring@(255)  NULL,
+         INPUT_MATCHED_FIELD @ustring@(255)  NULL
+     )
+    @storage_params_insert_update @env:idw_table_tablespace@ default@
+	@go@
+	
+	ALTER TABLE @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_MATCHES ADD
+    CONSTRAINT PK_WLX_CF_ISSUE_ITEM_MATCHES PRIMARY KEY @nonclustered@
+    (
+        ISSUE_KEY,
+        TENANT_CD,
+		ITEM_ID
+    )
+    @storage_primary_insert_update @env:idw_index_tablespace@ default@
+    @go@
+
+	CREATE INDEX IDX_WLX_CF_ISSUE_ITEM_MATCH_1 ON @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_MATCHES(ISSUE_KEY, TENANT_CD)
+	@storage_index_insert_update @env:tablespace_index@ default@
+	@go@
+
+    CREATE TABLE @env:idw_schema_name@.WLX_ISSUE_DISPOSITIONS
+    (
+        ISSUE_KEY @ustring@(50) NOT NULL,
+        TENANT_CD @ustring@(50) NOT NULL,
+        ITEM_ID @ustring@(50) NOT NULL,
+        DISPOSITION_STATUS @ustring@(255)  NULL,
+        INSERT_DATE_TIME @datetime@  NULL,
+        UPDATE_DATE_TIME @datetime@  NULL
+    )
+    @storage_params_insert_update @env:idw_table_tablespace@ default@
+    @go@
+
+    ALTER TABLE @env:idw_schema_name@.WLX_ISSUE_DISPOSITIONS ADD
+    CONSTRAINT PK_WLX_ISSUE_DISPOSITIONS PRIMARY KEY @nonclustered@
+    (
+        ISSUE_KEY,
+        TENANT_CD,
+        ITEM_ID
+    )
+    @storage_primary_insert_update @env:idw_index_tablespace@ default@
+    @go@
+
+    CREATE INDEX IDX_WLX_ISSUE_DISPOSITIONS_1 ON @env:idw_schema_name@.WLX_ISSUE_DISPOSITIONS(ISSUE_KEY, TENANT_CD)
+    @storage_index_insert_update @env:tablespace_index@ default@
+    @go@
+
+
+    CREATE TABLE @env:idw_schema_name@.WLX_ISSUE_DISPOSITION_LOGS
+        (
+            ISSUE_KEY @ustring@(50) NOT NULL,
+            TENANT_CD @ustring@(50) NOT NULL,
+            ITEM_ID @ustring@(50) NOT NULL,
+            DISPOSITION_STATUS @ustring@(255)  NULL,
+            UPDATED_BY @ustring@(255)  NULL,
+            UPDATE_DATE_TIME @datetime@  NOT NULL
+        )
+        @storage_params_insert_update @env:idw_table_tablespace@ default@
+        @go@
+
+        ALTER TABLE @env:idw_schema_name@.WLX_ISSUE_DISPOSITION_LOGS ADD
+        CONSTRAINT PK_WLX_ISSUE_DISPOSITION_LOGS PRIMARY KEY @nonclustered@
+        (
+            ISSUE_KEY,
+            TENANT_CD,
+            ITEM_ID,
+            UPDATE_DATE_TIME
+        )
+        @storage_primary_insert_update @env:idw_index_tablespace@ default@
+        @go@
+
+        CREATE INDEX IDX_WLX_ISSUE_DISPOSITION_LOGS_1 ON @env:idw_schema_name@.WLX_ISSUE_DISPOSITION_LOGS(ISSUE_KEY, TENANT_CD)
+        @storage_index_insert_update @env:tablespace_index@ default@
+        @go@
+
+    CREATE TABLE @env:idw_schema_name@.WLX_ISSUE_DISPOSITION_STATUS
+    (
+        HIT_DISPOSITION_CODE @ustring@(50) NOT NULL,
+        HIT_DISPOSITION_DESCRIPTION @ustring@(255)  NULL
+    )
+    @storage_params_insert_update @env:idw_table_tablespace@ default@
+    @go@
+
+    ALTER TABLE @env:idw_schema_name@.WLX_ISSUE_DISPOSITION_STATUS ADD
+    CONSTRAINT PK_WLX_ISSUE_DISPOSITION_STATUS PRIMARY KEY @nonclustered@
+    (
+        HIT_DISPOSITION_CODE
+    )
+    @storage_primary_insert_update @env:idw_index_tablespace@ default@
+    @go@
+
+    GRANT SELECT ON @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_ALIASES TO @env:idw_read_role@
+	@go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_ADDINFO TO @env:idw_read_role@
+	@go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_IDS TO @env:idw_read_role@
+	@go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_POB TO @env:idw_read_role@
+	@go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_DOB TO @env:idw_read_role@
+	@go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_ADDRESSES TO @env:idw_read_role@
+	@go@
+	GRANT SELECT ON @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_NCOUNTRIES TO @env:idw_read_role@
+	@go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_KEYWORDS TO @env:idw_read_role@
+	@go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_CATEGORY TO @env:idw_read_role@
+	@go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_SF TO @env:idw_read_role@
+	@go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_MATCHES TO @env:idw_read_role@
+    @go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_ISSUE_DISPOSITIONS TO @env:idw_read_role@
+    @go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_ISSUE_DISPOSITION_LOGS TO @env:idw_read_role@
+    @go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_ISSUE_DISPOSITION_STATUS TO @env:idw_read_role@
+    @go@
+
+
+	GRANT SELECT ON @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_ALIASES TO @env:idw_app_read_role@
+	@go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_ADDINFO TO @env:idw_app_read_role@
+	@go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_IDS TO @env:idw_app_read_role@
+	@go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_POB TO @env:idw_app_read_role@
+	@go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_DOB TO @env:idw_app_read_role@
+	@go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_ADDRESSES TO @env:idw_app_read_role@
+	@go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_NCOUNTRIES TO @env:idw_app_read_role@
+	@go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_KEYWORDS TO @env:idw_app_read_role@
+	@go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_CATEGORY TO @env:idw_app_read_role@
+	@go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_SF TO @env:idw_app_read_role@
+	@go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_MATCHES TO @env:idw_app_read_role@
+    @go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_ISSUE_DISPOSITIONS TO @env:idw_app_read_role@
+    @go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_ISSUE_DISPOSITION_LOGS TO @env:idw_app_read_role@
+    @go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_ISSUE_DISPOSITION_STATUS TO @env:idw_app_read_role@
+    @go@
+
+	GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_ALIASES TO @env:idw_write_role@
+	@go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_ADDINFO TO @env:idw_write_role@
+	@go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_IDS TO @env:idw_write_role@
+	@go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_POB TO @env:idw_write_role@
+	@go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_DOB TO @env:idw_write_role@
+	@go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_ADDRESSES TO @env:idw_write_role@
+	@go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_NCOUNTRIES TO @env:idw_write_role@
+	@go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_KEYWORDS TO @env:idw_write_role@
+	@go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_CATEGORY TO @env:idw_write_role@
+	@go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_SF TO @env:idw_write_role@
+	@go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_MATCHES TO @env:idw_write_role@
+    @go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_ISSUE_DISPOSITIONS TO @env:idw_write_role@
+    @go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_ISSUE_DISPOSITION_LOGS TO @env:idw_write_role@
+    @go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_ISSUE_DISPOSITION_STATUS TO @env:idw_write_role@
+    @go@
+
+	GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_ALIASES TO @env:idw_app_write_role@
+	@go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_ADDINFO TO @env:idw_app_write_role@
+	@go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_IDS TO @env:idw_app_write_role@
+	@go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_POB TO @env:idw_app_write_role@
+	@go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_DOB TO @env:idw_app_write_role@
+	@go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_ADDRESSES TO @env:idw_app_write_role@
+	@go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_NCOUNTRIES TO @env:idw_app_write_role@
+	@go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_KEYWORDS TO @env:idw_app_write_role@
+	@go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_CATEGORY TO @env:idw_app_write_role@
+	@go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_SF TO @env:idw_app_write_role@
+	@go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_MATCHES TO @env:idw_app_write_role@
+	@go@
+	GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_ISSUE_DISPOSITIONS TO @env:idw_app_write_role@
+    @go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_ISSUE_DISPOSITION_LOGS TO @env:idw_app_write_role@
+    @go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_ISSUE_DISPOSITION_STATUS TO @env:idw_app_write_role@
+    @go@
+
+   CREATE TABLE @env:idw_schema_name@.WLX_MS_ISSUES
+    (
+        ISSUE_KEY @ustring@(50) NOT NULL,
+        TENANT_CD @ustring@(50) NOT NULL,
+        SCORE @float@ NULL,
+        INSERT_DATE_TIME @datetime@ NOT NULL,
+        IS_DELETED @tinyint@ NULL,
+        ISSUE_TYPE @ustring@(50) NOT NULL,
+        RECORD_TYPE @ustring@(50) NOT NULL,
+        STATUS @ustring@(50) NOT NULL,
+        PARTY_KEY @ustring@(255) NULL,
+        MESSAGE_KEY @ustring@(255) NULL,
+        LIST_ID @ustring@(255) NULL,
+        LIST_NAME @ustring@(255) NULL,
+        BUSINESS_UNIT @ustring@(255) NULL,
+        SEARCH_DEF_ID @ustring@(255) NULL,
+        SEARCH_DEF_DESC @ustring@(1000) NULL,
+        ENTRY_KEY @ustring@(500)  NULL,
+        ENTRY_UPDATE_DATE @datetime@  NULL,
+        ENTRY_CREATE_DATE @datetime@  NULL,
+        ENTRY_TYPE @ustring@(50)  NULL,
+        POSITION @ustring@(255)  NULL,
+        TITLE @ustring@(255)  NULL,
+        IS_DECEASED @tinyint@  NULL,
+        DECEASED @datetime@  NULL,
+        GENDER @ustring@(50)  NULL,
+        MESSAGE_INSTANCE_NUMBER @int@ NULL,
+        MESSAGE_REF_NUMBER @int@ NULL,
+        MESSAGE_SOURCE_TYPE @ustring@(255) NULL,
+        MESSAGE_TYPE_CD @ustring@(255) NULL,
+        MESSAGE_DATE_TIME @datetime@  NULL,
+        AMOUNT @float@ NULL,
+        CURRENCY_CD @ustring@(255) NULL,
+        PRODUCT_KEY @ustring@(255)  NULL,
+        MESSAGE_DIRECTION @ustring@(255)  NULL,
+        MESSAGE_INSTRUCTIONS @clob@ NULL,
+        ADDITIONAL_MESSAGE_TEXT @clob@ NULL,
+        MESSAGE_TEXT @clob@ NULL,
+        FI_TO_FI_INFO @clob@ NULL,
+        AGE @int@ NULL,
+        AGE_AS_OF_DATE @datetime@ NULL,
+        MX_MESSAGE_DETAILS @clob@ NULL,
+        CUSTOM_FIELD_1  @ustring@(500)  NULL,
+        CUSTOM_FIELD_2  @ustring@(500)  NULL,
+        CUSTOM_FIELD_3  @ustring@(500)  NULL,
+        CUSTOM_FIELD_4  @ustring@(500)  NULL,
+        CUSTOM_FIELD_5  @ustring@(500)  NULL,
+        CUSTOM_FIELD_6 	@ustring@(500)  NULL,
+        CUSTOM_FIELD_7  @ustring@(500)  NULL,
+        CUSTOM_FIELD_8  @ustring@(500)  NULL,
+        CUSTOM_FIELD_9 	@ustring@(500)  NULL,
+        CUSTOM_FIELD_10 @ustring@(500)  NULL,
+        CUSTOM_FIELD_11 @datetime@   NULL,
+        CUSTOM_FIELD_12 @datetime@   NULL,
+        CUSTOM_FIELD_13 @datetime@   NULL,
+        CUSTOM_FIELD_14 @datetime@   NULL,
+        CUSTOM_FIELD_15 @datetime@   NULL,
+        CUSTOM_FIELD_16 @ustring@(4000)   NULL,
+        CUSTOM_FIELD_17 @ustring@(4000)   NULL,
+        CUSTOM_FIELD_18 @ustring@(4000)   NULL,
+        CUSTOM_FIELD_19 @ustring@(4000)   NULL,
+        CUSTOM_FIELD_20 @ustring@(4000)   NULL,
+        CUSTOM_STRING_21 @ustring@(4000)   NULL,
+        CUSTOM_STRING_22 @ustring@(4000)   NULL,
+        CUSTOM_STRING_23 @ustring@(4000)   NULL,
+        CUSTOM_STRING_24 @ustring@(4000)   NULL,
+        CUSTOM_STRING_25 @ustring@(4000)   NULL,
+        CUSTOM_STRING_26 @ustring@(4000)   NULL,
+        CUSTOM_STRING_27 @ustring@(4000)   NULL,
+        CUSTOM_STRING_28 @ustring@(4000)   NULL,
+        CUSTOM_STRING_29 @ustring@(4000)   NULL,
+        CUSTOM_STRING_30 @ustring@(4000)   NULL,
+        CUSTOM_STRING_31 @ustring@(4000)   NULL,
+        CUSTOM_STRING_32 @ustring@(4000)   NULL,
+        CUSTOM_STRING_33 @ustring@(4000)   NULL,
+        CUSTOM_STRING_34 @ustring@(4000)   NULL,
+        CUSTOM_STRING_35 @ustring@(4000)   NULL,
+        CUSTOM_STRING_36 @ustring@(4000)   NULL,
+        CUSTOM_STRING_37 @ustring@(4000)   NULL,
+        CUSTOM_STRING_38 @ustring@(4000)   NULL,
+        CUSTOM_STRING_39 @ustring@(4000)   NULL,
+        CUSTOM_STRING_40 @ustring@(4000)   NULL,
+        CUSTOM_DATE_6 @datetime@    NULL,
+        CUSTOM_DATE_7 @datetime@    NULL,
+        CUSTOM_DATE_8 @datetime@    NULL,
+        CUSTOM_DATE_9 @datetime@    NULL,
+        CUSTOM_DATE_10 @datetime@    NULL,
+        CUSTOM_DATE_11 @datetime@    NULL,
+        CUSTOM_DATE_12 @datetime@    NULL,
+        CUSTOM_DATE_13 @datetime@    NULL,
+        CUSTOM_DATE_14 @datetime@    NULL,
+        CUSTOM_DATE_15 @datetime@    NULL,
+        CUSTOM_BOOLEAN_6 @tinyint@    NULL,
+        CUSTOM_BOOLEAN_7 @tinyint@    NULL,
+        CUSTOM_BOOLEAN_8 @tinyint@    NULL,
+        CUSTOM_BOOLEAN_9 @tinyint@    NULL,
+        CUSTOM_BOOLEAN_10 @tinyint@    NULL,
+        CUSTOM_NUMBER_1 @number@(18,3) NULL,
+        CUSTOM_NUMBER_2 @number@(18,3) NULL,
+        CUSTOM_NUMBER_3 @number@(18,3) NULL,
+        CUSTOM_NUMBER_4 @number@(18,3) NULL,
+        CUSTOM_NUMBER_5 @number@(18,3) NULL
+     )
+    @storage_params_insert_update @env:idw_table_tablespace@ default@
+    @go@
+
+    ALTER TABLE @env:idw_schema_name@.WLX_MS_ISSUES ADD
+    CONSTRAINT PK_WLX_MS_ISSUES PRIMARY KEY @nonclustered@
+    (
+        ISSUE_KEY,
+        TENANT_CD
+    )
+    @storage_primary_insert_update @env:idw_index_tablespace@ default@
+    @go@
+
+    GRANT SELECT ON @env:idw_schema_name@.WLX_MS_ISSUES TO @env:idw_read_role@
+    @go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_MS_ISSUES TO @env:idw_app_read_role@
+    @go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_MS_ISSUES TO @env:idw_write_role@
+    @go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_MS_ISSUES TO @env:idw_app_write_role@
+    @go@
+	
+	CREATE TABLE @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_ADDINFO
+	(
+         ISSUE_KEY @ustring@(50) NOT NULL,
+         TENANT_CD @ustring@(50) NOT NULL,
+         ITEM_ID @ustring@(50) NOT NULL,
+         NAME @ustring@(255) NULL,
+         VALUE @clob@ NULL
+     )
+    @storage_params_insert_update @env:idw_table_tablespace@ default@
+	@go@
+	
+	ALTER TABLE @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_ADDINFO ADD
+    CONSTRAINT PK_WLX_MS_ISSUE_ITEM_ADDINFO PRIMARY KEY @nonclustered@
+    (
+        ISSUE_KEY,
+        TENANT_CD,
+		ITEM_ID
+    )
+    @storage_primary_insert_update @env:idw_index_tablespace@ default@
+    @go@
+	
+	CREATE INDEX IDX_WLX_MS_ISSUE_ITEM_ADDINF_1 ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_ADDINFO(ISSUE_KEY, TENANT_CD)
+	@storage_index_insert_update @env:tablespace_index@ default@
+	@go@
+	
+	CREATE TABLE @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_KEYWORDS
+	(
+         ISSUE_KEY @ustring@(50) NOT NULL,
+         TENANT_CD @ustring@(50) NOT NULL,
+         ITEM_ID @ustring@(50) NOT NULL,
+         KEYWORD @ustring@(255)	NULL
+     )
+    @storage_params_insert_update @env:idw_table_tablespace@ default@
+	@go@
+	
+	ALTER TABLE @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_KEYWORDS ADD
+    CONSTRAINT PK_WLX_MS_ISSUE_ITEM_KEYWORDS PRIMARY KEY @nonclustered@
+    (
+        ISSUE_KEY,
+        TENANT_CD,
+		ITEM_ID
+    )
+    @storage_primary_insert_update @env:idw_index_tablespace@ default@
+    @go@
+
+	CREATE INDEX IDX_WLX_MS_ISSUE_ITEM_KEYWRD_1 ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_KEYWORDS(ISSUE_KEY, TENANT_CD)
+	@storage_index_insert_update @env:tablespace_index@ default@
+	@go@
+		
+	CREATE TABLE @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_CATEGORY
+	(
+         ISSUE_KEY @ustring@(50) NOT NULL,
+         TENANT_CD @ustring@(50) NOT NULL,
+         ITEM_ID @ustring@(50) NOT NULL,
+         CATEGORY @ustring@(255) NULL
+     )
+    @storage_params_insert_update @env:idw_table_tablespace@ default@
+	@go@
+	
+	ALTER TABLE @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_CATEGORY ADD
+    CONSTRAINT PK_WLX_MS_ISSUE_ITEM_CATEGORY PRIMARY KEY @nonclustered@
+    (
+        ISSUE_KEY,
+        TENANT_CD,
+		ITEM_ID
+    )
+    @storage_primary_insert_update @env:idw_index_tablespace@ default@
+    @go@
+	
+	CREATE INDEX IDX_WLX_MS_ISSUE_ITEM_CAT_1 ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_CATEGORY(ISSUE_KEY, TENANT_CD)
+	@storage_index_insert_update @env:tablespace_index@ default@
+	@go@
+			
+	CREATE TABLE @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_SF
+	(
+         ISSUE_KEY @ustring@(50) NOT NULL,
+         TENANT_CD @ustring@(50) NOT NULL,
+         ITEM_ID @ustring@(50) NOT NULL,
+         SCORE_FACTOR_ID @ustring@(100) NOT NULL,
+         VALUE @ustring@(50) NULL,
+         SCORE @int@ NULL,
+		 IMPACT @ustring@(50) NULL, 
+		 SF_DESCR @ustring@(500) NULL
+     )
+    @storage_params_insert_update @env:idw_table_tablespace@ default@
+	@go@
+	
+	ALTER TABLE @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_SF ADD
+    CONSTRAINT PK_WLX_MS_ISSUE_ITEM_SF PRIMARY KEY @nonclustered@
+    (
+        ISSUE_KEY,
+        TENANT_CD,
+		ITEM_ID
+    )
+    @storage_primary_insert_update @env:idw_index_tablespace@ default@
+    @go@
+
+	CREATE INDEX IDX_WLX_MS_ISSUE_ITEM_SF_1 ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_SF(ISSUE_KEY, TENANT_CD)
+	@storage_index_insert_update @env:tablespace_index@ default@
+	@go@
+		
+	CREATE TABLE @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_MATCHES
+	(
+         ISSUE_KEY @ustring@(50) NOT NULL,
+         TENANT_CD @ustring@(50) NOT NULL,
+         ITEM_ID @ustring@(50) NOT NULL,
+         INPUT_MATCHED_VALUE @clob@  NULL,
+         INPUT_MATCHED_FIELD @ustring@(255)  NULL
+     )
+    @storage_params_insert_update @env:idw_table_tablespace@ default@
+	@go@
+
+	ALTER TABLE @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_MATCHES ADD
+    CONSTRAINT PK_WLX_MS_ISSUE_ITEM_MATCHES PRIMARY KEY @nonclustered@
+    (
+        ISSUE_KEY,
+        TENANT_CD,
+		ITEM_ID
+    )
+    @storage_primary_insert_update @env:idw_index_tablespace@ default@
+    @go@
+
+	CREATE INDEX IDX_WLX_MS_ISSUE_ITEM_MATCH_1 ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_MATCHES(ISSUE_KEY, TENANT_CD)
+	@storage_index_insert_update @env:tablespace_index@ default@
+	@go@
+
+    CREATE TABLE @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_ORIGINATOR
+    (
+        ISSUE_KEY @ustring@(50) NOT NULL,
+        TENANT_CD @ustring@(50) NOT NULL,
+        ITEM_ID @ustring@(50) NOT NULL,
+        ORIGINATOR_NAME @ustring@(500)  NULL,
+        ORIGINATOR_ADDRESS_LINE_1 @ustring@(500)  NULL,
+        ORIGINATOR_ADDRESS_LINE_2 @ustring@(500)  NULL,
+        ORIGINATOR_ADDRESS_LINE_3 @ustring@(500)  NULL,
+        ORIGINATOR_PO_BOX @ustring@(255)  NULL,
+        ORIGINATOR_CITY @ustring@(255)  NULL,
+        ORIGINATOR_STATE_PROVINCE @ustring@(255)  NULL,
+        ORIGINATOR_ZIP_CD @ustring@(50)  NULL,
+        ORIGINATOR_COUNTRY_CD @ustring@(255)  NULL,
+        ORIGINATOR_PARTY_TYPE_CD @ustring@(255)  NULL,
+        ORIGINATOR_ADDITIONAL_INFO @clob@  NULL,
+        ORIGINATOR_FI_CD @ustring@(255)  NULL,
+        ORIGINATOR_FI_COUNTRY_CD @ustring@(255)  NULL,
+        ORIGINATOR_FI_ORG_NAME @ustring@(255)  NULL
+    )
+    @storage_params_insert_update @env:idw_table_tablespace@ default@
+    @go@
+
+    ALTER TABLE @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_ORIGINATOR ADD
+    CONSTRAINT PK_WLX_MS_ISSUE_ITEM_ORIGINATOR PRIMARY KEY @nonclustered@
+    (
+        ISSUE_KEY,
+        TENANT_CD,
+        ITEM_ID
+    )
+    @storage_primary_insert_update @env:idw_index_tablespace@ default@
+    @go@
+
+    CREATE INDEX IDX_WLX_MS_ISSUE_ITEM_ORIGINATOR_1 ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_ORIGINATOR(ISSUE_KEY, TENANT_CD)
+    @storage_index_insert_update @env:tablespace_index@ default@
+    @go@
+
+    CREATE TABLE @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_INTERMEDIATE_FI
+    (
+        ISSUE_KEY @ustring@(50) NOT NULL,
+        TENANT_CD @ustring@(50) NOT NULL,
+        ITEM_ID @ustring@(50) NOT NULL,
+        FI_CODE @ustring@(255)  NULL,
+        FI_COUNTRY_CODE @ustring@(50)  NULL,
+        FI_NAME @ustring@(500)  NULL
+    )
+    @storage_params_insert_update @env:idw_table_tablespace@ default@
+    @go@
+
+    ALTER TABLE @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_INTERMEDIATE_FI ADD
+    CONSTRAINT PK_WLX_WLX_MS_ISSUE_ITEM_INTERMEDIATE_FI PRIMARY KEY @nonclustered@
+    (
+        ISSUE_KEY,
+        TENANT_CD,
+        ITEM_ID
+    )
+    @storage_primary_insert_update @env:idw_index_tablespace@ default@
+    @go@
+
+    CREATE INDEX IDX_WLX_MS_ISSUE_ITEM_INTERMEDIATE_FI_1 ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_INTERMEDIATE_FI(ISSUE_KEY, TENANT_CD)
+    @storage_index_insert_update @env:tablespace_index@ default@
+    @go@
+
+
+    CREATE TABLE @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_BENEFICIARY
+    (
+        ISSUE_KEY @ustring@(50) NOT NULL,
+        TENANT_CD @ustring@(50) NOT NULL,
+        ITEM_ID @ustring@(50) NOT NULL,
+        BENEFICIARY_PRIMARY_NAME @ustring@(500)  NULL,
+        BENEFICIARY_ADDRESS_LINE_1 @ustring@(500)  NULL,
+        BENEFICIARY_ADDRESS_LINE_2 @ustring@(500)  NULL,
+        BENEFICIARY_ADDRESS_LINE_3 @ustring@(500)  NULL,
+        BENEFICIARY_PO_BOX @ustring@(255)  NULL,
+        BENEFICIARY_CITY @ustring@(255)  NULL,
+        BENEFICIARY_STATE_PROVINCE @ustring@(255)  NULL,
+        BENEFICIARY_ZIP_CD @ustring@(50)  NULL,
+        BENEFICIARY_COUNTRY_CD @ustring@(255)  NULL,
+        BENEFICIARY_ADDITIONAL_INFO @clob@  NULL,
+        BENEFICIARY_FI_ORG_NAME @ustring@(500)  NULL,
+        BENEFICIARY_FI_CD @ustring@(255)  NULL,
+        BENEFICIARY_FI_PARTY_TYPE_CD @ustring@(255)  NULL,
+        BENEFICIARY_FI_COUNTRY_CD @ustring@(255)  NULL
+    )
+    @storage_params_insert_update @env:idw_table_tablespace@ default@
+    @go@
+
+    ALTER TABLE @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_BENEFICIARY ADD
+    CONSTRAINT PK_WLX_MS_ISSUE_ITEM_BENEFICIARY PRIMARY KEY @nonclustered@
+    (
+        ISSUE_KEY,
+        TENANT_CD,
+        ITEM_ID
+    )
+    @storage_primary_insert_update @env:idw_index_tablespace@ default@
+    @go@
+
+    CREATE INDEX IDX_WLX_MS_ISSUE_ITEM_BENEFICIARY_1 ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_BENEFICIARY(ISSUE_KEY, TENANT_CD)
+    @storage_index_insert_update @env:tablespace_index@ default@
+    @go@
+
+    CREATE TABLE @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_RECEIVING_FI
+    (
+        ISSUE_KEY @ustring@(50) NOT NULL,
+        TENANT_CD @ustring@(50) NOT NULL,
+        ITEM_ID @ustring@(50) NOT NULL,
+        RECEIVING_FI_ADDITIONAL_INFO @clob@  NULL,
+        RECEIVING_FI_CD @ustring@(255)  NULL,
+        RECEIVING_FI_COUNTRY_CD @ustring@(255)  NULL,
+        RECEIVING_FI_ORGANIZATION_NAME @ustring@(500)  NULL
+    )
+    @storage_params_insert_update @env:idw_table_tablespace@ default@
+    @go@
+
+    ALTER TABLE @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_RECEIVING_FI ADD
+    CONSTRAINT PK_WLX_MS_ISSUE_ITEM_RECEIVING_FI PRIMARY KEY @nonclustered@
+    (
+        ISSUE_KEY,
+        TENANT_CD,
+        ITEM_ID
+    )
+    @storage_primary_insert_update @env:idw_index_tablespace@ default@
+    @go@
+
+    CREATE INDEX IDX_WLX_MS_ISSUE_ITEM_RECEIVING_FI_1 ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_RECEIVING_FI(ISSUE_KEY, TENANT_CD)
+    @storage_index_insert_update @env:tablespace_index@ default@
+    @go@
+
+    CREATE TABLE @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_SENDING_FI
+    (
+        ISSUE_KEY @ustring@(50) NOT NULL,
+        TENANT_CD @ustring@(50) NOT NULL,
+        ITEM_ID @ustring@(50) NOT NULL,
+        SENDING_FI_ADDITIONAL_INFO @clob@  NULL,
+        SENDING_FI_CD @ustring@(255)  NULL,
+        SENDING_FI_COUNTRY_CD @ustring@(255)  NULL,
+        SENDING_FI_ORGANIZATION_NAME @ustring@(500)  NULL
+    )
+    @storage_params_insert_update @env:idw_table_tablespace@ default@
+    @go@
+
+    ALTER TABLE @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_SENDING_FI ADD
+    CONSTRAINT PK_WLX_MS_ISSUE_ITEM_SENDING_FI PRIMARY KEY @nonclustered@
+    (
+        ISSUE_KEY,
+        TENANT_CD,
+        ITEM_ID
+    )
+    @storage_primary_insert_update @env:idw_index_tablespace@ default@
+    @go@
+
+    CREATE INDEX IDX_WLX_MS_ISSUE_ITEM_SENDING_FI_1 ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_SENDING_FI(ISSUE_KEY, TENANT_CD)
+    @storage_index_insert_update @env:tablespace_index@ default@
+    @go@
+
+
+    CREATE TABLE @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_ORIGINATOR_PARTY_IDS
+	(
+         ISSUE_KEY @ustring@(50) NOT NULL,
+         TENANT_CD @ustring@(50) NOT NULL,
+         ITEM_ID @ustring@(50) NOT NULL,
+         ID_TYPE @ustring@(255)	NULL,
+         ID_NUMBER @ustring@(255)	NULL,
+         ID_COUNTRY @ustring@(255)	NULL
+     )
+    @storage_params_insert_update @env:idw_table_tablespace@ default@
+	@go@
+
+	ALTER TABLE @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_ORIGINATOR_PARTY_IDS  ADD
+    CONSTRAINT PK_WLX_MS_ISSUE_ITEM_ORIGINATOR_PARTY_IDS PRIMARY KEY @nonclustered@
+    (
+        ISSUE_KEY,
+        TENANT_CD,
+		ITEM_ID
+    )
+    @storage_primary_insert_update @env:idw_index_tablespace@ default@
+    @go@
+
+	CREATE INDEX IDX_WLX_MS_ISSUE_ITEM_ORIGINATOR_PARTY_IDS_1 ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_ORIGINATOR_PARTY_IDS(ISSUE_KEY, TENANT_CD)
+	@storage_index_insert_update @env:tablespace_index@ default@
+	@go@
+
+    CREATE TABLE @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_BENEFICIARY_PARTY_IDS
+	(
+         ISSUE_KEY @ustring@(50) NOT NULL,
+         TENANT_CD @ustring@(50) NOT NULL,
+         ITEM_ID @ustring@(50) NOT NULL,
+         ID_TYPE @ustring@(255)	NULL,
+         ID_NUMBER @ustring@(255)	NULL,
+         ID_COUNTRY @ustring@(255)	NULL
+     )
+    @storage_params_insert_update @env:idw_table_tablespace@ default@
+	@go@
+
+	ALTER TABLE @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_BENEFICIARY_PARTY_IDS  ADD
+    CONSTRAINT PK_WLX_MS_ISSUE_ITEM_BENEFICIARY_PARTY_IDS PRIMARY KEY @nonclustered@
+    (
+        ISSUE_KEY,
+        TENANT_CD,
+		ITEM_ID
+    )
+    @storage_primary_insert_update @env:idw_index_tablespace@ default@
+    @go@
+
+	CREATE INDEX IDX_WLX_MS_ISSUE_ITEM_BENEFICIARY_PARTY_IDS_1 ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_BENEFICIARY_PARTY_IDS(ISSUE_KEY, TENANT_CD)
+	@storage_index_insert_update @env:tablespace_index@ default@
+	@go@
+
+    CREATE TABLE @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_ALIASES
+	(
+         ISSUE_KEY @ustring@(50) NOT NULL,
+         TENANT_CD @ustring@(50) NOT NULL,
+         ITEM_ID @ustring@(50) NOT NULL,
+         DISPLAY_NAME @ustring@(255) NULL,
+         MATCHED_NAME @ustring@(255) NULL,
+         IS_NAME_BROKEN @tinyint@ NULL,
+         MATCH_STRENGTH @ustring@(255) NULL
+     )
+    @storage_params_insert_update @env:idw_table_tablespace@ default@
+	@go@
+
+    ALTER TABLE @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_ALIASES  ADD
+    CONSTRAINT PK_WLX_MS_ISSUE_ITEM_ALIASES PRIMARY KEY @nonclustered@
+    (
+        ISSUE_KEY,
+        TENANT_CD,
+		ITEM_ID
+    )
+    @storage_primary_insert_update @env:idw_index_tablespace@ default@
+    @go@
+
+	CREATE INDEX IDX_WLX_MS_ISSUE_ITEM_ALIAS_1 ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_ALIASES(ISSUE_KEY, TENANT_CD)
+	@storage_index_insert_update @env:tablespace_index@ default@
+	@go@
+
+    CREATE TABLE @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_IDS
+	(
+         ISSUE_KEY @ustring@(50) NOT NULL,
+         TENANT_CD @ustring@(50) NOT NULL,
+         ITEM_ID @ustring@(50) NOT NULL,
+         ID_TYPE @ustring@(255)	NULL,
+         ID_NUMBER @ustring@(255)	NULL,
+         ID_COUNTRY @ustring@(255)	NULL
+     )
+    @storage_params_insert_update @env:idw_table_tablespace@ default@
+	@go@
+
+	ALTER TABLE @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_IDS  ADD
+    CONSTRAINT PK_WLX_MS_ISSUE_ITEM_IDS PRIMARY KEY @nonclustered@
+    (
+        ISSUE_KEY,
+        TENANT_CD,
+		ITEM_ID
+    )
+    @storage_primary_insert_update @env:idw_index_tablespace@ default@
+    @go@
+
+	CREATE INDEX IDX_WLX_MS_ISSUE_ITEM_IDS_1 ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_IDS(ISSUE_KEY, TENANT_CD)
+	@storage_index_insert_update @env:tablespace_index@ default@
+	@go@
+
+	CREATE TABLE @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_POB
+	(
+         ISSUE_KEY @ustring@(50) NOT NULL,
+         TENANT_CD @ustring@(50) NOT NULL,
+         ITEM_ID @ustring@(50) NOT NULL,
+         PLACE_OF_BIRTH @ustring@(255)	NULL,
+         COUNTRY @ustring@(255)	NULL
+     )
+    @storage_params_insert_update @env:idw_table_tablespace@ default@
+	@go@
+
+	ALTER TABLE @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_POB ADD
+    CONSTRAINT PK_WLX_MS_ISSUE_ITEM_POB PRIMARY KEY @nonclustered@
+    (
+        ISSUE_KEY,
+        TENANT_CD,
+		ITEM_ID
+    )
+    @storage_primary_insert_update @env:idw_index_tablespace@ default@
+    @go@
+
+	CREATE INDEX IDX_WLX_MS_ISSUE_ITEM_POB_1 ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_POB(ISSUE_KEY, TENANT_CD)
+	@storage_index_insert_update @env:tablespace_index@ default@
+	@go@
+
+	CREATE TABLE @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_DOB
+	(
+         ISSUE_KEY @ustring@(50) NOT NULL,
+         TENANT_CD @ustring@(50) NOT NULL,
+         ITEM_ID @ustring@(50) NOT NULL,
+         BIRTH_DATE @ustring@(50) NULL,
+         YEAR_OF_BIRTH @ustring@(50) NULL
+     )
+    @storage_params_insert_update @env:idw_table_tablespace@ default@
+	@go@
+
+	ALTER TABLE @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_DOB  ADD
+    CONSTRAINT PK_WLX_MS_ISSUE_ITEM_DOB PRIMARY KEY @nonclustered@
+    (
+        ISSUE_KEY,
+        TENANT_CD,
+		ITEM_ID
+    )
+    @storage_primary_insert_update @env:idw_index_tablespace@ default@
+    @go@
+
+	CREATE INDEX IDX_WLX_MS_ISSUE_ITEM_DOB_1 ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_DOB(ISSUE_KEY, TENANT_CD)
+	@storage_index_insert_update @env:tablespace_index@ default@
+	@go@
+
+	CREATE TABLE @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_ADDRESSES
+	(
+         ISSUE_KEY @ustring@(50) NOT NULL,
+         TENANT_CD @ustring@(50) NOT NULL,
+         ITEM_ID @ustring@(50) NOT NULL,
+         STREET_ADDR1 @ustring@(255)	NULL,
+         STREET_ADDR2 @ustring@(255)	NULL,
+         CITY @ustring@(255)	NULL,
+		 STATE @ustring@(255)	NULL,
+		 COUNTRY @ustring@(255)	NULL,
+		 POSTAL_CODE @ustring@(255)	NULL
+     )
+    @storage_params_insert_update @env:idw_table_tablespace@ default@
+	@go@
+
+	ALTER TABLE @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_ADDRESSES ADD
+    CONSTRAINT PK_WLX_MS_ISSUE_ITEM_ADDRESSES PRIMARY KEY @nonclustered@
+    (
+        ISSUE_KEY,
+        TENANT_CD,
+		ITEM_ID
+    )
+    @storage_primary_insert_update @env:idw_index_tablespace@ default@
+    @go@
+
+	CREATE INDEX IDX_WLX_MS_ISSUE_ITEM_ADDRESSES_1 ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_ADDRESSES(ISSUE_KEY, TENANT_CD)
+	@storage_index_insert_update @env:tablespace_index@ default@
+	@go@
+
+	CREATE TABLE @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_NCOUNTRIES
+	(
+         ISSUE_KEY @ustring@(50) NOT NULL,
+         TENANT_CD @ustring@(50) NOT NULL,
+         ITEM_ID @ustring@(50) NOT NULL,
+         COUNTRY @ustring@(255)	NULL
+     )
+    @storage_params_insert_update @env:idw_table_tablespace@ default@
+	@go@
+
+	ALTER TABLE @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_NCOUNTRIES ADD
+    CONSTRAINT PK_WLX_MS_ISSUE_ITEM_NCOUNTRIES PRIMARY KEY @nonclustered@
+    (
+        ISSUE_KEY,
+        TENANT_CD,
+		ITEM_ID
+    )
+    @storage_primary_insert_update @env:idw_index_tablespace@ default@
+    @go@
+
+	CREATE INDEX IDX_WLX_MS_ISSUE_ITEM_NCOUNTRIES_1 ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_NCOUNTRIES(ISSUE_KEY, TENANT_CD)
+	@storage_index_insert_update @env:tablespace_index@ default@
+	@go@
+
+    GRANT SELECT ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_ADDINFO TO @env:idw_read_role@
+	@go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_KEYWORDS TO @env:idw_read_role@
+	@go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_CATEGORY TO @env:idw_read_role@
+	@go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_SF TO @env:idw_read_role@
+	@go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_MATCHES TO @env:idw_read_role@
+    @go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_ORIGINATOR TO @env:idw_read_role@
+    @go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_INTERMEDIATE_FI TO @env:idw_read_role@
+    @go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_BENEFICIARY TO @env:idw_read_role@
+    @go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_RECEIVING_FI TO @env:idw_read_role@
+    @go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_SENDING_FI TO @env:idw_read_role@
+    @go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_ORIGINATOR_PARTY_IDS TO @env:idw_read_role@
+    @go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_BENEFICIARY_PARTY_IDS TO @env:idw_read_role@
+    @go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_ALIASES TO @env:idw_read_role@
+    @go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_IDS TO @env:idw_read_role@
+    @go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_POB TO @env:idw_read_role@
+    @go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_DOB TO @env:idw_read_role@
+    @go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_ADDRESSES TO @env:idw_read_role@
+    @go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_NCOUNTRIES TO @env:idw_read_role@
+    @go@
+
+    GRANT SELECT ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_ADDINFO TO @env:idw_app_read_role@
+	@go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_KEYWORDS TO @env:idw_app_read_role@
+	@go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_CATEGORY TO @env:idw_app_read_role@
+	@go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_SF TO @env:idw_app_read_role@
+	@go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_MATCHES TO @env:idw_app_read_role@
+    @go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_ORIGINATOR TO @env:idw_app_read_role@
+    @go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_INTERMEDIATE_FI TO @env:idw_app_read_role@
+    @go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_BENEFICIARY TO @env:idw_app_read_role@
+    @go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_RECEIVING_FI TO @env:idw_app_read_role@
+    @go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_SENDING_FI TO @env:idw_app_read_role@
+    @go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_ORIGINATOR_PARTY_IDS TO @env:idw_app_read_role@
+    @go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_BENEFICIARY_PARTY_IDS TO @env:idw_app_read_role@
+    @go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_ALIASES TO @env:idw_app_read_role@
+    @go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_IDS TO @env:idw_app_read_role@
+    @go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_POB TO @env:idw_app_read_role@
+    @go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_DOB TO @env:idw_app_read_role@
+    @go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_ADDRESSES TO @env:idw_app_read_role@
+    @go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_NCOUNTRIES TO @env:idw_app_read_role@
+    @go@
+
+
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_ADDINFO TO @env:idw_write_role@
+	@go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_KEYWORDS TO @env:idw_write_role@
+	@go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_CATEGORY TO @env:idw_write_role@
+	@go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_SF TO @env:idw_write_role@
+	@go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_MATCHES TO @env:idw_write_role@
+    @go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_ORIGINATOR TO @env:idw_write_role@
+    @go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_INTERMEDIATE_FI TO @env:idw_write_role@
+    @go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_BENEFICIARY TO @env:idw_write_role@
+    @go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_RECEIVING_FI TO @env:idw_write_role@
+    @go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_SENDING_FI TO @env:idw_write_role@
+    @go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_ORIGINATOR_PARTY_IDS TO @env:idw_write_role@
+    @go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_BENEFICIARY_PARTY_IDS TO @env:idw_write_role@
+    @go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_ALIASES TO @env:idw_write_role@
+    @go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_IDS TO @env:idw_write_role@
+    @go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_POB TO @env:idw_write_role@
+    @go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_DOB TO @env:idw_write_role@
+    @go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_ADDRESSES TO @env:idw_write_role@
+    @go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_NCOUNTRIES TO @env:idw_write_role@
+    @go@
+
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_ADDINFO TO @env:idw_app_write_role@
+	@go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_KEYWORDS TO @env:idw_app_write_role@
+	@go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_CATEGORY TO @env:idw_app_write_role@
+	@go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_SF TO @env:idw_app_write_role@
+	@go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_MATCHES TO @env:idw_app_write_role@
+	@go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_ORIGINATOR TO @env:idw_app_write_role@
+    @go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_INTERMEDIATE_FI TO @env:idw_app_write_role@
+    @go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_BENEFICIARY TO @env:idw_app_write_role@
+    @go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_RECEIVING_FI TO @env:idw_app_write_role@
+    @go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_SENDING_FI TO @env:idw_app_write_role@
+    @go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_ORIGINATOR_PARTY_IDS TO @env:idw_app_write_role@
+    @go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_BENEFICIARY_PARTY_IDS TO @env:idw_app_write_role@
+    @go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_ALIASES TO @env:idw_app_write_role@
+    @go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_IDS TO @env:idw_app_write_role@
+    @go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_POB TO @env:idw_app_write_role@
+    @go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_DOB TO @env:idw_app_write_role@
+    @go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_ADDRESSES TO @env:idw_app_write_role@
+    @go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_NCOUNTRIES TO @env:idw_app_write_role@
+    @go@
+
+	INSERT INTO @env:idw_schema_name@.WLX_ISSUE_DISPOSITION_STATUS (HIT_DISPOSITION_CODE, HIT_DISPOSITION_DESCRIPTION) values('TP', 'Confirmed Match')
+    @go@
+
+    INSERT INTO @env:idw_schema_name@.WLX_ISSUE_DISPOSITION_STATUS (HIT_DISPOSITION_CODE, HIT_DISPOSITION_DESCRIPTION) values('FP', 'Confirmed Mismatch')
+    @go@
+
+    INSERT INTO @env:idw_schema_name@.WLX_ISSUE_DISPOSITION_STATUS (HIT_DISPOSITION_CODE, HIT_DISPOSITION_DESCRIPTION) values('VMFP', 'Valid Algorithmic match, Confirmed mismatch post investigation')
+    @go@
+
+    INSERT INTO @env:idw_schema_name@.WLX_ISSUE_DISPOSITION_STATUS (HIT_DISPOSITION_CODE, HIT_DISPOSITION_DESCRIPTION) values('N', 'None')
+    @go@
+}
+version 10.1.0.5 add {
+}
+version 10.1.0.6 add {
+}
+version 10.1.0.7 add {
+}
+version 10.1.0.8 add {
+}
+version 10.1.0.9 add {
+}
+version 10.1.0.10 add {
+}
+version 10.1.0.11 add {
+}
+version 10.1.0.12 add {
+}
+version 10.1.0.13 add {
+}
+version 10.1.0.14 add {
+}
+version 10.1.0.15 add {
+    ALTER TABLE @env:idw_schema_name@.WLX_MS_ISSUES ADD DISPLAY_NAME @ustring@(255)  NULL
+    @go@
+}
+version 10.1.0.16 add {
+}
+version 10.1.0.17 add {
+}
+version 10.1.0.18 add {
+}
+version 10.1.0.19 add {
+}
+version 10.1.0.20 add {
+}
+version 10.1.0.21 add {
+    DELETE FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_SF where SCORE=0
+    @go@
+}
+version 10.1.0.22 add {
+}
+version 10.1.0.23 add {
+}
+version 10.1.0.24 add {
+}
+version 10.1.0.25 add {
+}
+version 10.1.0.26 add {
+}
+version 10.1.0.27 add {
+}
+version 10.1.0.28 add {
+}
+version 10.1.0.29 add {
+}
+version 10.1.0.30 add {
+[mssql
+    IF EXISTS (Select * from @env:idw_schema_name@.WLX_MS_ISSUES)
+    BEGIN
+        UPDATE @env:idw_schema_name@.WLX_MS_ISSUES
+        SET MX_MESSAGE_DETAILS = CAST(REPLACE(CAST(MX_MESSAGE_DETAILS as NVarchar(4000)), '"Additional Message Information":', '"Additional Information":') AS NTEXT)
+        WHERE MX_MESSAGE_DETAILS like '%"Additional Message Information":%';
+
+        UPDATE @env:idw_schema_name@.WLX_MS_ISSUES
+        SET MX_MESSAGE_DETAILS = CAST(REPLACE(CAST(MX_MESSAGE_DETAILS as NVarchar(4000)), '"displayCategory":"Additional Message Information",', '"displayCategory":"Additional Information",') AS NTEXT)
+        WHERE MX_MESSAGE_DETAILS like '%"displayCategory":"Additional Message Information",%';
+
+    END;
+]
+[oracle
+    DECLARE
+        c int;
+       BEGIN
+        SELECT COUNT(*) INTO c FROM @env:idw_schema_name@.WLX_MS_ISSUES;
+        IF c > 0 THEN
+          UPDATE @env:idw_schema_name@.WLX_MS_ISSUES
+          SET MX_MESSAGE_DETAILS = REPLACE(MX_MESSAGE_DETAILS, '"Additional Message Information":', '"Additional Information":')
+          WHERE MX_MESSAGE_DETAILS LIKE '%"Additional Message Information":%';
+
+          UPDATE @env:idw_schema_name@.WLX_MS_ISSUES
+          SET MX_MESSAGE_DETAILS = REPLACE(MX_MESSAGE_DETAILS, '"displayCategory":"Additional Message Information",', '"displayCategory":"Additional Information",')
+          WHERE MX_MESSAGE_DETAILS LIKE '%"displayCategory":"Additional Message Information",%';
+
+         END IF;
+       END;
+    @go@
+]
+}
+version 10.1.0.31 add {
+}
+version 10.1.0.32 add {
+}
+version 10.1.0.33 add {
+}
+version 10.1.0.34 add {
+}
+version 10.1.0.35 add {
+    INSERT INTO @env:idw_schema_name@.DW_OPERATIONS (TABLE_NAME, OPERATION_TYPE, DESCRIPTION) values('WLX_ISSUE_DISPOSITION_STATUS','CleanUp','Hit Details tab')
+    @go@
+}
+version 10.1.0.36 add {
+}
+version 10.1.0.37 add {
+}
+version 10.1.0.38 add {
+}
+version 10.1.0.39 add {
+}
+version 10.1.0.40 add {
+}
+version 10.1.0.41 add {
+}
+version 10.1.0.42 add {
+}
+version 10.1.0.43 add {
+}
+version 10.1.0.44 add {
+}
+version 10.1.0.45 add {
+[mssql
+    ALTER TABLE @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_IDS ALTER COLUMN ID_NUMBER @ustring@(450) NULL
+  	@go@
+  	ALTER TABLE @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_IDS ALTER COLUMN ID_NUMBER @ustring@(450) NULL
+  	@go@
+	ALTER TABLE @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_BENEFICIARY_PARTY_IDS ALTER COLUMN ID_NUMBER @ustring@(450) NULL
+  	@go@
+  	ALTER TABLE @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_ORIGINATOR_PARTY_IDS ALTER COLUMN ID_NUMBER @ustring@(450) NULL
+  	@go@
+]
+[oracle
+    ALTER TABLE @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_IDS MODIFY ID_NUMBER @ustring@(450)
+  	@go@
+  	ALTER TABLE @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_IDS MODIFY ID_NUMBER @ustring@(450)
+  	@go@
+	ALTER TABLE @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_BENEFICIARY_PARTY_IDS MODIFY ID_NUMBER @ustring@(450)
+  	@go@
+  	ALTER TABLE @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_ORIGINATOR_PARTY_IDS MODIFY ID_NUMBER @ustring@(450)
+  	@go@
+]
+}
+version 10.1.0.46 add {
+}
+version 10.1.0.47 add {
+}
+version 10.1.0.48 add {
+}
+version 10.1.0.49 add {
+}
+version 10.1.0.50 add {
+}
+version 10.1.0.51 add {
+}
+version 10.1.0.52 add {
+}
+version 10.1.0.53 add {
+}
+version 10.1.0.54 add {
+}
+version 10.1.0.55 add {
+}
+version 10.1.0.56 add {
+}
+version 10.1.0.57 add {
+}
+version 10.1.0.58 add {
+}
+version 10.1.0.59 add {
+}
+version 10.1.0.60 add {
+}
+version 10.1.0.61 add {
+}
+version 10.1.0.62 add {
+}
+version 10.1.0.63 add {
+}
+version 10.1.0.64 add {
+}
+version 10.1.0.65 add {
+[mssql
+    exec sp_rename '@env:idw_schema_name@.WLX_MS_ISSUE_ITEM_INTERMEDIATE_FI', 'WLX_MS_ISSUE_ITEM_INTERMDT_FI'
+    @go@
+    exec sp_rename '@env:idw_schema_name@.WLX_MS_ISSUE_ITEM_ORIGINATOR_PARTY_IDS', 'WLX_MS_ISSUE_ITEM_ORIG_PRTY_ID'
+    @go@
+    exec sp_rename '@env:idw_schema_name@.WLX_MS_ISSUE_ITEM_BENEFICIARY_PARTY_IDS', 'WLX_MS_ISSUE_ITEM_BENE_PRTY_ID'
+    @go@
+]
+[oracle
+    ALTER TABLE @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_INTERMEDIATE_FI RENAME TO WLX_MS_ISSUE_ITEM_INTERMDT_FI
+  	@go@
+  	ALTER TABLE @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_ORIGINATOR_PARTY_IDS RENAME TO WLX_MS_ISSUE_ITEM_ORIG_PRTY_ID
+    @go@
+    ALTER TABLE @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_BENEFICIARY_PARTY_IDS RENAME TO WLX_MS_ISSUE_ITEM_BENE_PRTY_ID
+    @go@
+]
+[mssql
+    IF EXISTS(SELECT v.name FROM sys.views v WHERE v.name = 'V_WLX_CF_ALIASES_ISSUE')
+        BEGIN
+            EXEC('DROP VIEW @env:idw_schema_name@.V_WLX_CF_ALIASES_ISSUE');
+        END;
+    @go@
+    CREATE VIEW @env:idw_schema_name@.V_WLX_CF_ALIASES_ISSUE(
+        ISSUE_KEY,
+        IS_NAME_BROKEN,
+        MATCH_STRENGTH,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIA.ISSUE_KEY, IS_NAME_BROKEN, MATCH_STRENGTH, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_ALIASES WCIIA
+        INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCIIA.ISSUE_KEY = WCI.ISSUE_KEY
+        WHERE WCI.RECORD_TYPE = 'ISSUE'
+    @go@
+    IF EXISTS(SELECT v.name FROM sys.views v WHERE v.name = 'V_WLX_CF_IDS_PARTY')
+        BEGIN
+            EXEC('DROP VIEW @env:idw_schema_name@.V_WLX_CF_IDS_PARTY');
+        END;
+    @go@
+    CREATE VIEW @env:idw_schema_name@.V_WLX_CF_IDS_PARTY(
+        ISSUE_KEY,
+        PARTY_ID_TYPE,
+        PARTY_ID_COUNTRY,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIII.ISSUE_KEY, ID_TYPE, ID_COUNTRY, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_IDS WCIII
+        INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCIII.ISSUE_KEY = WCI.ISSUE_KEY
+        WHERE WCI.RECORD_TYPE = 'PARTY'
+    @go@
+    IF EXISTS(SELECT v.name FROM sys.views v WHERE v.name = 'V_WLX_CF_ADDRESSES_PARTY')
+        BEGIN
+            EXEC('DROP VIEW @env:idw_schema_name@.V_WLX_CF_ADDRESSES_PARTY');
+        END;
+    @go@
+    CREATE VIEW @env:idw_schema_name@.V_WLX_CF_ADDRESSES_PARTY(
+        ISSUE_KEY,
+        PARTY_ADDRESS_COUNTRIES,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIII.ISSUE_KEY , WCIII.COUNTRY, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_ADDRESSES WCIII INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCIII.ISSUE_KEY = WCI.ISSUE_KEY
+        WHERE WCI.RECORD_TYPE = 'PARTY'
+    @go@
+    IF EXISTS(SELECT v.name FROM sys.views v WHERE v.name = 'V_WLX_CF_NCOUNTRIES_PARTY')
+        BEGIN
+            EXEC('DROP VIEW @env:idw_schema_name@.V_WLX_CF_NCOUNTRIES_PARTY');
+        END;
+    @go@
+    CREATE VIEW @env:idw_schema_name@.V_WLX_CF_NCOUNTRIES_PARTY(
+        ISSUE_KEY,
+        PARTY_NATIONALITY_COUNTRIES,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIN.ISSUE_KEY , WCIIN.COUNTRY, WCI.INSERT_DATE_TIME  FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_NCOUNTRIES WCIIN INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCIIN.ISSUE_KEY = WCI.ISSUE_KEY
+        WHERE WCI.RECORD_TYPE = 'PARTY'
+    @go@
+    IF EXISTS(SELECT v.name FROM sys.views v WHERE v.name = 'V_WLX_CF_POB_PARTY')
+        BEGIN
+            EXEC('DROP VIEW @env:idw_schema_name@.V_WLX_CF_POB_PARTY');
+        END;
+    @go@
+    CREATE VIEW @env:idw_schema_name@.V_WLX_CF_POB_PARTY(
+        ISSUE_KEY,
+        PARTY_POB_COUNTRIES,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIP.ISSUE_KEY , WCIIP.COUNTRY, WCI.INSERT_DATE_TIME  FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_POB WCIIP INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCIIP.ISSUE_KEY = WCI.ISSUE_KEY
+        WHERE WCI.RECORD_TYPE = 'PARTY'
+    @go@
+    IF EXISTS(SELECT v.name FROM sys.views v WHERE v.name = 'V_WLX_CF_DOB_PARTY')
+        BEGIN
+            EXEC('DROP VIEW @env:idw_schema_name@.V_WLX_CF_DOB_PARTY');
+        END;
+    @go@
+    CREATE VIEW @env:idw_schema_name@.V_WLX_CF_DOB_PARTY (
+        ISSUE_KEY,
+        PARTY_YEAR_OF_BIRTH,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIID.ISSUE_KEY , WCIID.YEAR_OF_BIRTH, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_DOB WCIID
+        INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI ON WCIID.ISSUE_KEY = WCI.ISSUE_KEY
+        WHERE WCI.RECORD_TYPE = 'PARTY'
+    @go@
+    IF EXISTS(SELECT v.name FROM sys.views v WHERE v.name = 'V_WLX_CF_ISSUES_PARTY')
+        BEGIN
+            EXEC('DROP VIEW @env:idw_schema_name@.V_WLX_CF_ISSUES_PARTY');
+        END;
+    @go@
+    CREATE VIEW @env:idw_schema_name@.V_WLX_CF_ISSUES_PARTY (
+        ISSUE_KEY,
+        PARTY_TYPE,
+        PARTY_AGE,
+        PARTY_REGION,
+        PARTY_POSITION,
+        PARTY_TITLE,
+        PARTY_IS_DECEASED,
+        PARTY_GENDER,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT
+        ISSUE_KEY,
+        ENTRY_TYPE,
+        AGE,
+        REGION,
+        POSITION,
+        TITLE,
+        IS_DECEASED,
+        GENDER,
+        INSERT_DATE_TIME
+        FROM @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        WHERE RECORD_TYPE  = 'PARTY'
+    @go@
+    IF EXISTS(SELECT v.name FROM sys.views v WHERE v.name = 'V_WLX_CF_IDS_ISSUE')
+        BEGIN
+            EXEC('DROP VIEW @env:idw_schema_name@.V_WLX_CF_IDS_ISSUE');
+        END;
+    @go@
+    CREATE VIEW @env:idw_schema_name@.V_WLX_CF_IDS_ISSUE (
+        ISSUE_KEY,
+        HIT_ID_TYPE,
+        HIT_ID_COUNTRY,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIII.ISSUE_KEY, WCIII.ID_TYPE, WCIII.ID_COUNTRY, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_IDS WCIII INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCIII.ISSUE_KEY = WCI.ISSUE_KEY
+        WHERE WCI.RECORD_TYPE  = 'ISSUE'
+    @go@
+    IF EXISTS(SELECT v.name FROM sys.views v WHERE v.name = 'V_WLX_CF_NCOUNTRIES_ISSUE')
+        BEGIN
+            EXEC('DROP VIEW @env:idw_schema_name@.V_WLX_CF_NCOUNTRIES_ISSUE');
+        END;
+    @go@
+    CREATE VIEW @env:idw_schema_name@.V_WLX_CF_NCOUNTRIES_ISSUE (
+        ISSUE_KEY,
+        HIT_NATIONALITY_COUNTRIES,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIN.ISSUE_KEY , WCIIN.COUNTRY, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_NCOUNTRIES WCIIN INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCIIN.ISSUE_KEY = WCI.ISSUE_KEY
+        WHERE WCI.RECORD_TYPE = 'ISSUE'
+    @go@
+    IF EXISTS(SELECT v.name FROM sys.views v WHERE v.name = 'V_WLX_CF_POB_ISSUE')
+        BEGIN
+            EXEC('DROP VIEW @env:idw_schema_name@.V_WLX_CF_POB_ISSUE');
+        END;
+    @go@
+    CREATE VIEW @env:idw_schema_name@.V_WLX_CF_POB_ISSUE(
+        ISSUE_KEY,
+        HIT_POB_COUNTRIES,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIP.ISSUE_KEY , WCIIP.COUNTRY, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_POB WCIIP INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCIIP.ISSUE_KEY = WCI.ISSUE_KEY
+        WHERE WCI.RECORD_TYPE = 'ISSUE'
+    @go@
+    IF EXISTS(SELECT v.name FROM sys.views v WHERE v.name = 'V_WLX_CF_ADDRESSES_ISSUE')
+        BEGIN
+            EXEC('DROP VIEW @env:idw_schema_name@.V_WLX_CF_ADDRESSES_ISSUE');
+        END;
+    @go@
+    CREATE VIEW @env:idw_schema_name@.V_WLX_CF_ADDRESSES_ISSUE(
+        ISSUE_KEY,
+        HIT_ADDRESS_COUNTRIES,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIII.ISSUE_KEY , WCIII.COUNTRY, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_ADDRESSES WCIII INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCIII.ISSUE_KEY = WCI.ISSUE_KEY
+        WHERE WCI.RECORD_TYPE = 'ISSUE'
+    @go@
+    IF EXISTS(SELECT v.name FROM sys.views v WHERE v.name = 'V_WLX_CF_DOB_ISSUE')
+        BEGIN
+            EXEC('DROP VIEW @env:idw_schema_name@.V_WLX_CF_DOB_ISSUE');
+        END;
+    @go@
+    CREATE VIEW @env:idw_schema_name@.V_WLX_CF_DOB_ISSUE (
+        ISSUE_KEY,
+        HIT_YEAR_OF_BIRTH,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIID.ISSUE_KEY , WCIID.YEAR_OF_BIRTH, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_DOB WCIID
+        INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI ON WCIID.ISSUE_KEY = WCI.ISSUE_KEY
+        WHERE WCI.RECORD_TYPE = 'ISSUE'
+    @go@
+    IF EXISTS(SELECT v.name FROM sys.views v WHERE v.name = 'V_WLX_CF_ISSUES_ISSUE')
+        BEGIN
+            EXEC('DROP VIEW @env:idw_schema_name@.V_WLX_CF_ISSUES_ISSUE');
+        END;
+    @go@
+    CREATE VIEW @env:idw_schema_name@.V_WLX_CF_ISSUES_ISSUE (
+        ISSUE_KEY,
+        HIT_GENDER,
+        LIST,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT
+        ISSUE_KEY,
+        GENDER,
+        LIST_NAME,
+        INSERT_DATE_TIME
+        FROM @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        WHERE RECORD_TYPE  = 'ISSUE'
+    @go@
+    IF EXISTS(SELECT v.name FROM sys.views v WHERE v.name = 'V_WLX_CF_KEYWORDS_ISSUE')
+        BEGIN
+            EXEC('DROP VIEW @env:idw_schema_name@.V_WLX_CF_KEYWORDS_ISSUE');
+        END;
+    @go@
+    CREATE VIEW @env:idw_schema_name@.V_WLX_CF_KEYWORDS_ISSUE (
+        ISSUE_KEY,
+        HIT_KEYWORDS,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIK.ISSUE_KEY , WCIIK.KEYWORD, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_KEYWORDS WCIIK  INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCIIK.ISSUE_KEY = WCI.ISSUE_KEY
+        WHERE WCI.RECORD_TYPE = 'ISSUE'
+    @go@
+    IF EXISTS(SELECT v.name FROM sys.views v WHERE v.name = 'V_WLX_CF_CATEGORY_ISSUE')
+        BEGIN
+            EXEC('DROP VIEW @env:idw_schema_name@.V_WLX_CF_CATEGORY_ISSUE');
+        END;
+    @go@
+    CREATE VIEW @env:idw_schema_name@.V_WLX_CF_CATEGORY_ISSUE (
+        ISSUE_KEY,
+        HIT_CATEGORIES,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIC.ISSUE_KEY , WCIIC.CATEGORY, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_CATEGORY WCIIC  INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCIIC.ISSUE_KEY = WCI.ISSUE_KEY
+        WHERE WCI.RECORD_TYPE = 'ISSUE'
+    @go@
+    IF EXISTS(SELECT v.name FROM sys.views v WHERE v.name = 'V_WLX_CF_SF_MATCHINGENGINE')
+        BEGIN
+            EXEC('DROP VIEW @env:idw_schema_name@.V_WLX_CF_SF_MATCHINGENGINE');
+        END;
+    @go@
+    CREATE VIEW @env:idw_schema_name@.V_WLX_CF_SF_MATCHINGENGINE (
+        ISSUE_KEY,
+        WLX_CFSF_MATCHINGENGINE_VL,
+        WLX_CFSF_MATCHINGENGINE_SC,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIS.ISSUE_KEY, VALUE, WCIIS.SCORE, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_SF WCIIS INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCI.ISSUE_KEY = WCIIS.ISSUE_KEY
+        WHERE SCORE_FACTOR_ID = 'AML_WLF_CF_SF_matchingEngine'
+    @go@
+    IF EXISTS(SELECT v.name FROM sys.views v WHERE v.name = 'V_WLF_CF_MATCHES_ISSUE')
+        BEGIN
+            EXEC('DROP VIEW @env:idw_schema_name@.V_WLF_CF_MATCHES_ISSUE');
+        END;
+    @go@
+    CREATE VIEW @env:idw_schema_name@.V_WLF_CF_MATCHES_ISSUE (
+        ISSUE_KEY,
+        INPUT_MATCHED_FIELD,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIM.ISSUE_KEY , WCIIM.INPUT_MATCHED_FIELD, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_MATCHES WCIIM INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCIIM.ISSUE_KEY = WCI.ISSUE_KEY
+        WHERE WCI.RECORD_TYPE = 'ISSUE'
+    @go@
+    IF EXISTS(SELECT v.name FROM sys.views v WHERE v.name = 'V_WLX_CFSF_IDMATCH')
+        BEGIN
+            EXEC('DROP VIEW @env:idw_schema_name@.V_WLX_CFSF_IDMATCH');
+        END;
+    @go@
+    CREATE VIEW @env:idw_schema_name@.V_WLX_CFSF_IDMATCH (
+        ISSUE_KEY,
+        WLX_CFSF_IDMATCH_VL,
+        WLX_CFSF_IDMATCH_SC,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIS.ISSUE_KEY, VALUE, WCIIS.SCORE, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_SF WCIIS INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCI.ISSUE_KEY = WCIIS.ISSUE_KEY
+        WHERE SCORE_FACTOR_ID = 'AML_WLF_CF_SF_idMatch'
+    @go@
+    IF EXISTS(SELECT v.name FROM sys.views v WHERE v.name = 'V_WLX_CFSF_LOWQUALITYALIASES')
+        BEGIN
+            EXEC('DROP VIEW @env:idw_schema_name@.V_WLX_CFSF_LOWQUALITYALIASES');
+        END;
+    @go@
+    CREATE VIEW @env:idw_schema_name@.V_WLX_CFSF_LOWQUALITYALIASES (
+        ISSUE_KEY,
+        WLX_CFSF_LOWQUALITYALIASES_VL,
+        WLX_CFSF_LOWQUALITYALIASES_SC,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIS.ISSUE_KEY, WCIIS.VALUE, WCIIS.SCORE, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_SF WCIIS INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCI.ISSUE_KEY = WCIIS.ISSUE_KEY
+        WHERE SCORE_FACTOR_ID = 'AML_WLF_CF_SF_lowQualityAliases'
+    @go@
+    IF EXISTS(SELECT v.name FROM sys.views v WHERE v.name = 'V_WLX_CFSF_COUNTRYMATCH')
+        BEGIN
+            EXEC('DROP VIEW @env:idw_schema_name@.V_WLX_CFSF_COUNTRYMATCH');
+        END;
+    @go@
+    CREATE VIEW @env:idw_schema_name@.V_WLX_CFSF_COUNTRYMATCH (
+        ISSUE_KEY,
+        WLX_CFSF_COUNTRYMATCH_VL,
+        WLX_CFSF_COUNTRYMATCH_SC,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIS.ISSUE_KEY, WCIIS.VALUE, WCIIS.SCORE, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_SF WCIIS INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCI.ISSUE_KEY = WCIIS.ISSUE_KEY
+        WHERE SCORE_FACTOR_ID = 'AML_WLF_CF_SF_countryMatch'
+    @go@
+    IF EXISTS(SELECT v.name FROM sys.views v WHERE v.name = 'V_WLX_CFSF_NUMBEROFKEYWORDS')
+        BEGIN
+            EXEC('DROP VIEW @env:idw_schema_name@.V_WLX_CFSF_NUMBEROFKEYWORDS');
+        END;
+    @go@
+    CREATE VIEW @env:idw_schema_name@.V_WLX_CFSF_NUMBEROFKEYWORDS (
+        ISSUE_KEY,
+        WLX_CFSF_NUMBEROFKEYWORDS_VL,
+        WLX_CFSF_NUMBEROFKEYWORDS_SC,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIS.ISSUE_KEY, WCIIS.VALUE, WCIIS.SCORE, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_SF WCIIS INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCI.ISSUE_KEY = WCIIS.ISSUE_KEY
+        WHERE SCORE_FACTOR_ID = 'AML_WLF_CF_SF_numberOfKeywords'
+    @go@
+    IF EXISTS(SELECT v.name FROM sys.views v WHERE v.name = 'V_WLX_CFSF_LOWRISKCATEGORIES')
+        BEGIN
+            EXEC('DROP VIEW @env:idw_schema_name@.V_WLX_CFSF_LOWRISKCATEGORIES');
+        END;
+    @go@
+    CREATE VIEW @env:idw_schema_name@.V_WLX_CFSF_LOWRISKCATEGORIES (
+        ISSUE_KEY,
+        WLX_CFSF_LOWRISKCATEGORIES_VL,
+        WLX_CFSF_LOWRISKCATEGORIES_SC,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIS.ISSUE_KEY, WCIIS.VALUE, WCIIS.SCORE, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_SF WCIIS INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCI.ISSUE_KEY = WCIIS.ISSUE_KEY
+        WHERE SCORE_FACTOR_ID = 'AML_WLF_CF_SF_LowRiskCategories'
+    @go@
+    IF EXISTS(SELECT v.name FROM sys.views v WHERE v.name = 'V_WLX_CFSF_LOWRISKKEYWORDS')
+        BEGIN
+            EXEC('DROP VIEW @env:idw_schema_name@.V_WLX_CFSF_LOWRISKKEYWORDS');
+        END;
+    @go@
+    CREATE VIEW @env:idw_schema_name@.V_WLX_CFSF_LOWRISKKEYWORDS (
+        ISSUE_KEY,
+        WLX_CFSF_LOWRISKKEYWORDS_VL,
+        WLX_CFSF_LOWRISKKEYWORDS_SC,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIS.ISSUE_KEY, WCIIS.VALUE, WCIIS.SCORE, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_SF WCIIS INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCI.ISSUE_KEY = WCIIS.ISSUE_KEY
+        WHERE SCORE_FACTOR_ID = 'AML_WLF_CF_SF_LowRiskKeywords'
+    @go@
+    IF EXISTS(SELECT v.name FROM sys.views v WHERE v.name = 'V_WLX_CFSF_SINGLETOKENMATCH')
+        BEGIN
+            EXEC('DROP VIEW @env:idw_schema_name@.V_WLX_CFSF_SINGLETOKENMATCH');
+        END;
+    @go@
+    CREATE VIEW @env:idw_schema_name@.V_WLX_CFSF_SINGLETOKENMATCH (
+        ISSUE_KEY,
+        WLX_CFSF_SINGLETOKENMATCH_VL,
+        WLX_CFSF_SINGLETOKENMATCH_SC,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIS.ISSUE_KEY, WCIIS.VALUE, WCIIS.SCORE, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_SF WCIIS INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCI.ISSUE_KEY = WCIIS.ISSUE_KEY
+        WHERE SCORE_FACTOR_ID = 'AML_WLF_CF_SF_singleTokenMatch'
+    @go@
+    IF EXISTS(SELECT v.name FROM sys.views v WHERE v.name = 'V_WLX_CFSF_ORGEXACTMATCH')
+        BEGIN
+            EXEC('DROP VIEW @env:idw_schema_name@.V_WLX_CFSF_ORGEXACTMATCH');
+        END;
+    @go@
+    CREATE VIEW @env:idw_schema_name@.V_WLX_CFSF_ORGEXACTMATCH (
+        ISSUE_KEY,
+        WLX_CFSF_ORGEXACTMATCH_VL,
+        WLX_CFSF_ORGEXACTMATCH_SC,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIS.ISSUE_KEY, WCIIS.VALUE, WCIIS.SCORE, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_SF WCIIS INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCI.ISSUE_KEY = WCIIS.ISSUE_KEY
+        WHERE SCORE_FACTOR_ID = 'AML_WLF_CF_SF_orgExactMatch'
+    @go@
+    IF EXISTS(SELECT v.name FROM sys.views v WHERE v.name = 'V_WLX_CFSF_PERSONEXACTMATCH')
+        BEGIN
+            EXEC('DROP VIEW @env:idw_schema_name@.V_WLX_CFSF_PERSONEXACTMATCH');
+        END;
+    @go@
+    CREATE VIEW @env:idw_schema_name@.V_WLX_CFSF_PERSONEXACTMATCH (
+        ISSUE_KEY,
+        WLX_CFSF_PERSONEXACTMATCH_VL,
+        WLX_CFSF_PERSONEXACTMATCH_SC,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIS.ISSUE_KEY, WCIIS.VALUE, WCIIS.SCORE, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_SF WCIIS INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCI.ISSUE_KEY = WCIIS.ISSUE_KEY
+        WHERE SCORE_FACTOR_ID = 'AML_WLF_CF_SF_personExactMatch'
+    @go@
+    IF EXISTS(SELECT v.name FROM sys.views v WHERE v.name = 'V_WLX_CFSF_LOCALCOUNTRY')
+        BEGIN
+            EXEC('DROP VIEW @env:idw_schema_name@.V_WLX_CFSF_LOCALCOUNTRY');
+        END;
+    @go@
+    CREATE VIEW @env:idw_schema_name@.V_WLX_CFSF_LOCALCOUNTRY (
+        ISSUE_KEY,
+        WLX_CFSF_LOCALCOUNTRY_VL,
+        WLX_CFSF_LOCALCOUNTRY_SC,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIS.ISSUE_KEY, WCIIS.VALUE, WCIIS.SCORE, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_SF WCIIS INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCI.ISSUE_KEY = WCIIS.ISSUE_KEY
+        WHERE SCORE_FACTOR_ID = 'AML_WLF_CF_SF_localCountry'
+    @go@
+    IF EXISTS(SELECT v.name FROM sys.views v WHERE v.name = 'V_WLX_CFSF_YEAROFBIRTHMATCH')
+        BEGIN
+            EXEC('DROP VIEW @env:idw_schema_name@.V_WLX_CFSF_YEAROFBIRTHMATCH');
+        END;
+    @go@
+    CREATE VIEW @env:idw_schema_name@.V_WLX_CFSF_YEAROFBIRTHMATCH (
+        ISSUE_KEY,
+        WLX_CFSF_YEAROFBIRTHMATCH_VL,
+        WLX_CFSF_YEAROFBIRTHMATCH_SC,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIS.ISSUE_KEY, WCIIS.VALUE, WCIIS.SCORE, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_SF WCIIS INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCI.ISSUE_KEY = WCIIS.ISSUE_KEY
+        WHERE SCORE_FACTOR_ID = 'AML_WLF_CF_SF_yearOfBirthMatch'
+    @go@
+    IF EXISTS(SELECT v.name FROM sys.views v WHERE v.name = 'V_WLX_CFSF_GENDERMATCH')
+        BEGIN
+            EXEC('DROP VIEW @env:idw_schema_name@.V_WLX_CFSF_GENDERMATCH');
+        END;
+    @go@
+    CREATE VIEW @env:idw_schema_name@.V_WLX_CFSF_GENDERMATCH (
+        ISSUE_KEY,
+        WLX_CFSF_GENDERMATCH_VL,
+        WLX_CFSF_GENDERMATCH_SC,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIS.ISSUE_KEY, WCIIS.VALUE, WCIIS.SCORE, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_SF WCIIS INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCI.ISSUE_KEY = WCIIS.ISSUE_KEY
+        WHERE SCORE_FACTOR_ID = 'AML_WLF_CF_SF_genderMatch'
+    @go@
+    IF EXISTS(SELECT v.name FROM sys.views v WHERE v.name = 'V_WLX_CFSF_PRIORHITSFREQ')
+        BEGIN
+            EXEC('DROP VIEW @env:idw_schema_name@.V_WLX_CFSF_PRIORHITSFREQ');
+        END;
+    @go@
+    CREATE VIEW @env:idw_schema_name@.V_WLX_CFSF_PRIORHITSFREQ (
+        ISSUE_KEY,
+        WLX_CFSF_PRIORHITSFREQ_VL,
+        WLX_CFSF_PRIORHITSFREQ_SC,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIS.ISSUE_KEY, WCIIS.VALUE, WCIIS.SCORE, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_SF WCIIS INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCI.ISSUE_KEY = WCIIS.ISSUE_KEY
+        WHERE SCORE_FACTOR_ID = 'AML_WLF_CF_SF_priorHitsFreq'
+    @go@
+    IF EXISTS(SELECT v.name FROM sys.views v WHERE v.name = 'V_WLX_CFSF_PRIORHITSISSUE')
+        BEGIN
+            EXEC('DROP VIEW @env:idw_schema_name@.V_WLX_CFSF_PRIORHITSISSUE');
+        END;
+    @go@
+    CREATE VIEW @env:idw_schema_name@.V_WLX_CFSF_PRIORHITSISSUE (
+        ISSUE_KEY,
+        WLX_CFSF_PRIORHITSISSUE_VL,
+        WLX_CFSF_PRIORHITSISSUE_SC,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIS.ISSUE_KEY, WCIIS.VALUE, WCIIS.SCORE, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_SF WCIIS INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCI.ISSUE_KEY = WCIIS.ISSUE_KEY
+        WHERE SCORE_FACTOR_ID = 'AML_WLF_CF_SF_priorHitsIssue'
+    @go@
+    IF EXISTS(SELECT v.name FROM sys.views v WHERE v.name = 'V_WLX_CFSF_PRIORHITSNONISSUE')
+        BEGIN
+            EXEC('DROP VIEW @env:idw_schema_name@.V_WLX_CFSF_PRIORHITSNONISSUE');
+        END;
+    @go@
+    CREATE VIEW @env:idw_schema_name@.V_WLX_CFSF_PRIORHITSNONISSUE (
+        ISSUE_KEY,
+        WLX_CFSF_PRIORHITSNONISSUE_VL,
+        WLX_CFSF_PRIORHITSNONISSUE_SC,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIS.ISSUE_KEY, WCIIS.VALUE, WCIIS.SCORE, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_SF WCIIS INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCI.ISSUE_KEY = WCIIS.ISSUE_KEY
+        WHERE SCORE_FACTOR_ID = 'AML_WLF_CF_SF_priorHitsNonIssue'
+    @go@
+    IF EXISTS(SELECT v.name FROM sys.views v WHERE v.name = 'V_WLX_CFSF_PRIORHITSNONDET')
+        BEGIN
+            EXEC('DROP VIEW @env:idw_schema_name@.V_WLX_CFSF_PRIORHITSNONDET');
+        END;
+    @go@
+    CREATE VIEW @env:idw_schema_name@.V_WLX_CFSF_PRIORHITSNONDET (
+        ISSUE_KEY,
+        WLX_CFSF_PRIORHITSNONDET_VL,
+        WLX_CFSF_PRIORHITSNONDET_SC,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIS.ISSUE_KEY, WCIIS.VALUE, WCIIS.SCORE, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_SF WCIIS INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCI.ISSUE_KEY = WCIIS.ISSUE_KEY
+        WHERE SCORE_FACTOR_ID = 'AML_WLF_CF_SF_priorHitsNonDet'
+    @go@
+    IF EXISTS(SELECT v.name FROM sys.views v WHERE v.name = 'V_WLX_CFSF_EDITDISTANCEMATCH')
+        BEGIN
+            EXEC('DROP VIEW @env:idw_schema_name@.V_WLX_CFSF_EDITDISTANCEMATCH');
+        END;
+    @go@
+    CREATE VIEW @env:idw_schema_name@.V_WLX_CFSF_EDITDISTANCEMATCH (
+        ISSUE_KEY,
+        WLX_CFSF_EDITDISTANCEMATCH_VL,
+        WLX_CFSF_EDITDISTANCEMATCH_SC,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIS.ISSUE_KEY, WCIIS.VALUE, WCIIS.SCORE, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_SF WCIIS INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCI.ISSUE_KEY = WCIIS.ISSUE_KEY
+        WHERE SCORE_FACTOR_ID = 'AML_WLF_CF_SF_editDistanceMatch'
+    @go@
+    IF EXISTS(SELECT v.name FROM sys.views v WHERE v.name = 'V_WLX_CFSF_INITIALHITSNUMBER')
+        BEGIN
+            EXEC('DROP VIEW @env:idw_schema_name@.V_WLX_CFSF_INITIALHITSNUMBER');
+        END;
+    @go@
+    CREATE VIEW @env:idw_schema_name@.V_WLX_CFSF_INITIALHITSNUMBER (
+        ISSUE_KEY,
+        WLX_CFSF_INITIALHITSNUMBER_VL,
+        WLX_CFSF_INITIALHITSNUMBER_SC,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIS.ISSUE_KEY, WCIIS.VALUE, WCIIS.SCORE, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_SF WCIIS INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCI.ISSUE_KEY = WCIIS.ISSUE_KEY
+        WHERE SCORE_FACTOR_ID = 'AML_WLF_CF_SF_initialHitsNumber'
+    @go@
+    IF EXISTS(SELECT v.name FROM sys.views v WHERE v.name = 'V_WLX_CFSF_ISORGANIZATION')
+        BEGIN
+            EXEC('DROP VIEW @env:idw_schema_name@.V_WLX_CFSF_ISORGANIZATION');
+        END;
+    @go@
+    CREATE VIEW @env:idw_schema_name@.V_WLX_CFSF_ISORGANIZATION (
+        ISSUE_KEY,
+        WLX_CFSF_ISORGANIZATION_VL,
+        WLX_CFSF_ISORGANIZATION_SC,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIS.ISSUE_KEY, WCIIS.VALUE, WCIIS.SCORE, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_SF WCIIS INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCI.ISSUE_KEY = WCIIS.ISSUE_KEY
+        WHERE SCORE_FACTOR_ID = 'AML_WLF_CF_SF_isOrganization'
+    @go@
+    IF EXISTS(SELECT v.name FROM sys.views v WHERE v.name = 'V_WLX_CFSF_PRIORALERTSISSUE')
+        BEGIN
+            EXEC('DROP VIEW @env:idw_schema_name@.V_WLX_CFSF_PRIORALERTSISSUE');
+        END;
+    @go@
+    CREATE VIEW @env:idw_schema_name@.V_WLX_CFSF_PRIORALERTSISSUE (
+        ISSUE_KEY,
+        WLX_CFSF_PRIORALERTSISSUE_VL,
+        WLX_CFSF_PRIORALERTSISSUE_SC,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIS.ISSUE_KEY, WCIIS.VALUE, WCIIS.SCORE, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_SF WCIIS INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCI.ISSUE_KEY = WCIIS.ISSUE_KEY
+        WHERE SCORE_FACTOR_ID = 'AML_WLF_CF_SF_priorAlertsIssue'
+    @go@
+    IF EXISTS(SELECT v.name FROM sys.views v WHERE v.name = 'V_WLX_CFSF_PRIORALERTSNONDET')
+        BEGIN
+            EXEC('DROP VIEW @env:idw_schema_name@.V_WLX_CFSF_PRIORALERTSNONDET');
+        END;
+    @go@
+    CREATE VIEW @env:idw_schema_name@.V_WLX_CFSF_PRIORALERTSNONDET (
+        ISSUE_KEY,
+        WLX_CFSF_PRIORALERTSNONDET_VL,
+        WLX_CFSF_PRIORALERTSNONDET_SC,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIS.ISSUE_KEY, WCIIS.VALUE, WCIIS.SCORE, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_SF WCIIS INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCI.ISSUE_KEY = WCIIS.ISSUE_KEY
+        WHERE SCORE_FACTOR_ID = 'AML_WLF_CF_SF_priorAlertsNonDet'
+    @go@
+    IF EXISTS(SELECT v.name FROM sys.views v WHERE v.name = 'V_WLX_CFSF_PRIORALERTSNONISSUE')
+        BEGIN
+            EXEC('DROP VIEW @env:idw_schema_name@.V_WLX_CFSF_PRIORALERTSNONISSUE');
+        END;
+    @go@
+    CREATE VIEW @env:idw_schema_name@.V_WLX_CFSF_PRIORALERTSNONISSUE (
+        ISSUE_KEY,
+        WLX_CFSF_PRIORALERTNONISSUE_VL,
+        WLX_CFSF_PRIORALERTNONISSUE_SC,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIS.ISSUE_KEY, WCIIS.VALUE, WCIIS.SCORE, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_SF WCIIS INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCI.ISSUE_KEY = WCIIS.ISSUE_KEY
+        WHERE SCORE_FACTOR_ID = 'AML_WLF_CF_SF_priorAlertsNonIssue'
+    @go@
+    IF EXISTS(SELECT v.name FROM sys.views v WHERE v.name = 'V_WLX_CF_PARTY_ALIAS_INFO')
+        BEGIN
+            EXEC('DROP VIEW @env:idw_schema_name@.V_WLX_CF_PARTY_ALIAS_INFO');
+        END;
+    @go@
+    CREATE VIEW @env:idw_schema_name@.V_WLX_CF_PARTY_ALIAS_INFO (
+        ISSUE_KEY,
+        INSERT_DATE_TIME,
+        PARTY_ALIAS_COUNT,
+        PARTY_ALIASES_PRESENT
+        ) AS
+        SELECT WCI2.ISSUE_KEY , WCI2.INSERT_DATE_TIME , COALESCE (ALIAS_MD.ALIAS_COUNT, 0) AS PARTY_ALIAS_COUNT,
+        CASE
+            WHEN COALESCE(ALIAS_MD.ALIAS_COUNT, 0) > 0 THEN 1
+            ELSE 0
+        END AS PARTY_ALIASES_PRESENT
+        FROM @env:idw_schema_name@.WLX_CF_ISSUES WCI2 LEFT OUTER JOIN
+        (
+        SELECT WCI.ISSUE_KEY AS ISSUE_KEY , COUNT(1) AS ALIAS_COUNT  FROM @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_ALIASES WCIIA
+        ON WCI.ISSUE_KEY = WCIIA.ISSUE_KEY
+        AND WCI.RECORD_TYPE = 'PARTY'
+        AND WCIIA .DISPLAY_NAME <> ''
+        GROUP BY WCI.ISSUE_KEY ) ALIAS_MD
+        ON WCI2.ISSUE_KEY = ALIAS_MD.ISSUE_KEY
+        WHERE WCI2.RECORD_TYPE = 'PARTY'
+    @go@
+]
+[oracle
+    CREATE OR REPLACE VIEW @env:idw_schema_name@.V_WLX_CF_ALIASES_ISSUE(
+        ISSUE_KEY,
+        IS_NAME_BROKEN,
+        MATCH_STRENGTH,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIA.ISSUE_KEY, IS_NAME_BROKEN, MATCH_STRENGTH, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_ALIASES WCIIA
+        INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCIIA.ISSUE_KEY = WCI.ISSUE_KEY
+        WHERE WCI.RECORD_TYPE = 'ISSUE'
+    @go@
+    CREATE OR REPLACE VIEW @env:idw_schema_name@.V_WLX_CF_IDS_PARTY(
+        ISSUE_KEY,
+        PARTY_ID_TYPE,
+        PARTY_ID_COUNTRY,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIII.ISSUE_KEY, ID_TYPE, ID_COUNTRY, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_IDS WCIII
+        INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCIII.ISSUE_KEY = WCI.ISSUE_KEY
+        WHERE WCI.RECORD_TYPE = 'PARTY'
+    @go@
+    CREATE OR REPLACE VIEW @env:idw_schema_name@.V_WLX_CF_ADDRESSES_PARTY(
+        ISSUE_KEY,
+        PARTY_ADDRESS_COUNTRIES,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIII.ISSUE_KEY , WCIII.COUNTRY, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_ADDRESSES WCIII INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCIII.ISSUE_KEY = WCI.ISSUE_KEY
+        WHERE WCI.RECORD_TYPE = 'PARTY'
+    @go@
+    CREATE OR REPLACE VIEW @env:idw_schema_name@.V_WLX_CF_NCOUNTRIES_PARTY(
+        ISSUE_KEY,
+        PARTY_NATIONALITY_COUNTRIES,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIN.ISSUE_KEY , WCIIN.COUNTRY, WCI.INSERT_DATE_TIME  FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_NCOUNTRIES WCIIN INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCIIN.ISSUE_KEY = WCI.ISSUE_KEY
+        WHERE WCI.RECORD_TYPE = 'PARTY'
+    @go@
+    CREATE OR REPLACE VIEW @env:idw_schema_name@.V_WLX_CF_POB_PARTY(
+        ISSUE_KEY,
+        PARTY_POB_COUNTRIES,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIP.ISSUE_KEY , WCIIP.COUNTRY, WCI.INSERT_DATE_TIME  FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_POB WCIIP INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCIIP.ISSUE_KEY = WCI.ISSUE_KEY
+        WHERE WCI.RECORD_TYPE = 'PARTY'
+    @go@
+    CREATE OR REPLACE VIEW @env:idw_schema_name@.V_WLX_CF_DOB_PARTY (
+        ISSUE_KEY,
+        PARTY_YEAR_OF_BIRTH,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIID.ISSUE_KEY , WCIID.YEAR_OF_BIRTH, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_DOB WCIID
+        INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI ON WCIID.ISSUE_KEY = WCI.ISSUE_KEY
+        WHERE WCI.RECORD_TYPE = 'PARTY'
+    @go@
+    CREATE OR REPLACE VIEW @env:idw_schema_name@.V_WLX_CF_ISSUES_PARTY (
+        ISSUE_KEY,
+        PARTY_TYPE,
+        PARTY_AGE,
+        PARTY_REGION,
+        PARTY_POSITION,
+        PARTY_TITLE,
+        PARTY_IS_DECEASED,
+        PARTY_GENDER,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT
+        ISSUE_KEY,
+        ENTRY_TYPE,
+        AGE,
+        REGION,
+        POSITION,
+        TITLE,
+        IS_DECEASED,
+        GENDER,
+        INSERT_DATE_TIME
+        FROM @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        WHERE RECORD_TYPE  = 'PARTY'
+    @go@
+    CREATE OR REPLACE VIEW @env:idw_schema_name@.V_WLX_CF_IDS_ISSUE (
+        ISSUE_KEY,
+        HIT_ID_TYPE,
+        HIT_ID_COUNTRY,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIII.ISSUE_KEY, WCIII.ID_TYPE, WCIII.ID_COUNTRY, WCI.INSERT_DATE_TIME  FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_IDS WCIII INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCIII.ISSUE_KEY = WCI.ISSUE_KEY
+        WHERE WCI.RECORD_TYPE  = 'ISSUE'
+    @go@
+    CREATE OR REPLACE VIEW @env:idw_schema_name@.V_WLX_CF_NCOUNTRIES_ISSUE (
+        ISSUE_KEY,
+        HIT_NATIONALITY_COUNTRIES,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIN.ISSUE_KEY , WCIIN.COUNTRY, WCI.INSERT_DATE_TIME  FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_NCOUNTRIES WCIIN INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCIIN.ISSUE_KEY = WCI.ISSUE_KEY
+        WHERE WCI.RECORD_TYPE = 'ISSUE'
+    @go@
+    CREATE OR REPLACE VIEW @env:idw_schema_name@.V_WLX_CF_POB_ISSUE(
+        ISSUE_KEY,
+        HIT_POB_COUNTRIES,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIP.ISSUE_KEY , WCIIP.COUNTRY, WCI.INSERT_DATE_TIME  FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_POB WCIIP INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCIIP.ISSUE_KEY = WCI.ISSUE_KEY
+        WHERE WCI.RECORD_TYPE = 'ISSUE'
+    @go@
+    CREATE OR REPLACE VIEW @env:idw_schema_name@.V_WLX_CF_ADDRESSES_ISSUE(
+        ISSUE_KEY,
+        HIT_ADDRESS_COUNTRIES,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIII.ISSUE_KEY , WCIII.COUNTRY, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_ADDRESSES WCIII INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCIII.ISSUE_KEY = WCI.ISSUE_KEY
+        WHERE WCI.RECORD_TYPE = 'ISSUE'
+    @go@
+    CREATE OR REPLACE VIEW @env:idw_schema_name@.V_WLX_CF_DOB_ISSUE (
+        ISSUE_KEY,
+        HIT_YEAR_OF_BIRTH,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIID.ISSUE_KEY , WCIID.YEAR_OF_BIRTH, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_DOB WCIID
+        INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI ON WCIID.ISSUE_KEY = WCI.ISSUE_KEY
+        WHERE WCI.RECORD_TYPE = 'ISSUE'
+    @go@
+    CREATE OR REPLACE VIEW @env:idw_schema_name@.V_WLX_CF_ISSUES_ISSUE (
+        ISSUE_KEY,
+        HIT_GENDER,
+        LIST,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT
+        ISSUE_KEY,
+        GENDER,
+        LIST_NAME,
+        INSERT_DATE_TIME
+        FROM @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        WHERE RECORD_TYPE  = 'ISSUE'
+    @go@
+    CREATE OR REPLACE VIEW @env:idw_schema_name@.V_WLX_CF_KEYWORDS_ISSUE (
+        ISSUE_KEY,
+        HIT_KEYWORDS,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIK.ISSUE_KEY , WCIIK.KEYWORD, INSERT_DATE_TIME  FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_KEYWORDS WCIIK  INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCIIK.ISSUE_KEY = WCI.ISSUE_KEY
+        WHERE WCI.RECORD_TYPE = 'ISSUE'
+    @go@
+    CREATE OR REPLACE VIEW @env:idw_schema_name@.V_WLX_CF_CATEGORY_ISSUE (
+        ISSUE_KEY,
+        HIT_CATEGORIES,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIC.ISSUE_KEY , WCIIC.CATEGORY, WCI.INSERT_DATE_TIME  FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_CATEGORY WCIIC  INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCIIC.ISSUE_KEY = WCI.ISSUE_KEY
+        WHERE WCI.RECORD_TYPE = 'ISSUE'
+    @go@
+    CREATE OR REPLACE VIEW @env:idw_schema_name@.V_WLX_CF_SF_MATCHINGENGINE (
+        ISSUE_KEY,
+        WLX_CFSF_MATCHINGENGINE_VL,
+        WLX_CFSF_MATCHINGENGINE_SC,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIS.ISSUE_KEY, VALUE, WCIIS.SCORE, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_SF WCIIS INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCI.ISSUE_KEY = WCIIS.ISSUE_KEY
+        WHERE SCORE_FACTOR_ID = 'AML_WLF_CF_SF_matchingEngine'
+    @go@
+    CREATE OR REPLACE VIEW @env:idw_schema_name@.V_WLF_CF_MATCHES_ISSUE (
+        ISSUE_KEY,
+        INPUT_MATCHED_FIELD,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIM.ISSUE_KEY , WCIIM.INPUT_MATCHED_FIELD, WCI.INSERT_DATE_TIME  FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_MATCHES WCIIM INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCIIM.ISSUE_KEY = WCI.ISSUE_KEY
+        WHERE WCI.RECORD_TYPE = 'ISSUE'
+    @go@
+    CREATE OR REPLACE VIEW @env:idw_schema_name@.V_WLX_CFSF_IDMATCH (
+        ISSUE_KEY,
+        WLX_CFSF_IDMATCH_VL,
+        WLX_CFSF_IDMATCH_SC,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIS.ISSUE_KEY, WCIIS.VALUE, WCIIS.SCORE, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_SF WCIIS INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCI.ISSUE_KEY = WCIIS.ISSUE_KEY
+        WHERE SCORE_FACTOR_ID = 'AML_WLF_CF_SF_idMatch'
+    @go@
+    CREATE OR REPLACE VIEW @env:idw_schema_name@.V_WLX_CFSF_LOWQUALITYALIASES (
+        ISSUE_KEY,
+        WLX_CFSF_LOWQUALITYALIASES_VL,
+        WLX_CFSF_LOWQUALITYALIASES_SC,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIS.ISSUE_KEY, WCIIS.VALUE, WCIIS.SCORE, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_SF WCIIS INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCI.ISSUE_KEY = WCIIS.ISSUE_KEY
+        WHERE SCORE_FACTOR_ID = 'AML_WLF_CF_SF_lowQualityAliases'
+    @go@
+    CREATE OR REPLACE VIEW @env:idw_schema_name@.V_WLX_CFSF_COUNTRYMATCH (
+        ISSUE_KEY,
+        WLX_CFSF_COUNTRYMATCH_VL,
+        WLX_CFSF_COUNTRYMATCH_SC,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIS.ISSUE_KEY, WCIIS.VALUE, WCIIS.SCORE, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_SF WCIIS INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCI.ISSUE_KEY = WCIIS.ISSUE_KEY
+        WHERE SCORE_FACTOR_ID = 'AML_WLF_CF_SF_countryMatch'
+    @go@
+    CREATE OR REPLACE VIEW @env:idw_schema_name@.V_WLX_CF_ISSUE_ITEM_SF_NUMBEROFKEYWORDS (
+        ISSUE_KEY,
+        AML_WLF_CF_SF_NUMBEROFKEYWORDS_VALUE,
+        AML_WLF_CF_SF_NUMBEROFKEYWORDS_SCORE,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIS.ISSUE_KEY, WCIIS.VALUE, WCIIS.SCORE, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_SF WCIIS INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCI.ISSUE_KEY = WCIIS.ISSUE_KEY
+        WHERE SCORE_FACTOR_ID = 'AML_WLF_CF_SF_numberOfKeywords'
+    @go@
+    CREATE OR REPLACE VIEW @env:idw_schema_name@.V_WLX_CFSF_NUMBEROFKEYWORDS (
+        ISSUE_KEY,
+        WLX_CFSF_NUMBEROFKEYWORDS_VL,
+        WLX_CFSF_NUMBEROFKEYWORDS_SC,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIS.ISSUE_KEY, WCIIS.VALUE, WCIIS.SCORE, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_SF WCIIS INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCI.ISSUE_KEY = WCIIS.ISSUE_KEY
+        WHERE SCORE_FACTOR_ID = 'AML_WLF_CF_SF_LowRiskCategories'
+    @go@
+    CREATE OR REPLACE VIEW @env:idw_schema_name@.V_WLX_CFSF_LOWRISKCATEGORIES (
+        ISSUE_KEY,
+        WLX_CFSF_LOWRISKCATEGORIES_VL,
+        WLX_CFSF_LOWRISKCATEGORIES_SC,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIS.ISSUE_KEY, WCIIS.VALUE, WCIIS.SCORE, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_SF WCIIS INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCI.ISSUE_KEY = WCIIS.ISSUE_KEY
+        WHERE SCORE_FACTOR_ID = 'AML_WLF_CF_SF_LowRiskKeywords'
+    @go@
+    CREATE OR REPLACE VIEW @env:idw_schema_name@.V_WLX_CFSF_LOWRISKKEYWORDS (
+        ISSUE_KEY,
+        WLX_CFSF_LOWRISKKEYWORDS_VL,
+        WLX_CFSF_LOWRISKKEYWORDS_SC,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIS.ISSUE_KEY, WCIIS.VALUE, WCIIS.SCORE, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_SF WCIIS INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCI.ISSUE_KEY = WCIIS.ISSUE_KEY
+        WHERE SCORE_FACTOR_ID = 'AML_WLF_CF_SF_LowRiskKeywords'
+    @go@
+    CREATE OR REPLACE VIEW @env:idw_schema_name@.V_WLX_CFSF_SINGLETOKENMATCH (
+        ISSUE_KEY,
+        WLX_CFSF_SINGLETOKENMATCH_VL,
+        WLX_CFSF_SINGLETOKENMATCH_SC,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIS.ISSUE_KEY, WCIIS.VALUE, WCIIS.SCORE, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_SF WCIIS INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCI.ISSUE_KEY = WCIIS.ISSUE_KEY
+        WHERE SCORE_FACTOR_ID = 'AML_WLF_CF_SF_singleTokenMatch'
+    @go@
+    CREATE OR REPLACE VIEW @env:idw_schema_name@.V_WLX_CFSF_ORGEXACTMATCH (
+        ISSUE_KEY,
+        WLX_CFSF_ORGEXACTMATCH_VL,
+        WLX_CFSF_ORGEXACTMATCH_SC,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIS.ISSUE_KEY, WCIIS.VALUE, WCIIS.SCORE, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_SF WCIIS INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCI.ISSUE_KEY = WCIIS.ISSUE_KEY
+        WHERE SCORE_FACTOR_ID = 'AML_WLF_CF_SF_orgExactMatch'
+    @go@
+    CREATE OR REPLACE VIEW @env:idw_schema_name@.V_WLX_CFSF_PERSONEXACTMATCH (
+        ISSUE_KEY,
+        WLX_CFSF_PERSONEXACTMATCH_VL,
+        WLX_CFSF_PERSONEXACTMATCH_SC,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIS.ISSUE_KEY, WCIIS.VALUE, WCIIS.SCORE, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_SF WCIIS INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCI.ISSUE_KEY = WCIIS.ISSUE_KEY
+        WHERE SCORE_FACTOR_ID = 'AML_WLF_CF_SF_personExactMatch'
+    @go@
+    CREATE OR REPLACE VIEW @env:idw_schema_name@.V_WLX_CFSF_LOCALCOUNTRY (
+        ISSUE_KEY,
+        WLX_CFSF_LOCALCOUNTRY_VL,
+        WLX_CFSF_LOCALCOUNTRY_SC,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIS.ISSUE_KEY, WCIIS.VALUE, WCIIS.SCORE, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_SF WCIIS INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCI.ISSUE_KEY = WCIIS.ISSUE_KEY
+        WHERE SCORE_FACTOR_ID = 'AML_WLF_CF_SF_localCountry'
+    @go@
+    CREATE OR REPLACE VIEW @env:idw_schema_name@.V_WLX_CFSF_YEAROFBIRTHMATCH (
+        ISSUE_KEY,
+        WLX_CFSF_YEAROFBIRTHMATCH_VL,
+        WLX_CFSF_YEAROFBIRTHMATCH_SC,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIS.ISSUE_KEY, WCIIS.VALUE, WCIIS.SCORE, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_SF WCIIS INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCI.ISSUE_KEY = WCIIS.ISSUE_KEY
+        WHERE SCORE_FACTOR_ID = 'AML_WLF_CF_SF_yearOfBirthMatch'
+    @go@
+    CREATE OR REPLACE VIEW @env:idw_schema_name@.V_WLX_CFSF_GENDERMATCH (
+        ISSUE_KEY,
+        WLX_CFSF_GENDERMATCH_VL,
+        WLX_CFSF_GENDERMATCH_SC,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIS.ISSUE_KEY, WCIIS.VALUE, WCIIS.SCORE, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_SF WCIIS INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCI.ISSUE_KEY = WCIIS.ISSUE_KEY
+        WHERE SCORE_FACTOR_ID = 'AML_WLF_CF_SF_genderMatch'
+    @go@
+    CREATE OR REPLACE VIEW @env:idw_schema_name@.V_WLX_CFSF_PRIORHITSFREQ (
+        ISSUE_KEY,
+        WLX_CFSF_PRIORHITSFREQ_VL,
+        WLX_CFSF_PRIORHITSFREQ_SC,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIS.ISSUE_KEY, WCIIS.VALUE, WCIIS.SCORE, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_SF WCIIS INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCI.ISSUE_KEY = WCIIS.ISSUE_KEY
+        WHERE SCORE_FACTOR_ID = 'AML_WLF_CF_SF_priorHitsFreq'
+    @go@
+    CREATE OR REPLACE VIEW @env:idw_schema_name@.V_WLX_CFSF_PRIORHITSISSUE (
+        ISSUE_KEY,
+        WLX_CFSF_PRIORHITSISSUE_VL,
+        WLX_CFSF_PRIORHITSISSUE_SC,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIS.ISSUE_KEY, WCIIS.VALUE, WCIIS.SCORE, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_SF WCIIS INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCI.ISSUE_KEY = WCIIS.ISSUE_KEY
+        WHERE SCORE_FACTOR_ID = 'AML_WLF_CF_SF_priorHitsIssue'
+    @go@
+    CREATE OR REPLACE VIEW @env:idw_schema_name@.V_WLX_CFSF_PRIORHITSNONISSUE (
+        ISSUE_KEY,
+        WLX_CFSF_PRIORHITSNONISSUE_VL,
+        WLX_CFSF_PRIORHITSNONISSUE_SC,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIS.ISSUE_KEY, WCIIS.VALUE, WCIIS.SCORE, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_SF WCIIS INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCI.ISSUE_KEY = WCIIS.ISSUE_KEY
+        WHERE SCORE_FACTOR_ID = 'AML_WLF_CF_SF_priorHitsNonIssue'
+    @go@
+    CREATE OR REPLACE VIEW @env:idw_schema_name@.V_WLX_CFSF_PRIORHITSNONDET (
+        ISSUE_KEY,
+        WLX_CFSF_PRIORHITSNONDET_VL,
+        WLX_CFSF_PRIORHITSNONDET_SC,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIS.ISSUE_KEY, WCIIS.VALUE, WCIIS.SCORE, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_SF WCIIS INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCI.ISSUE_KEY = WCIIS.ISSUE_KEY
+        WHERE SCORE_FACTOR_ID = 'AML_WLF_CF_SF_priorHitsNonDet'
+    @go@
+    CREATE OR REPLACE VIEW @env:idw_schema_name@.V_WLX_CFSF_EDITDISTANCEMATCH (
+        ISSUE_KEY,
+        WLX_CFSF_EDITDISTANCEMATCH_VL,
+        WLX_CFSF_EDITDISTANCEMATCH_SC,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIS.ISSUE_KEY, WCIIS.VALUE, WCIIS.SCORE, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_SF WCIIS INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCI.ISSUE_KEY = WCIIS.ISSUE_KEY
+        WHERE SCORE_FACTOR_ID = 'AML_WLF_CF_SF_editDistanceMatch'
+    @go@
+    CREATE OR REPLACE VIEW @env:idw_schema_name@.V_WLX_CFSF_INITIALHITSNUMBER (
+        ISSUE_KEY,
+        WLX_CFSF_INITIALHITSNUMBER_VL,
+        WLX_CFSF_INITIALHITSNUMBER_SC,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIS.ISSUE_KEY, WCIIS.VALUE, WCIIS.SCORE, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_SF WCIIS INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCI.ISSUE_KEY = WCIIS.ISSUE_KEY
+        WHERE SCORE_FACTOR_ID = 'AML_WLF_CF_SF_initialHitsNumber'
+    @go@
+    CREATE OR REPLACE VIEW @env:idw_schema_name@.V_WLX_CFSF_ISORGANIZATION (
+        ISSUE_KEY,
+        WLX_CFSF_ISORGANIZATION_VL,
+        WLX_CFSF_ISORGANIZATION_SC,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIS.ISSUE_KEY, WCIIS.VALUE, WCIIS.SCORE, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_SF WCIIS INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCI.ISSUE_KEY = WCIIS.ISSUE_KEY
+        WHERE SCORE_FACTOR_ID = 'AML_WLF_CF_SF_isOrganization'
+    @go@
+    CREATE OR REPLACE VIEW @env:idw_schema_name@.V_WLX_CFSF_PRIORALERTSISSUE (
+        ISSUE_KEY,
+        WLX_CFSF_PRIORALERTSISSUE_VL,
+        WLX_CFSF_PRIORALERTSISSUE_SC,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIS.ISSUE_KEY, WCIIS.VALUE, WCIIS.SCORE, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_SF WCIIS INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCI.ISSUE_KEY = WCIIS.ISSUE_KEY
+        WHERE SCORE_FACTOR_ID = 'AML_WLF_CF_SF_priorAlertsIssue'
+    @go@
+    CREATE OR REPLACE VIEW @env:idw_schema_name@.V_WLX_CFSF_PRIORALERTSNONDET (
+        ISSUE_KEY,
+        WLX_CFSF_PRIORALERTSNONDET_VL,
+        WLX_CFSF_PRIORALERTSNONDET_SC,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIS.ISSUE_KEY, WCIIS.VALUE, WCIIS.SCORE, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_SF WCIIS INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCI.ISSUE_KEY = WCIIS.ISSUE_KEY
+        WHERE SCORE_FACTOR_ID = 'AML_WLF_CF_SF_priorAlertsNonDet'
+    @go@
+    CREATE OR REPLACE VIEW @env:idw_schema_name@.V_WLX_CFSF_PRIORALERTSNONISSUE (
+        ISSUE_KEY,
+        WLX_CFSF_PRIORALERTNONISSUE_VL,
+        WLX_CFSF_PRIORALERTNONISSUE_SC,
+        INSERT_DATE_TIME
+        ) AS
+        SELECT WCIIS.ISSUE_KEY, WCIIS.VALUE, WCIIS.SCORE, WCI.INSERT_DATE_TIME FROM @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_SF WCIIS INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        ON WCI.ISSUE_KEY = WCIIS.ISSUE_KEY
+        WHERE SCORE_FACTOR_ID = 'AML_WLF_CF_SF_priorAlertsNonIssue'
+    @go@
+    CREATE OR REPLACE VIEW @env:idw_schema_name@.V_WLX_CF_PARTY_ALIAS_INFO (
+        ISSUE_KEY,
+        INSERT_DATE_TIME,
+        PARTY_ALIAS_COUNT,
+        PARTY_ALIASES_PRESENT
+        ) AS
+        SELECT WCI2.ISSUE_KEY , WCI2.INSERT_DATE_TIME , COALESCE (ALIAS_MD.ALIAS_COUNT, 0) AS PARTY_ALIAS_COUNT,
+        CASE
+            WHEN COALESCE(ALIAS_MD.ALIAS_COUNT, 0) > 0 THEN 1
+            ELSE 0
+        END AS PARTY_ALIASES_PRESENT
+        FROM @env:idw_schema_name@.WLX_CF_ISSUES WCI2 LEFT OUTER JOIN
+        (
+        SELECT WCI.ISSUE_KEY AS ISSUE_KEY , COUNT(1) AS ALIAS_COUNT  FROM @env:idw_schema_name@.WLX_CF_ISSUES WCI
+        INNER JOIN @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_ALIASES WCIIA
+        ON WCI.ISSUE_KEY = WCIIA.ISSUE_KEY
+        AND WCI.RECORD_TYPE = 'PARTY'
+        AND WCIIA .DISPLAY_NAME <> ''
+        GROUP BY WCI.ISSUE_KEY ) ALIAS_MD
+        ON WCI2.ISSUE_KEY = ALIAS_MD.ISSUE_KEY
+        WHERE WCI2.RECORD_TYPE = 'PARTY'
+    @go@
+]
+}
+version 10.1.0.66 add {
+}
+version 10.1.0.67 add {
+}
+version 10.1.0.68 add {
+[mssql
+    ALTER TABLE @env:idw_schema_name@.WLX_MS_ISSUES
+    ALTER COLUMN MESSAGE_REF_NUMBER @ustring@(255) NULL
+    @go@
+]
+}
+version 10.1.0.69 add {
+}
+version 10.1.0.70 add {
+}
+version 10.1.0.71 add {
+[mssql
+	IF NOT EXISTS (SELECT * FROM sys.partition_functions WHERE name = N'PFN_WLX_PSC_RESULTS')
+	CREATE PARTITION FUNCTION [PFN_WLX_PSC_RESULTS](@datetime@) AS RANGE RIGHT FOR VALUES (N'2000-01-02 00:00:00')
+	@go@
+
+	IF NOT EXISTS (SELECT * FROM sys.partition_schemes WHERE name = N'PFN_WLX_PSC_RESULTS')
+	CREATE PARTITION SCHEME [PFN_WLX_PSC_RESULTS] AS PARTITION [PFN_WLX_PSC_RESULTS] TO ([PRIMARY], [PRIMARY])
+	@go@
+]
+[oracle
+        DECLARE
+        n NUMBER(2);
+        j NUMBER(2);
+        BEGIN
+        SELECT COUNT(*) INTO n FROM USER_TABLES WHERE TABLE_NAME='WLX_PSC_RESULTS';
+        if n = 0 THEN
+        EXECUTE IMMEDIATE'
+]
+[mssql
+        if not exists (select * from dbo.sysobjects where id = object_id('WLX_PSC_RESULTS') and type='U')
+        begin
+        exec ('
+]
+	CREATE TABLE @env:idw_schema_name@.WLX_PSC_RESULTS
+	(
+		RESULT_KEY			            @ustring@(50)	NOT NULL,
+		PARTITION_DATE_TIME	            @datetime@		NOT NULL,
+		INSERT_DATE_TIME	            @datetime@		NOT NULL,
+		TENANT_CD 			            @ustring@(50) DEFAULT(''N/A'') NOT NULL,
+		ALERT_ID			            @ustring@(50)	NOT NULL,
+		ISSUE_KEY 			            @ustring@(50)	NOT NULL,
+		SCORE				            @float@			NULL,
+		IS_SKIPPED 						@tinyint@
+		)
+		@storage_params_insert_update @env:idw_table_tablespace@ default@
+[mssql
+	ON PFN_WLX_PSC_RESULTS (PARTITION_DATE_TIME)
+
+]
+[oracle
+	PARTITION BY RANGE (PARTITION_DATE_TIME) INTERVAL(INTERVAL ''1'' DAY)
+	(PARTITION P0 VALUES LESS THAN (TO_DATE(''02/01/2000'',''DD/MM/YYYY'')))
+	NOLOGGING
+]
+
+[oracle
+        ';
+        END IF;
+        END;
+]
+[mssql
+        ')
+        end
+]
+
+	@go@
+
+[oracle
+	ALTER TABLE @env:idw_schema_name@.WLX_PSC_RESULTS ENABLE ROW MOVEMENT;
+	@go@
+]
+[oracle
+        DECLARE
+        n NUMBER(2);
+        j NUMBER(2);
+        BEGIN
+        SELECT COUNT(*) INTO j FROM USER_CONSTRAINTS WHERE
+        TABLE_NAME = 'WLX_PSC_RESULTS' AND CONSTRAINT_NAME = 'PK_WLX_PSC_RESULTS' ;
+        IF j = 0 THEN
+        EXECUTE IMMEDIATE '
+]
+[mssql
+       if not exists (select * from sysconstraints c, sysobjects o1, sysobjects o2
+       where c.id = o1.id and c.constid = o2.id and
+       o1.name = 'WLX_PSC_RESULTS' and
+       o2.name = 'PK_WLX_PSC_RESULTS')
+       begin
+       EXEC ('
+]
+	ALTER TABLE @env:idw_schema_name@.WLX_PSC_RESULTS ADD
+		CONSTRAINT PK_WLX_PSC_RESULTS PRIMARY KEY @nonclustered@(
+			PARTITION_DATE_TIME,
+			RESULT_KEY
+	)
+	@storage_primary_insert_update @env:idw_index_tablespace@ default@
+[oracle
+        ';
+         END IF;
+          END;
+]
+[mssql
+        ')
+        end
+]
+	@go@
+
+[oracle
+        DECLARE
+        n NUMBER(2);
+        j NUMBER(2);
+        BEGIN
+        SELECT COUNT(*) INTO n FROM USER_INDEXES WHERE INDEX_NAME='IX_WLX_PSC_RESULTS';
+        if n = 0 THEN
+        EXECUTE IMMEDIATE '
+]
+[mssql
+        IF NOT EXISTS (SELECT * FROM sysindexes
+        WHERE id = object_id('WLX_PSC_RESULTS') AND name = 'IX_WLX_PSC_RESULTS' )
+        BEGIN
+        exec ('
+]
+	CREATE INDEX IX_WLX_PSC_RESULTS ON @env:idw_schema_name@.WLX_PSC_RESULTS (ALERT_ID)
+    @storage_index_insert_update @env:tablespace_index@ default@
+[oracle
+        ';
+        END IF;
+        END;
+]
+[mssql
+        ')
+        END
+]
+	@go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_PSC_RESULTS TO @env:idw_read_role@
+    @go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_PSC_RESULTS TO @env:idw_app_read_role@
+    @go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_PSC_RESULTS TO @env:idw_write_role@
+    @go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_PSC_RESULTS TO @env:idw_app_write_role@
+    @go@
+
+[mssql
+	IF NOT EXISTS (SELECT * FROM sys.partition_functions WHERE name = N'PFN_WLX_PSE_RESULTS')
+	CREATE PARTITION FUNCTION [PFN_WLX_PSE_RESULTS](@datetime@) AS RANGE RIGHT FOR VALUES (N'2000-01-02 00:00:00')
+	@go@
+
+	IF NOT EXISTS (SELECT * FROM sys.partition_schemes WHERE name = N'PFN_WLX_PSE_RESULTS')
+	CREATE PARTITION SCHEME [PFN_WLX_PSE_RESULTS] AS PARTITION [PFN_WLX_PSE_RESULTS] TO ([PRIMARY], [PRIMARY])
+	@go@
+]
+
+[oracle
+        DECLARE
+        n NUMBER(2);
+        j NUMBER(2);
+        BEGIN
+        SELECT COUNT(*) INTO n FROM USER_TABLES WHERE TABLE_NAME='WLX_PSE_RESULTS';
+        if n = 0 THEN
+        EXECUTE IMMEDIATE'
+]
+[mssql
+        if not exists (select * from dbo.sysobjects where id = object_id('WLX_PSE_RESULTS') and type='U')
+        begin
+        exec ('
+]
+	CREATE TABLE @env:idw_schema_name@.WLX_PSE_RESULTS
+	(
+		RESULT_KEY			@ustring@(50)	NOT NULL,
+		PARENT_RESULT_KEY   @ustring@(50)    NOT NULL,
+		PARTITION_DATE_TIME	@datetime@		NOT NULL,
+		INSERT_DATE_TIME	@datetime@		NOT NULL,
+		TENANT_CD 			@ustring@(50) DEFAULT(''N/A'') NOT NULL,
+		ALERT_ID			@ustring@(50)	NOT NULL,
+		ISSUE_KEY 			@ustring@(50)	NOT NULL,
+		SCORE				@float@			NULL,
+		EVIDENCE_NAME		@ustring@(200)	NULL,
+		EVIDENCE_VALUE		@ustring@(200)	NULL,
+		EVIDENCE_DESC		@ustring@(4000)	NULL,
+		EVIDENCE_DESC_ID	@ustring@(590)	NULL,
+		EVIDENCE_CONTRIBUTION	@float@		NULL
+	)
+	@storage_params_insert_update @env:idw_table_tablespace@ default@
+[mssql
+	ON PFN_WLX_PSE_RESULTS (PARTITION_DATE_TIME)
+]
+[oracle
+	PARTITION BY RANGE (PARTITION_DATE_TIME) INTERVAL(INTERVAL ''1'' DAY)
+	(PARTITION P0 VALUES LESS THAN (TO_DATE(''02/01/2000'',''DD/MM/YYYY'')))
+	NOLOGGING
+]
+[oracle
+        ';
+        END IF;
+        END;
+]
+[mssql
+        ')
+        end
+]
+
+	@go@
+
+[oracle
+	ALTER TABLE @env:idw_schema_name@.WLX_PSE_RESULTS ENABLE ROW MOVEMENT;
+	@go@
+]
+
+[oracle
+        DECLARE
+        n NUMBER(2);
+        j NUMBER(2);
+        BEGIN
+        SELECT COUNT(*) INTO j FROM USER_CONSTRAINTS WHERE
+        TABLE_NAME = 'WLX_PSE_RESULTS' AND CONSTRAINT_NAME = 'PK_WLX_PSE_RESULTS' ;
+        IF j = 0 THEN
+        EXECUTE IMMEDIATE '
+]
+[mssql
+       if not exists (select * from sysconstraints c, sysobjects o1, sysobjects o2
+       where c.id = o1.id and c.constid = o2.id and
+       o1.name = 'WLX_PSE_RESULTS' and
+       o2.name = 'PK_WLX_PSE_RESULTS')
+       begin
+       EXEC ('
+]
+	ALTER TABLE @env:idw_schema_name@.WLX_PSE_RESULTS ADD
+		CONSTRAINT PK_WLX_PSE_RESULTS PRIMARY KEY @nonclustered@(
+			PARTITION_DATE_TIME,
+			RESULT_KEY
+	)
+	@storage_primary_insert_update @env:idw_index_tablespace@ default@
+[oracle
+        ';
+         END IF;
+          END;
+]
+[mssql
+        ')
+        end
+]
+	@go@
+
+[oracle
+        DECLARE
+        n NUMBER(2);
+        j NUMBER(2);
+        BEGIN
+        SELECT COUNT(*) INTO n FROM USER_INDEXES WHERE INDEX_NAME='IX_WLX_PSE_RESULTS_ALERT_ID';
+        if n = 0 THEN
+        EXECUTE IMMEDIATE '
+]
+[mssql
+        IF NOT EXISTS (SELECT * FROM sysindexes
+        WHERE id = object_id('WLX_PSE_RESULTS') AND name = 'IX_WLX_PSE_RESULTS_ALERT_ID' )
+        BEGIN
+        exec ('
+]
+	CREATE INDEX IX_WLX_PSE_RESULTS_ALERT_ID ON @env:idw_schema_name@.WLX_PSE_RESULTS (ALERT_ID)
+	@storage_index_insert_update @env:tablespace_index@ default@
+[oracle
+        ';
+        END IF;
+        END;
+]
+[mssql
+        ')
+        END
+]
+	@go@
+[oracle
+        DECLARE
+        n NUMBER(2);
+        j NUMBER(2);
+        BEGIN
+        SELECT COUNT(*) INTO n FROM USER_INDEXES WHERE INDEX_NAME='IX_WLX_PSE_RESULTS_PRK';
+        if n = 0 THEN
+        EXECUTE IMMEDIATE '
+]
+[mssql
+        IF NOT EXISTS (SELECT * FROM sysindexes
+        WHERE id = object_id('WLX_PSE_RESULTS') AND name = 'IX_WLX_PSE_RESULTS_PRK' )
+        BEGIN
+        exec ('
+]
+	CREATE INDEX IX_WLX_PSE_RESULTS_PRK ON @env:idw_schema_name@.WLX_PSE_RESULTS (PARENT_RESULT_KEY)
+	@storage_index_insert_update @env:tablespace_index@ default@
+[oracle
+        ';
+        END IF;
+        END;
+]
+[mssql
+        ')
+        END
+]
+	@go@
+	GRANT SELECT ON @env:idw_schema_name@.WLX_PSE_RESULTS TO @env:idw_read_role@
+    @go@
+    GRANT SELECT ON @env:idw_schema_name@.WLX_PSE_RESULTS TO @env:idw_app_read_role@
+    @go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_PSE_RESULTS TO @env:idw_write_role@
+    @go@
+    GRANT UPDATE, INSERT, DELETE ON @env:idw_schema_name@.WLX_PSE_RESULTS TO @env:idw_app_write_role@
+    @go@
+
+[mssql
+    IF EXISTS(SELECT v.name FROM sys.views v WHERE v.name = 'V_WLX_PRED_SCORE_DETAILS')
+    BEGIN
+        EXEC('DROP VIEW @env:idw_schema_name@.V_WLX_PRED_SCORE_DETAILS');
+    END;
+    @go@
+    CREATE VIEW @env:idw_schema_name@.V_WLX_PRED_SCORE_DETAILS(
+     ALERT_ID,
+     ISSUE_KEY,
+     PREDICTIVE_SCORE,
+     EVIDENCE_DESC,
+     EVIDENCE_DESC_ID,
+     EVIDENCE_CONTRIBUTION,
+     EVIDENCE_SCORE,
+     IS_SKIPPED
+     ) AS
+]
+[oracle
+    CREATE OR REPLACE VIEW @env:idw_schema_name@.V_WLX_PRED_SCORE_DETAILS(
+      ALERT_ID,
+      ISSUE_KEY,
+      PREDICTIVE_SCORE,
+      EVIDENCE_DESC,
+      EVIDENCE_DESC_ID,
+      EVIDENCE_CONTRIBUTION,
+      EVIDENCE_SCORE,
+      IS_SKIPPED
+      ) AS
+]
+    SELECT
+     PSC.ALERT_ID,
+     PSC.ISSUE_KEY,
+     PSC.SCORE AS PREDICTIVE_SCORE,
+     PSE.EVIDENCE_DESC,
+     PSE.EVIDENCE_DESC_ID,
+     PSE.EVIDENCE_CONTRIBUTION,
+     PSE.SCORE AS EVIDENCE_SCORE,
+     PSC.IS_SKIPPED
+    FROM
+     @env:idw_schema_name@.WLX_PSC_RESULTS PSC
+    LEFT JOIN
+     @env:idw_schema_name@.WLX_PSE_RESULTS PSE
+    ON
+     PSC.RESULT_KEY = PSE.PARENT_RESULT_KEY
+    WHERE
+     PSC.PARTITION_DATE_TIME = (
+      SELECT
+       MAX(PARTITION_DATE_TIME)
+      FROM
+       @env:idw_schema_name@.WLX_PSC_RESULTS PSC2
+      WHERE
+       PSC2.ALERT_ID = PSC.ALERT_ID
+       AND PSC2.ISSUE_KEY = PSC.ISSUE_KEY
+      )
+    @go@
+}
+version 10.1.0.72 add {
+}
+version 10.1.0.73 add {
+}
+version 10.1.0.74 add {
+}
+version 10.1.0.75 add {
+[mssql
+    ALTER TABLE @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_ADDRESSES ALTER COLUMN STREET_ADDR1 @ustring@(1000);
+
+
+    ALTER TABLE @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_ADDRESSES ALTER COLUMN STREET_ADDR2 @ustring@(1000);
+
+]
+[oracle
+    ALTER TABLE @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_ADDRESSES MODIFY STREET_ADDR1 @ustring@(1000);
+    ALTER TABLE @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_ADDRESSES MODIFY STREET_ADDR2 @ustring@(1000);
+
+]
+}
+version 10.1.0.76 add {
+}
+version 10.1.0.77 add {
+}
+version 10.1.0.78 add {
+}
+version 10.1.0.79 add {
+}
+version 10.1.0.80 add {
+}
+version 10.1.0.81 add {
+[oracle
+
+    ALTER TABLE @env:idw_schema_name@.WLX_MS_ISSUES ADD MESSAGE_REF_NUMBER_1 @ustring@(255)
+    @go@
+    UPDATE @env:idw_schema_name@.WLX_MS_ISSUES SET MESSAGE_REF_NUMBER_1 = MESSAGE_REF_NUMBER
+    @go@
+    ALTER table @env:idw_schema_name@.WLX_MS_ISSUES DROP COLUMN MESSAGE_REF_NUMBER
+    @go@
+    ALTER TABLE @env:idw_schema_name@.WLX_MS_ISSUES RENAME COLUMN MESSAGE_REF_NUMBER_1 TO MESSAGE_REF_NUMBER
+    @go@
+
+    ALTER TABLE @env:idw_schema_name@.WLX_MS_ISSUES @modify@(
+    MESSAGE_SOURCE_TYPE INVISIBLE,
+    MESSAGE_TYPE_CD INVISIBLE,
+    MESSAGE_DATE_TIME INVISIBLE,
+    AMOUNT INVISIBLE,
+    CURRENCY_CD INVISIBLE,
+    PRODUCT_KEY INVISIBLE,
+    MESSAGE_DIRECTION INVISIBLE,
+    MESSAGE_INSTRUCTIONS INVISIBLE,
+    ADDITIONAL_MESSAGE_TEXT INVISIBLE,
+    MESSAGE_TEXT INVISIBLE,
+    FI_TO_FI_INFO INVISIBLE,
+    AGE INVISIBLE,
+    AGE_AS_OF_DATE INVISIBLE,
+    MX_MESSAGE_DETAILS INVISIBLE,
+    CUSTOM_FIELD_1 INVISIBLE,
+    CUSTOM_FIELD_2 INVISIBLE,
+    CUSTOM_FIELD_3 INVISIBLE,
+    CUSTOM_FIELD_4 INVISIBLE,
+    CUSTOM_FIELD_5 INVISIBLE,
+    CUSTOM_FIELD_6 INVISIBLE,
+    CUSTOM_FIELD_7 INVISIBLE,
+    CUSTOM_FIELD_8 INVISIBLE,
+    CUSTOM_FIELD_9 INVISIBLE,
+    CUSTOM_FIELD_10 INVISIBLE,
+    CUSTOM_FIELD_11 INVISIBLE,
+    CUSTOM_FIELD_12 INVISIBLE,
+    CUSTOM_FIELD_13 INVISIBLE,
+    CUSTOM_FIELD_14 INVISIBLE,
+    CUSTOM_FIELD_15 INVISIBLE,
+    CUSTOM_FIELD_16 INVISIBLE,
+    CUSTOM_FIELD_17 INVISIBLE,
+    CUSTOM_FIELD_18 INVISIBLE,
+    CUSTOM_FIELD_19 INVISIBLE,
+    CUSTOM_FIELD_20 INVISIBLE,
+    CUSTOM_STRING_21 INVISIBLE,
+    CUSTOM_STRING_22 INVISIBLE,
+    CUSTOM_STRING_23 INVISIBLE,
+    CUSTOM_STRING_24 INVISIBLE,
+    CUSTOM_STRING_25 INVISIBLE,
+    CUSTOM_STRING_26 INVISIBLE,
+    CUSTOM_STRING_27 INVISIBLE,
+    CUSTOM_STRING_28 INVISIBLE,
+    CUSTOM_STRING_29 INVISIBLE,
+    CUSTOM_STRING_30 INVISIBLE,
+    CUSTOM_STRING_31 INVISIBLE,
+    CUSTOM_STRING_32 INVISIBLE,
+    CUSTOM_STRING_33 INVISIBLE,
+    CUSTOM_STRING_34 INVISIBLE,
+    CUSTOM_STRING_35 INVISIBLE,
+    CUSTOM_STRING_36 INVISIBLE,
+    CUSTOM_STRING_37 INVISIBLE,
+    CUSTOM_STRING_38 INVISIBLE,
+    CUSTOM_STRING_39 INVISIBLE,
+    CUSTOM_STRING_40 INVISIBLE,
+    CUSTOM_DATE_6 INVISIBLE,
+    CUSTOM_DATE_7 INVISIBLE,
+    CUSTOM_DATE_8 INVISIBLE,
+    CUSTOM_DATE_9 INVISIBLE,
+    CUSTOM_DATE_10 INVISIBLE,
+    CUSTOM_DATE_11 INVISIBLE,
+    CUSTOM_DATE_12 INVISIBLE,
+    CUSTOM_DATE_13 INVISIBLE,
+    CUSTOM_DATE_14 INVISIBLE,
+    CUSTOM_DATE_15 INVISIBLE,
+    CUSTOM_BOOLEAN_6 INVISIBLE,
+    CUSTOM_BOOLEAN_7 INVISIBLE,
+    CUSTOM_BOOLEAN_8 INVISIBLE,
+    CUSTOM_BOOLEAN_9 INVISIBLE,
+    CUSTOM_BOOLEAN_10 INVISIBLE,
+    CUSTOM_NUMBER_1 INVISIBLE,
+    CUSTOM_NUMBER_2 INVISIBLE,
+    CUSTOM_NUMBER_3 INVISIBLE,
+    CUSTOM_NUMBER_4 INVISIBLE,
+    CUSTOM_NUMBER_5 INVISIBLE,
+    DISPLAY_NAME INVISIBLE
+    )
+    @go@
+
+    ALTER TABLE @env:idw_schema_name@.WLX_MS_ISSUES @modify@(
+    MESSAGE_SOURCE_TYPE VISIBLE,
+    MESSAGE_TYPE_CD VISIBLE,
+    MESSAGE_DATE_TIME VISIBLE,
+    AMOUNT VISIBLE,
+    CURRENCY_CD VISIBLE,
+    PRODUCT_KEY VISIBLE,
+    MESSAGE_DIRECTION VISIBLE,
+    MESSAGE_INSTRUCTIONS VISIBLE,
+    ADDITIONAL_MESSAGE_TEXT VISIBLE,
+    MESSAGE_TEXT VISIBLE,
+    FI_TO_FI_INFO VISIBLE,
+    AGE VISIBLE,
+    AGE_AS_OF_DATE VISIBLE,
+    MX_MESSAGE_DETAILS VISIBLE,
+    CUSTOM_FIELD_1 VISIBLE,
+    CUSTOM_FIELD_2 VISIBLE,
+    CUSTOM_FIELD_3 VISIBLE,
+    CUSTOM_FIELD_4 VISIBLE,
+    CUSTOM_FIELD_5 VISIBLE,
+    CUSTOM_FIELD_6 VISIBLE,
+    CUSTOM_FIELD_7 VISIBLE,
+    CUSTOM_FIELD_8 VISIBLE,
+    CUSTOM_FIELD_9 VISIBLE,
+    CUSTOM_FIELD_10 VISIBLE,
+    CUSTOM_FIELD_11 VISIBLE,
+    CUSTOM_FIELD_12 VISIBLE,
+    CUSTOM_FIELD_13 VISIBLE,
+    CUSTOM_FIELD_14 VISIBLE,
+    CUSTOM_FIELD_15 VISIBLE,
+    CUSTOM_FIELD_16 VISIBLE,
+    CUSTOM_FIELD_17 VISIBLE,
+    CUSTOM_FIELD_18 VISIBLE,
+    CUSTOM_FIELD_19 VISIBLE,
+    CUSTOM_FIELD_20 VISIBLE,
+    CUSTOM_STRING_21 VISIBLE,
+    CUSTOM_STRING_22 VISIBLE,
+    CUSTOM_STRING_23 VISIBLE,
+    CUSTOM_STRING_24 VISIBLE,
+    CUSTOM_STRING_25 VISIBLE,
+    CUSTOM_STRING_26 VISIBLE,
+    CUSTOM_STRING_27 VISIBLE,
+    CUSTOM_STRING_28 VISIBLE,
+    CUSTOM_STRING_29 VISIBLE,
+    CUSTOM_STRING_30 VISIBLE,
+    CUSTOM_STRING_31 VISIBLE,
+    CUSTOM_STRING_32 VISIBLE,
+    CUSTOM_STRING_33 VISIBLE,
+    CUSTOM_STRING_34 VISIBLE,
+    CUSTOM_STRING_35 VISIBLE,
+    CUSTOM_STRING_36 VISIBLE,
+    CUSTOM_STRING_37 VISIBLE,
+    CUSTOM_STRING_38 VISIBLE,
+    CUSTOM_STRING_39 VISIBLE,
+    CUSTOM_STRING_40 VISIBLE,
+    CUSTOM_DATE_6 VISIBLE,
+    CUSTOM_DATE_7 VISIBLE,
+    CUSTOM_DATE_8 VISIBLE,
+    CUSTOM_DATE_9 VISIBLE,
+    CUSTOM_DATE_10 VISIBLE,
+    CUSTOM_DATE_11 VISIBLE,
+    CUSTOM_DATE_12 VISIBLE,
+    CUSTOM_DATE_13 VISIBLE,
+    CUSTOM_DATE_14 VISIBLE,
+    CUSTOM_DATE_15 VISIBLE,
+    CUSTOM_BOOLEAN_6 VISIBLE,
+    CUSTOM_BOOLEAN_7 VISIBLE,
+    CUSTOM_BOOLEAN_8 VISIBLE,
+    CUSTOM_BOOLEAN_9 VISIBLE,
+    CUSTOM_BOOLEAN_10 VISIBLE,
+    CUSTOM_NUMBER_1 VISIBLE,
+    CUSTOM_NUMBER_2 VISIBLE,
+    CUSTOM_NUMBER_3 VISIBLE,
+    CUSTOM_NUMBER_4 VISIBLE,
+    CUSTOM_NUMBER_5 VISIBLE,
+    DISPLAY_NAME VISIBLE
+    )
+    @go@
+
+]
+}
+version 10.1.0.82 add {
+}
+version 10.1.0.83 add {
+}
+version 10.1.0.84 add {
+}
+version 10.1.0.85 add {
+}
+version 10.1.0.86 add {
+}
+version 10.1.0.87 add {
+}
+version 10.1.0.88 add {
+}
+version 10.1.0.89 add {
+[mssql
+        ALTER TABLE @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_ORIG_PRTY_ID  ALTER COLUMN ID_NUMBER @ustring@(512);
+    	ALTER TABLE @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_IDS  ALTER COLUMN ID_NUMBER @ustring@(512);
+    	ALTER TABLE @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_BENE_PRTY_ID  ALTER COLUMN ID_NUMBER @ustring@(512);
+    	ALTER TABLE @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_IDS  ALTER COLUMN ID_NUMBER @ustring@(512);
+
+        @go@
+
+]
+[oracle
+        ALTER TABLE @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_ORIG_PRTY_ID
+        @modify@   ID_NUMBER @ustring@(512)
+        @go@
+        ALTER TABLE @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_IDS
+        @modify@   ID_NUMBER @ustring@(512)
+        @go@
+        ALTER TABLE @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_BENE_PRTY_ID
+        @modify@   ID_NUMBER @ustring@(512)
+        @go@
+        ALTER TABLE @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_IDS
+        @modify@   ID_NUMBER @ustring@(512)
+        @go@
+        ALTER TABLE @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_ALIASES
+        @modify@   DISPLAY_NAME @ustring@(470)
+        @go@
+]
+}
+version 10.1.0.90 add {
+[mssql
+        ALTER TABLE @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_ALIASES ALTER COLUMN DISPLAY_NAME @ustring@(470)
+        @go@
+
+        ALTER TABLE @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_ALIASES ALTER COLUMN DISPLAY_NAME @ustring@(470)
+        @go@
+
+        ALTER TABLE @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_ALIASES ALTER COLUMN MATCHED_NAME @ustring@(500)
+        @go@
+
+        ALTER TABLE @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_ALIASES ALTER COLUMN MATCHED_NAME @ustring@(500)
+        @go@
+
+        ALTER TABLE @env:idw_schema_name@.WLX_CF_ISSUES ALTER COLUMN DISPLAY_NAME @ustring@(470)
+        @go@
+
+        ALTER TABLE @env:idw_schema_name@.WLX_MS_ISSUES ALTER COLUMN DISPLAY_NAME @ustring@(470)
+        @go@
+
+        ALTER TABLE @env:idw_schema_name@.WLX_CF_ISSUES ALTER COLUMN MATCHED_NAME @ustring@(500)
+        @go@
+
+        ALTER TABLE @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_MATCHES ALTER COLUMN INPUT_MATCHED_VALUE @ustring@(500)
+        @go@
+
+        ALTER TABLE @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_MATCHES ALTER COLUMN INPUT_MATCHED_VALUE @ustring@(500)
+        @go@
+
+        ALTER TABLE @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_ORIGINATOR ALTER COLUMN ORIGINATOR_FI_ORG_NAME @ustring@(500)
+        @go@
+
+
+]
+[oracle
+
+        ALTER TABLE @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_ALIASES
+        @modify@   DISPLAY_NAME @ustring@(470)
+        @go@
+        ALTER TABLE @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_ALIASES
+        @modify@   DISPLAY_NAME @ustring@(470)
+        @go@
+        ALTER TABLE @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_ALIASES
+        @modify@   MATCHED_NAME @ustring@(500)
+        @go@
+        ALTER TABLE @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_ALIASES
+        @modify@   MATCHED_NAME @ustring@(500)
+        @go@
+
+        ALTER TABLE @env:idw_schema_name@.WLX_CF_ISSUES
+        @modify@   DISPLAY_NAME @ustring@(470)
+        @go@
+
+        ALTER TABLE @env:idw_schema_name@.WLX_CF_ISSUES
+        @modify@   MATCHED_NAME @ustring@(500)
+        @go@
+
+        ALTER TABLE @env:idw_schema_name@.WLX_MS_ISSUES
+        @modify@   DISPLAY_NAME @ustring@(470)
+        @go@
+
+        ALTER TABLE @env:idw_schema_name@.WLX_CF_ISSUE_ITEM_MATCHES
+        @modify@   INPUT_MATCHED_VALUE @ustring@(500)
+        @go@
+
+        ALTER TABLE @env:idw_schema_name@.WLX_MS_ISSUE_ITEM_ORIGINATOR
+        @modify@   ORIGINATOR_FI_ORG_NAME @ustring@(500)
+        @go@
+
+
+]
+
+}
+version 10.1.0.91 add {
+}
+version 10.1.0.92 add {
+}
+version 10.1.0.93 add {
+}

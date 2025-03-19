@@ -1,0 +1,19 @@
+<!-- free text search map.  Keys are defined in MS_texts.xml and values are from AML_EWLF_MS_FREE_TEXT_SEARCH_FIELDS -->
+<freeTextFieldMap>
+	<entry key="msgSendFIAddlInfo" value="Sending.FI_Additional_Info"/>
+	<entry key="msgRecvFIAddlInfo" value="Receiving.FI_Additional_Info"/>
+	<entry key="msgBenAddr1" value="Beneficiary.Address_Line_1"/>
+	<entry key="msgBenAddr2" value="Beneficiary.Address_Line_2"/>
+	<entry key="msgBenAddr3" value="Beneficiary.Address_Line_3"/>
+	<entry key="msgOrigtorAddr1" value="Originator.Address_Line_1"/>
+	<entry key="msgOrigtorAddr2" value="Originator.Address_Line_2"/>
+	<entry key="msgOrigtorAddr3" value="Originator.Address_Line_3"/>
+	<entry key="msgBenAddlInfo" value="Beneficiary.Additional_Info"/>
+	<entry key="msgOrigtorAddlInfo" value="Originator.Additional_Info"/>
+	<entry key="msgFItoFIInfo" value="FI_To_FI_Info"/>
+	<entry key="msgInstr" value="Message Instructions"/>
+	<entry key="msgAddlInfo" value="Additional_Message_Info"/>
+	<entry key="msgText" value="Message_Text"/>
+	<entry key="swiftBlock4" value="Message_Text"/>
+</freeTextFieldMap>
+

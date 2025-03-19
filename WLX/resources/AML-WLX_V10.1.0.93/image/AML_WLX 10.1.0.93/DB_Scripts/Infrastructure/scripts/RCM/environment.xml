@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+	<!--
+	This xml file is meant to be customized internally.	
+	-->
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd"
+>
+	<bean id="targetDatabaseEnvironment" class="com.actimize.util.dbupgrade.DatabaseEnvironment">
+		<property name="versionsSelect">
+			<value>
+				SELECT	cast(version_major as varchar(5)) @concat@ '.' @concat@ 
+					cast(version_minor as varchar(5)) @concat@ '.' @concat@ 
+					cast(version_sub as varchar(5)) @concat@ '.' @concat@ 
+					cast(version_build as varchar(5)) 
+				FROM acm_md_versions 
+				WHERE module_name = 'AML-WLF' OR module_name = 'WLF'
+		  </value>
+		</property>
+		<property name="insertVersionSQL">
+			<value>
+				insert into  @env:rcm_schema_name@.acm_md_versions(module_name,version_major,version_minor,version_sub, version_build, upgrade_at, module_type, comments) 
+	            values ('AML-WLF',@version.major@,@version.minor@,@version.release@,@version.build@,@now@,' ', 'SP12')
+             </value>
+		</property>
+	
+	</bean>
+	
+	<bean id="mssqlDatabaseEnvironment" parent="targetDatabaseEnvironment" >
+	</bean>
+
+
+	<bean id="postgresqlDatabaseEnvironment" parent="targetDatabaseEnvironment" >
+	</bean>
+
+	<bean id="cassandraDatabaseEnvironment" parent="targetDatabaseEnvironment">
+	</bean>
+
+	<bean id="tigergraphDatabaseEnvironment" parent="targetDatabaseEnvironment" >
+	</bean>
+
+	<bean id="oracleDatabaseEnvironment" parent="targetDatabaseEnvironment">
+	</bean>
+
+	<bean id="db2DatabaseEnvironment" parent="targetDatabaseEnvironment">
+	</bean>
+
+	<bean id="sybaseDatabaseEnvironment" parent="targetDatabaseEnvironment">
+	</bean>
+
+	<!-- The majority of the environment variables should be defined here -->
+	<bean id="defaultEnvironmentMap" class="org.springframework.beans.factory.config.MapFactoryBean">
+		<property name="sourceMap">
+			<map>
+				<entry key="exampleVariable1" value="hello actimize"/>
+				<entry key="defaultValue" value="hello"/>
+			</map>
+		</property>
+	</bean>
+	
+	<!--
+	
+	These beans here provide a way to customize the default environment variables.
+	
+	!! Notice the use of "merge" attribute !!
+	
+	-->
+
+	<bean id="mssqlDefaultEnvironmentMap" parent="defaultEnvironmentMap">
+		<property name="sourceMap">
+			<map merge="true">
+				<entry key="exampleVariable1" value="hello actimize, mssql"/>
+			</map>
+		</property>
+	</bean>
+
+
+	<bean id="postgresqlDefaultEnvironmentMap" parent="defaultEnvironmentMap">
+		<property name="sourceMap">
+			<map merge="true">
+				<entry key="exampleVariable1" value="hello actimize, postgresql"/>
+			</map>
+		</property>
+	</bean>
+
+	<bean id="cassandraDefaultEnvironmentMap" parent="defaultEnvironmentMap">
+		<property name="sourceMap">
+			<map merge="true">
+				<entry key="exampleVariable1" value="hello actimize, cassandra"/>
+			</map>
+		</property>
+	</bean>
+
+	<bean id="tigergraphDefaultEnvironmentMap" parent="defaultEnvironmentMap">
+		<property name="sourceMap">
+			<map merge="true">
+				<entry key="exampleVariable1" value="hello actimize, tigergraph"/>
+			</map>
+		</property>
+	</bean>
+
+	<bean id="oracleDefaultEnvironmentMap" parent="defaultEnvironmentMap">
+		<property name="sourceMap">
+			<map merge="true">
+				<entry key="exampleVariable1" value="hello actimize, oracle"/>
+			</map>
+		</property>
+	</bean>
+
+	<bean id="db2DefaultEnvironmentMap" parent="defaultEnvironmentMap">
+		<property name="sourceMap">
+			<map merge="true">
+				<entry key="exampleVariable1" value="hello actimize, db2"/>
+			</map>
+		</property>
+	</bean>
+
+	<bean id="sybaseDefaultEnvironmentMap" parent="defaultEnvironmentMap">
+		<property name="sourceMap">
+			<map merge="true">
+				<entry key="exampleVariable1" value="hello actimize, sybase"/>
+			</map>
+		</property>
+	</bean>
+
+</beans>

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+	<!--
+	This xml file is meant to be customized internally.	
+	-->
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd"
+>
+	<bean id="targetDatabaseEnvironment" class="com.actimize.util.dbupgrade.DatabaseEnvironment">
+		<property name="versionsSelect">
+			<value>
+				 select ID from @env:lm_schema_name@.WLF_LM_VERSIONS where APP_TYPE = 'List Management'
+		  </value>
+		</property>
+		<property name="insertVersionSQL">
+			<value>
+			   insert into  @env:lm_schema_name@.WLF_LM_VERSIONS(ID,VERSION_CONTROL_LABEL,UPDATE_DATE,SCRIPT_FILE_NAME, APP_TYPE) 
+               values ('@version@','V@version@',@now@,'package_lm_upgrade_@version@.txt','List Management')
+             </value>
+		</property>
+	
+	</bean>
+	
+	<bean id="mssqlDatabaseEnvironment" parent="targetDatabaseEnvironment" >
+	</bean>
+
+	<bean id="postgresqlDatabaseEnvironment" parent="targetDatabaseEnvironment" >
+	</bean>
+
+	<bean id="cassandraDatabaseEnvironment" parent="targetDatabaseEnvironment">
+	</bean>
+
+	<bean id="tigergraphDatabaseEnvironment" parent="targetDatabaseEnvironment" >
+	</bean>
+
+	<bean id="oracleDatabaseEnvironment" parent="targetDatabaseEnvironment">
+	</bean>
+
+	<bean id="db2DatabaseEnvironment" parent="targetDatabaseEnvironment">
+	</bean>
+
+	<bean id="sybaseDatabaseEnvironment" parent="targetDatabaseEnvironment">
+	</bean>
+
+	<!-- The majority of the environment variables should be defined here -->
+	<bean id="defaultEnvironmentMap" class="org.springframework.beans.factory.config.MapFactoryBean">
+		<property name="sourceMap">
+			<map>
+				<entry key="exampleVariable1" value="hello actimize"/>
+				<entry key="defaultValue" value="hello"/>
+			</map>
+		</property>
+	</bean>
+	
+	<!--
+	
+	These beans here provide a way to customize the default environment variables.
+	
+	!! Notice the use of "merge" attribute !!
+	
+	-->
+
+	<bean id="mssqlDefaultEnvironmentMap" parent="defaultEnvironmentMap">
+		<property name="sourceMap">
+			<map merge="true">
+				<entry key="exampleVariable1" value="hello actimize, mssql"/>
+			</map>
+		</property>
+	</bean>
+
+	<bean id="postgresqlDefaultEnvironmentMap" parent="defaultEnvironmentMap">
+		<property name="sourceMap">
+			<map merge="true">
+				<entry key="exampleVariable1" value="hello actimize, postgresql"/>
+			</map>
+		</property>
+	</bean>
+
+	<bean id="cassandraDefaultEnvironmentMap" parent="defaultEnvironmentMap">
+		<property name="sourceMap">
+			<map merge="true">
+				<entry key="exampleVariable1" value="hello actimize, cassandra"/>
+			</map>
+		</property>
+	</bean>
+
+	<bean id="tigergraphDefaultEnvironmentMap" parent="defaultEnvironmentMap">
+		<property name="sourceMap">
+			<map merge="true">
+				<entry key="exampleVariable1" value="hello actimize, tigergraph"/>
+			</map>
+		</property>
+	</bean>
+
+	<bean id="oracleDefaultEnvironmentMap" parent="defaultEnvironmentMap">
+		<property name="sourceMap">
+			<map merge="true">
+				<entry key="exampleVariable1" value="hello actimize, oracle"/>
+			</map>
+		</property>
+	</bean>
+
+	<bean id="db2DefaultEnvironmentMap" parent="defaultEnvironmentMap">
+		<property name="sourceMap">
+			<map merge="true">
+				<entry key="exampleVariable1" value="hello actimize, db2"/>
+			</map>
+		</property>
+	</bean>
+
+	<bean id="sybaseDefaultEnvironmentMap" parent="defaultEnvironmentMap">
+		<property name="sourceMap">
+			<map merge="true">
+				<entry key="exampleVariable1" value="hello actimize, sybase"/>
+			</map>
+		</property>
+	</bean>
+
+</beans>

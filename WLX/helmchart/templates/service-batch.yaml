@@ -1,0 +1,37 @@
+#####################################################################################
+#       __      __.____     ____  ___
+#      /  \    /  \    |    \   \/  /
+#      \   \/\/   /    |     \     /    WLX Nice Actimize
+#       \        /|    |___  /     \
+#        \__/\  / |_______ \/___/\  \
+#             \/          \/      \_/
+#
+#####################################################################################
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.app.wlxCustomerName }}-{{ .Values.app.name }}-batch
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-additional-resource-tags:
+        Name={{ .Values.app.wlxCustomerName }}-{{ .Values.app.name }}-batch,
+        Created_By={{ .Values.tags.createdBy }},
+        BudgetTeam={{ .Values.tags.budgetTeam }},
+        EnvType={{ .Values.tags.envType }},
+        Environment={{ .Values.tags.environment }},
+        Service={{ .Values.tags.service }},
+        Team={{ .Values.tags.team }}
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: tcp
+    service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: "60"
+    service.beta.kubernetes.io/aws-load-balancer-internal: 0.0.0.0/0
+    service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
+spec:
+  type: {{ .Values.service.type }}
+  externalTrafficPolicy: Local
+  selector:
+    app: {{ .Values.app.wlxCustomerName }}-{{ .Values.app.name }}-batch
+  ports:
+  - protocol: TCP
+    port: {{ .Values.service.listenerPort }}
+    targetPort: {{ .Values.service.listenerPort }}
+    name: listener-port

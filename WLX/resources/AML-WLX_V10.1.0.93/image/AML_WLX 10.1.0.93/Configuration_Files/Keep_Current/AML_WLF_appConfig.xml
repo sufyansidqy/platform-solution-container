@@ -1,0 +1,906 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?><!--
+		edited with XML Spy v4.3 U (http://www.xmlspy.com) by me me (me)
+	-->
+<configuration version="3.1.1.0">
+
+  <!-- List Loading ETL Configuration -->
+
+  <listLoadingETLConf>
+    <!--
+			Keywords that determine if the World-Check entry is an OFAC entry.
+		-->
+    <OFACKeywordsList id="ETL_OFACKeywordsList">
+      <listSchema elementName="OFACkeyword" keywordValue=""/>
+      <OFACkeyword keywordValue="BALKANS"/>
+      <OFACkeyword keywordValue="BELARUS"/>
+      <OFACkeyword keywordValue="BPI"/>
+      <OFACkeyword keywordValue="BPI-PA"/>
+      <OFACkeyword keywordValue="BPI-SDNT"/>
+      <OFACkeyword keywordValue="BPI-SDNTK"/>
+      <OFACkeyword keywordValue="BURMA"/>
+      <OFACkeyword keywordValue="BURMA JADE"/>
+      <OFACkeyword keywordValue="COTED"/>
+      <OFACkeyword keywordValue="CUBA"/>
+      <OFACkeyword keywordValue="DARFUR"/>
+      <OFACkeyword keywordValue="DRCONGO"/>
+      <OFACkeyword keywordValue="DRCONGO LIBERIA"/>
+      <OFACkeyword keywordValue="FTO SDGT"/>
+      <OFACkeyword keywordValue="IRAN"/>
+      <OFACkeyword keywordValue="IRAQ.2"/>
+      <OFACkeyword keywordValue="IRAQ.3"/>
+      <OFACkeyword keywordValue="IRAQ2"/>
+      <OFACkeyword keywordValue="IRAQ3"/>
+      <OFACkeyword keywordValue="LIBERIA"/>
+      <OFACkeyword keywordValue="NKOREA"/>
+      <OFACkeyword keywordValue="NPRO"/>
+      <OFACkeyword keywordValue="NPWMD"/>
+      <OFACkeyword keywordValue="NS-PLC"/>
+      <OFACkeyword keywordValue="OFAC"/>
+      <OFACkeyword keywordValue="OFAC-BK"/>
+      <OFACkeyword keywordValue="OFAC-BLR"/>
+      <OFACkeyword keywordValue="OFAC-BM"/>
+      <OFACkeyword keywordValue="OFAC-C"/>
+      <OFACkeyword keywordValue="OFAC-COTED"/>
+      <OFACkeyword keywordValue="OFAC-DFR"/>
+      <OFACkeyword keywordValue="OFAC-DRC"/>
+      <OFACkeyword keywordValue="OFAC-IRN"/>
+      <OFACkeyword keywordValue="OFAC-IRQ"/>
+      <OFACkeyword keywordValue="OFAC-LBN"/>
+      <OFACkeyword keywordValue="OFAC-L"/>
+      <OFACkeyword keywordValue="OFAC-NK"/>
+      <OFACkeyword keywordValue="OFAC-S"/>
+      <OFACkeyword keywordValue="OFAC-SYR"/>
+      <OFACkeyword keywordValue="SDGT"/>
+      <OFACkeyword keywordValue="SDGT SDNTK"/>
+      <OFACkeyword keywordValue="SDNT"/>
+      <OFACkeyword keywordValue="SDNTK"/>
+      <OFACkeyword keywordValue="SDT"/>
+      <OFACkeyword keywordValue="SUDAN"/>
+      <OFACkeyword keywordValue="ZIMB"/>
+      <OFACkeyword keywordValue="SYRIA"/>
+      <OFACkeyword keywordValue="SDT FTO SDGT"/>
+      <OFACkeyword keywordValue="SDT SDGT"/>
+    </OFACKeywordsList>
+    <!--
+			The following list contains values from the World-Check category
+			field that determines if the list entry is a country.
+		-->
+    <WCcountriesList id="WCcountriesList">
+      <listSchema countryValue="" elementName="country"/>
+      <country countryValue="EMBARGO"/>
+      <country countryValue="COUNTRY"/>
+    </WCcountriesList>
+    <!--
+			The following list contains values from the World-Check category
+			field that determine whether to take the last name from the country
+			field.
+		-->
+    <WClastNameExtractionCategories id="WClastNameExtractionCategories">
+      <listSchema categoryValue="" elementName="category"/>
+      <category categoryValue="EMBARGO"/>
+    </WClastNameExtractionCategories>
+    <!--
+			World-Check Filtering lists according to Keywords and Categories
+		-->
+    <WCfilterKeywordsList id="WCfilterKeywordsList">
+      <listSchema elementName="filterKeyword" keywordValue=""/>
+    </WCfilterKeywordsList>
+    <WCfilterCategoriesList id="WCfilterCategoriesList">
+      <listSchema categoryValue="" elementName="filterCategory"/>
+    </WCfilterCategoriesList>
+    <!-- Alternative spelling configuration -->
+    <WCalternativeSpellingConf considerAsAlias="0" id="alternativeSpellingConf"/>
+    <!-- The World Check languages for Chinese Character Codes -->
+    <WCcccLanguageSpecificationList id="WCcccLanguageSpecificationList">
+    	<listSchema languageValue="" elementName="language"/>
+    	<language languageValue="zh-XN"/>
+    	<language languageValue="zh-CN"/>
+    </WCcccLanguageSpecificationList>
+    <internalListConf>
+      <reviewType type="FOUR_EYES"/>
+      <dateFormat format="dd-MM-yyyy"/>
+      <dbSaveDateFormat format="dd-MM-yyyy"></dbSaveDateFormat></internalListConf> 
+    <ListExactMatchPopulationConf populateExactMatch="1" id="exactMatchEnabledConf"/>
+    <!-- The following list contains list of ID types that needs to be excluded while World-Check list loading.
+          Multiple ID types can be added to this exclude list by adding more 'idType' tags.
+      Example:
+      <WCLoadingExcludedIdTypes id="WCLoadingExcludedIdTypes">
+        <listSchema elementName="idType" idTypeValue=""/>
+        <idType idTypeValue="PASSPORT"/>
+        <idType idTypeValue="NLP"/>
+        <idType idTypeValue="CPF"/>
+      </WCLoadingExcludedIdTypes>
+      -->
+      <WCLoadingExcludedIdTypes id="WCLoadingExcludedIdTypes">
+          <listSchema elementName="idType" idTypeValue=""/>
+          <idType idTypeValue=""/>
+      </WCLoadingExcludedIdTypes>
+  </listLoadingETLConf>
+
+  <!-- Customer Filtering Score Factors Configuration -->
+
+  <scoreFactorsConfiguration id="CF_scoreFactorsConfigurations">
+    <regionDefaults>
+      <AML_WLF_CF_SF_hitProfilePeriod>
+        <period profilePeriod="12"/>
+      </AML_WLF_CF_SF_hitProfilePeriod>
+      <AML_WLF_CF_SF_partyProfilePeriod>
+        <period profilePeriod="12"/>
+      </AML_WLF_CF_SF_partyProfilePeriod>
+      <AML_WLF_CF_SF_listEntryProfilePeriod>
+        <period profilePeriod="12"/>
+      </AML_WLF_CF_SF_listEntryProfilePeriod>
+      <AML_WLF_CF_SF_priorHitsFrequency minimumScannedPartiesThreshold="1000"/>
+      <AML_WLF_CF_SF_lowRiskCategories>
+        <listSchema categoryValue="" elementName="category"/>
+        <category categoryValue="PEP_TEST"/>
+        <category categoryValue="COUNTRY_TEST"/>
+      </AML_WLF_CF_SF_lowRiskCategories>
+      <AML_WLF_CF_SF_lowRiskKeywords>
+        <listSchema elementName="keyword" keywordValue=""/>
+        <keyword keywordValue="OFAC"/>
+        <keyword keywordValue="UN"/>
+      </AML_WLF_CF_SF_lowRiskKeywords>
+      <AML_WLF_CF_SF_isLocalCountry>
+        <country countryCode="IL"/>
+      </AML_WLF_CF_SF_isLocalCountry>
+      <AML_WLF_MS_SF_lowRiskMatchesList>
+              <listSchema elementName="match" list="" message="" score=""/>
+      </AML_WLF_MS_SF_lowRiskMatchesList>
+	  <AML_WLF_MS_SF_lowRiskTokenList>
+        <listSchema elementName="match" token=""/>
+        <match token=""/>
+      </AML_WLF_MS_SF_lowRiskTokenList>
+	   <AML_WLF_MS_SF_listEntryProfilePeriod>
+        <period profilePeriod="12"/>
+      </AML_WLF_MS_SF_listEntryProfilePeriod>
+	  <AML_WLF_MS_SF_priorHitsFrequency minimumScannedPartiesThreshold="1000"/>
+	  <AML_WLF_MS_SF_lowRiskAdjacentList>       
+       <listSchema elementName="match" adjText="" score=""/> 
+       <match adjText="Boulevard" score="-10"/>   
+       <match adjText="Street" score="-10"/>   
+       <match adjText="Road" score="-10"/>   
+       <match adjText="St." score="-5"/>   
+       <match adjText="Blvd" score="-5"/>   
+       <match adjText="Rd" score="-5"/>   
+   </AML_WLF_MS_SF_lowRiskAdjacentList>
+	<AML_WLF_CF_SF_yearOfBirthMatch upperValue="1" lowerValue="1" />
+	<AML_WLF_CF_SF_singleTokenMatch>
+        <listSchema elementName="excludedCategory" categoryValue="" />
+    </AML_WLF_CF_SF_singleTokenMatch>
+    <AML_WLF_MS_SF_singleToken>
+        <listSchema elementName="excludedCategory" categoryValue="" />
+    </AML_WLF_MS_SF_singleToken>
+    </regionDefaults>
+    <region regionId="DEFAULT">
+      <AML_WLF_CF_SF_lowRiskCategories>
+        <listSchema categoryValue="" elementName="category"/>
+        <category categoryValue="PEP"/>
+        <category categoryValue="COUNTRY"/>
+      </AML_WLF_CF_SF_lowRiskCategories>
+      <AML_WLF_CF_SF_lowRiskKeywords>
+        <listSchema elementName="keyword" keywordValue=""/>
+        <keyword keywordValue="OFAC"/>
+        <keyword keywordValue="UN"/>
+      </AML_WLF_CF_SF_lowRiskKeywords>
+      <AML_WLF_CF_SF_isLocalCountry>
+        <country countryCode="IL"/>
+      </AML_WLF_CF_SF_isLocalCountry>
+	  <AML_WLF_MS_SF_lowRiskMatchesList>
+              <listSchema elementName="match" list="" message="" score=""/>
+	  </AML_WLF_MS_SF_lowRiskMatchesList>
+      <AML_WLF_MS_SF_lowRiskTokenList>
+        <listSchema elementName="match" token=""/>
+        <match token=""/>
+      </AML_WLF_MS_SF_lowRiskTokenList>
+	  <AML_WLF_MS_SF_lowRiskAdjacentList>       
+       <listSchema elementName="match" adjText="" score=""/> 
+       <match adjText="Boulevard" score="-10"/>   
+       <match adjText="Street" score="-10"/>   
+       <match adjText="Road" score="-10"/>   
+       <match adjText="St." score="-5"/>   
+       <match adjText="Blvd" score="-5"/>   
+       <match adjText="Rd" score="-5"/>   
+   </AML_WLF_MS_SF_lowRiskAdjacentList>
+   <AML_WLF_CF_SF_singleTokenMatch>
+        <listSchema elementName="excludedCategory" categoryValue="" />
+    </AML_WLF_CF_SF_singleTokenMatch>
+    <AML_WLF_MS_SF_singleToken>
+        <listSchema elementName="excludedCategory" categoryValue="" />
+    </AML_WLF_MS_SF_singleToken>
+        <AML_WLF_CF_SF_yearOfBirthMatch upperValue="1" lowerValue="1" />
+	</region>
+    <region regionId="US">
+      <AML_WLF_CF_SF_lowRiskCategories>
+        <listSchema categoryValue="" elementName="category"/>
+        <category categoryValue="PEP"/>
+        <category categoryValue="COUNTRY"/>
+      </AML_WLF_CF_SF_lowRiskCategories>
+      <AML_WLF_CF_SF_lowRiskKeywords>
+        <listSchema elementName="keyword" keywordValue=""/>
+        <keyword keywordValue="OFAC"/>
+        <keyword keywordValue="UN"/>
+      </AML_WLF_CF_SF_lowRiskKeywords>
+      <AML_WLF_CF_SF_isLocalCountry>
+        <country countryCode="US"/>
+      </AML_WLF_CF_SF_isLocalCountry>
+	  <AML_WLF_MS_SF_lowRiskAdjacentList>       
+       <listSchema elementName="match" adjText="" score=""/> 
+       <match adjText="Boulevard" score="-10"/>   
+       <match adjText="Street" score="-10"/>   
+       <match adjText="Road" score="-10"/>   
+       <match adjText="St." score="-5"/>   
+       <match adjText="Blvd" score="-5"/>   
+       <match adjText="Rd" score="-5"/>   
+   </AML_WLF_MS_SF_lowRiskAdjacentList>
+   <AML_WLF_CF_SF_singleTokenMatch>
+        <listSchema elementName="excludedCategory" categoryValue="" />
+    </AML_WLF_CF_SF_singleTokenMatch>
+    <AML_WLF_MS_SF_singleToken>
+        <listSchema elementName="excludedCategory" categoryValue="" />
+    </AML_WLF_MS_SF_singleToken>
+        <AML_WLF_CF_SF_yearOfBirthMatch upperValue="1" lowerValue="1" />
+    </region>
+  </scoreFactorsConfiguration>
+
+  <excludeListConf>
+    <dateFormat format="dd-MM-yyyy"/>
+  </excludeListConf>
+
+  <partyConf>
+    <dateFormat format="dd-MM-yyyy"/>
+  </partyConf>
+
+  <messageInputConfig>
+    <dateFormat format="dd-MM-yyyy"/>
+  </messageInputConfig>
+
+  <outputsConfig>
+    <outputDateFormat format="dd-MM-yyyy"/>
+  </outputsConfig>
+
+  <!-- Party Custom Fields Configuration -->
+
+  <!-- uncomment any of the following lines to include custom fields in OnDemand input screen and alert view -->
+  <partyCustomFieldsConfiguration id="partyCustomFieldsConfiguration">
+    <!-- <customField caption="Custom Field #1" dataType="CHAR" fieldId="customField_1" inHighlights="0"/> -->
+    <!-- <customField caption="Custom Field #2" dataType="CHAR" fieldId="customField_2" inHighlights="0"/> -->
+    <!-- <customField caption="Custom Field #3" dataType="CHAR" fieldId="customField_3" inHighlights="0"/> -->
+    <!-- <customField caption="Custom Field #4" dataType="CHAR" fieldId="customField_4" inHighlights="0"/> -->
+    <!-- <customField caption="Custom Field #5" dataType="CHAR" fieldId="customField_5" inHighlights="0"/> -->
+    <!-- <customField caption="Custom Field #6" dataType="BOOLEAN" fieldId="customField_6" inHighlights="0"/> -->
+    <!-- <customField caption="Custom Field #7" dataType="BOOLEAN" fieldId="customField_7" inHighlights="0"/> -->
+    <!-- <customField caption="Custom Field #8" dataType="BOOLEAN" fieldId="customField_8" inHighlights="0"/> -->
+    <!-- <customField caption="Custom Field #9" dataType="BOOLEAN" fieldId="customField_9" inHighlights="0"/> -->
+    <!-- <customField caption="Custom Field #10" dataType="BOOLEAN" fieldId="customField_10" inHighlights="0"/> -->
+    <!-- <customField caption="Custom Field #11" dataType="DATE" fieldId="customField_11" inHighlights="0"/> -->
+    <!-- <customField caption="Custom Field #12" dataType="DATE" fieldId="customField_12" inHighlights="0"/> -->
+    <!-- <customField caption="Custom Field #13" dataType="DATE" fieldId="customField_13" inHighlights="0"/> -->
+    <!-- <customField caption="Custom Field #14" dataType="DATE" fieldId="customField_14" inHighlights="0"/> -->
+    <!-- <customField caption="Custom Field #15" dataType="DATE" fieldId="customField_15" inHighlights="0"/> -->
+	<!-- <customField caption="Custom Field #16" dataType="TEXT" fieldId="customField_16" inHighlights="0"/> -->
+	<!-- <customField caption="Custom Field #17" dataType="TEXT" fieldId="customField_17" inHighlights="0"/> -->
+	<!-- <customField caption="Custom Field #18" dataType="TEXT" fieldId="customField_18" inHighlights="0"/> -->
+    <!-- <customField caption="Custom Field #19" dataType="CHAR" fieldId="customField_19" inHighlights="0"/> -->
+    <!-- <customField caption="Custom Field #20" dataType="CHAR" fieldId="customField_20" inHighlights="0"/> -->
+    <!-- <customField caption="Custom Field #21" dataType="CHAR" fieldId="customField_21" inHighlights="0"/> -->
+    <!-- <customField caption="Custom Field #22" dataType="CHAR" fieldId="customField_22" inHighlights="0"/> -->
+    <!-- <customField caption="Custom Field #23" dataType="CHAR" fieldId="customField_23" inHighlights="0"/> -->
+    <!-- <customField caption="Custom Field #24" dataType="CHAR" fieldId="customField_24" inHighlights="0"/> -->
+    <!-- <customField caption="Custom Field #25" dataType="CHAR" fieldId="customField_25" inHighlights="0"/> -->
+    <!-- <customField caption="Custom Field #26" dataType="CHAR" fieldId="customField_26" inHighlights="0"/> -->
+    <!-- <customField caption="Custom Field #27" dataType="CHAR" fieldId="customField_27" inHighlights="0"/> -->
+    <!-- <customField caption="Custom Field #28" dataType="CHAR" fieldId="customField_28" inHighlights="0"/> -->
+    <!-- <customField caption="Custom Field #29" dataType="TEXT" fieldId="customField_29" inHighlights="0"/> -->
+    <!-- <customField caption="Custom Field #30" dataType="TEXT" fieldId="customField_30" inHighlights="0"/> -->
+    <!-- <customField caption="Custom Field #31" dataType="TEXT" fieldId="customField_31" inHighlights="0"/> -->
+    <!-- <customField caption="Custom Field #32" dataType="TEXT" fieldId="customField_32" inHighlights="0"/> -->
+    <!-- <customField caption="Custom Field #33" dataType="TEXT" fieldId="customField_33" inHighlights="0"/> -->
+  </partyCustomFieldsConfiguration>
+
+  <!-- uncomment any of the following lines to include custom fields in list management GUI -->
+  <listEntryHitsCustomFieldsConfiguration id="listEntryHitsCustomFieldsConfiguration">
+    <!-- <customField caption="Custom Field #1" entryListViewDisplayOrder="0" fieldId="customField_1"/> -->
+    <!-- <customField caption="Custom Field #2" entryListViewDisplayOrder="0" fieldId="customField_2"/> -->
+    <!-- <customField caption="Custom Field #3" entryListViewDisplayOrder="0" fieldId="customField_3"/> -->
+    <!-- <customField caption="Custom Field #4" entryListViewDisplayOrder="0" fieldId="customField_4"/> -->
+    <!-- <customField caption="Custom Field #5" entryListViewDisplayOrder="0" fieldId="customField_5"/> -->
+    <!-- <customField caption="Custom Field #6" entryListViewDisplayOrder="0" fieldId="customField_6"/> -->
+    <!-- <customField caption="Custom Field #7" entryListViewDisplayOrder="0" fieldId="customField_7"/> -->
+    <!-- <customField caption="Custom Field #8" entryListViewDisplayOrder="0" fieldId="customField_8"/> -->
+    <!-- <customField caption="Custom Field #9" entryListViewDisplayOrder="0" fieldId="customField_9"/> -->
+    <!-- <customField caption="Custom Field #10" entryListViewDisplayOrder="0" fieldId="customField_10"/> -->
+    <!-- <customField caption="Custom Field #11" entryListViewDisplayOrder="0" fieldId="customField_11"/> -->
+    <!-- <customField caption="Custom Field #12" entryListViewDisplayOrder="0" fieldId="customField_12"/> -->
+    <!-- <customField caption="Custom Field #13" entryListViewDisplayOrder="0" fieldId="customField_13"/> -->
+    <!-- <customField caption="Custom Field #14" entryListViewDisplayOrder="0" fieldId="customField_14"/> -->
+    <!-- <customField caption="Custom Field #15" entryListViewDisplayOrder="0" fieldId="customField_15"/> -->
+    <!-- <customField caption="Custom Field #16" entryListViewDisplayOrder="0" fieldId="customField_16"/> -->
+    <!-- <customField caption="Custom Field #17" entryListViewDisplayOrder="0" fieldId="customField_17"/> -->
+    <!-- <customField caption="Custom Field #18" entryListViewDisplayOrder="0" fieldId="customField_18"/> -->
+	<!-- <customField caption="Custom Field #19" entryListViewDisplayOrder="0" fieldId="customField_19"/> -->
+    <!-- <customField caption="Custom Field #20" entryListViewDisplayOrder="0" fieldId="customField_20"/> -->
+    <!-- <customField caption="Custom Field #21" entryListViewDisplayOrder="0" fieldId="customField_21"/> -->
+    <!-- <customField caption="Custom Field #22" entryListViewDisplayOrder="0" fieldId="customField_22"/> -->
+    <!-- <customField caption="Custom Field #23" entryListViewDisplayOrder="0" fieldId="customField_23"/> -->
+    <!-- <customField caption="Custom Field #24" entryListViewDisplayOrder="0" fieldId="customField_24"/> -->
+    <!-- <customField caption="Custom Field #25" entryListViewDisplayOrder="0" fieldId="customField_25"/> -->
+    <!-- <customField caption="Custom Field #26" entryListViewDisplayOrder="0" fieldId="customField_26"/> -->
+    <!-- <customField caption="Custom Field #27" entryListViewDisplayOrder="0" fieldId="customField_27"/> -->
+    <!-- <customField caption="Custom Field #28" entryListViewDisplayOrder="0" fieldId="customField_28"/> -->
+    <!-- <customField caption="Custom Field #29" entryListViewDisplayOrder="0" fieldId="customField_29"/> -->
+    <!-- <customField caption="Custom Field #30" entryListViewDisplayOrder="0" fieldId="customField_30"/> -->
+    <!-- <customField caption="Custom Field #31" entryListViewDisplayOrder="0" fieldId="customField_31"/> -->
+    <!-- <customField caption="Custom Field #32" entryListViewDisplayOrder="0" fieldId="customField_32"/> -->
+    <!-- <customField caption="Custom Field #33" entryListViewDisplayOrder="0" fieldId="customField_33"/> -->
+  </listEntryHitsCustomFieldsConfiguration>
+
+  <!-- Countries -->
+
+  <implementationCountries id="implementationCountries">
+    <listSchema countryValue="" elementName="country"/>
+    <country countryValue="United States"/>
+    <country countryValue="United Kingdom"/>
+    <country countryValue="Slovakia"/>
+    <country countryValue="Israel"/>
+	<country countryValue="AFGHANISTAN"/>
+<country countryValue="ALBANIA"/>
+<country countryValue="ALGERIA"/>
+<country countryValue="AMERICAN SAMOA"/>
+<country countryValue="ANDORRA"/>
+<country countryValue="ANGOLA"/>
+<country countryValue="ANGUILLA"/>
+<country countryValue="ANTARCTICA"/>
+<country countryValue="ANTIGUA AND BARBUDA"/>
+<country countryValue="ARGENTINA"/>
+<country countryValue="ARMENIA"/>
+<country countryValue="ARUBA"/>
+<country countryValue="AUSTRALIA"/>
+<country countryValue="AUSTRIA"/>
+<country countryValue="AZERBAIJAN"/>
+<country countryValue="BAHAMAS"/>
+<country countryValue="BAHRAIN"/>
+<country countryValue="BANGLADESH"/>
+<country countryValue="BARBADOS"/>
+<country countryValue="BELARUS"/>
+<country countryValue="BELGIUM"/>
+<country countryValue="BELIZE"/>
+<country countryValue="BENIN"/>
+<country countryValue="BERMUDA"/>
+<country countryValue="BHUTAN"/>
+<country countryValue="BOLIVIA"/>
+<country countryValue="BONAIRE (SINT EUSTATIUS AND SABA)"/>
+<country countryValue="BOSNIA AND HERZEGOVINA"/>
+<country countryValue="BOTSWANA"/>
+<country countryValue="BOUVET ISLAND"/>
+<country countryValue="BRAZIL"/>
+<country countryValue="BRITISH INDIAN OCEAN TERRITORY"/>
+<country countryValue="BRUNEI DARUSSALAM"/>
+<country countryValue="BULGARIA"/>
+<country countryValue="BURKINA FASO"/>
+<country countryValue="BURUNDI"/>
+<country countryValue="CAMBODIA"/>
+<country countryValue="CAMEROON"/>
+<country countryValue="CANADA"/>
+<country countryValue="CAPE VERDE"/>
+<country countryValue="CAYMAN ISLANDS"/>
+<country countryValue="CENTRAL AFRICAN REPUBLIC"/>
+<country countryValue="CHAD"/>
+<country countryValue="CHILE"/>
+<country countryValue="CHINA"/>
+<country countryValue="CHRISTMAS ISLAND"/>
+<country countryValue="COCOS (KEELING) ISLANDS"/>
+<country countryValue="COLOMBIA"/>
+<country countryValue="COMOROS"/>
+<country countryValue="CONGO, DEMOCRATIC REPUBLIC OF THE"/>
+<country countryValue="COOK ISLANDS"/>
+<country countryValue="COSTA RICA"/>
+<country countryValue="CROATIA"/>
+<country countryValue="CUBA"/>
+<country countryValue="CURACAO"/>
+<country countryValue="CYPRUS"/>
+<country countryValue="CZECH REPUBLIC"/>
+<country countryValue="CÔTE D'IVOIRE (IVORY COAST)"/>
+<country countryValue="DENMARK"/>
+<country countryValue="DJIBOUTI"/>
+<country countryValue="DOMINICA"/>
+<country countryValue="DOMINICAN REPUBLIC"/>
+<country countryValue="ECUADOR"/>
+<country countryValue="EGYPT"/>
+<country countryValue="EL SALVADOR"/>
+<country countryValue="EQUATORIAL GUINEA"/>
+<country countryValue="ERITREA"/>
+<country countryValue="ESTONIA"/>
+<country countryValue="ETHIOPIA"/>
+<country countryValue="FALKLAND ISLANDS (MALVINAS)"/>
+<country countryValue="FAROE ISLANDS"/>
+<country countryValue="FIJI"/>
+<country countryValue="FINLAND"/>
+<country countryValue="FRANCE"/>
+<country countryValue="FRANCE, METROPOLITAN"/>
+<country countryValue="FRENCH GUIANA"/>
+<country countryValue="FRENCH POLYNESIA"/>
+<country countryValue="FRENCH SOUTHERN TERRITORIES"/>
+<country countryValue="GABON"/>
+<country countryValue="GAMBIA"/>
+<country countryValue="GEORGIA"/>
+<country countryValue="GERMANY"/>
+<country countryValue="GHANA"/>
+<country countryValue="GIBRALTAR"/>
+<country countryValue="GREECE"/>
+<country countryValue="GREENLAND"/>
+<country countryValue="GRENADA"/>
+<country countryValue="GUADELOUPE"/>
+<country countryValue="GUAM"/>
+<country countryValue="GUATEMALA"/>
+<country countryValue="GUERNSEY"/>
+<country countryValue="GUINEA"/>
+<country countryValue="GUINEA-BISSAU"/>
+<country countryValue="GUYANA"/>
+<country countryValue="HAITI"/>
+<country countryValue="HEARD ISLAND AND MCDONALD ISLANDS"/>
+<country countryValue="HONDURAS"/>
+<country countryValue="HONG KONG"/>
+<country countryValue="HUNGARY"/>
+<country countryValue="ICELAND"/>
+<country countryValue="INDIA"/>
+<country countryValue="INDONESIA"/>
+<country countryValue="IRAN, ISLAMIC REPUBLIC OF"/>
+<country countryValue="IRAQ"/>
+<country countryValue="IRELAND"/>
+<country countryValue="ISLE OF MAN"/>
+<country countryValue="ITALY"/>
+<country countryValue="JAMAICA"/>
+<country countryValue="JAPAN"/>
+<country countryValue="JERSEY"/>
+<country countryValue="JORDAN"/>
+<country countryValue="KAZAKHSTAN"/>
+<country countryValue="KENYA"/>
+<country countryValue="KIRIBATI"/>
+<country countryValue="KOREA, DEMOCRATIC PEOPLE'S REPUBLIC OF (NORTH)"/>
+<country countryValue="KOREA, REPUBLIC OF (SOUTH)"/>
+<country countryValue="KUWAIT"/>
+<country countryValue="KYRGYZSTAN"/>
+<country countryValue="LAO PEOPLE'S DEMOCRATIC REPUBLIC"/>
+<country countryValue="LATVIA"/>
+<country countryValue="LEBANON"/>
+<country countryValue="LESOTHO"/>
+<country countryValue="LIBERIA"/>
+<country countryValue="LIBYA (LIBYAN ARAB JAMAHIRIYA)"/>
+<country countryValue="LIECHTENSTEIN"/>
+<country countryValue="LITHUANIA"/>
+<country countryValue="LLAND ISLANDS"/>
+<country countryValue="LUXEMBOURG"/>
+<country countryValue="MACAO"/>
+<country countryValue="MACEDONIA (FORMER YUGOSLAV REPUBLIC OF)"/>
+<country countryValue="MADAGASCAR"/>
+<country countryValue="MALAWI"/>
+<country countryValue="MALAYSIA"/>
+<country countryValue="MALDIVES"/>
+<country countryValue="MALI"/>
+<country countryValue="MALTA"/>
+<country countryValue="MARSHALL ISLANDS"/>
+<country countryValue="MARTINIQUE"/>
+<country countryValue="MAURITANIA"/>
+<country countryValue="MAURITIUS"/>
+<country countryValue="MAYOTTE"/>
+<country countryValue="MEXICO"/>
+<country countryValue="MICRONESIA, FEDERATED STATES OF"/>
+<country countryValue="MOLDOVA, REPUBLIC OF"/>
+<country countryValue="MONACO"/>
+<country countryValue="MONGOLIA"/>
+<country countryValue="MONTENEGRO"/>
+<country countryValue="MONTSERRAT"/>
+<country countryValue="MOROCCO"/>
+<country countryValue="MOZAMBIQUE"/>
+<country countryValue="MYANMAR"/>
+<country countryValue="NAMIBIA"/>
+<country countryValue="NAURU"/>
+<country countryValue="NEPAL"/>
+<country countryValue="NETHERLANDS"/>
+<country countryValue="NETHERLANDS ANTILLES"/>
+<country countryValue="NEW CALEDONIA"/>
+<country countryValue="NEW ZEALAND"/>
+<country countryValue="DUCT CONFIDENTIAL"/>
+<country countryValue="NICARAGUA"/>
+<country countryValue="NIGER"/>
+<country countryValue="NIGERIA"/>
+<country countryValue="NIUE"/>
+<country countryValue="NORFOLK ISLAND"/>
+<country countryValue="NORTHERN MARIANA ISLANDS"/>
+<country countryValue="NORWAY"/>
+<country countryValue="OMAN"/>
+<country countryValue="PAKISTAN"/>
+<country countryValue="PALAU"/>
+<country countryValue="PALESTINIAN TERRITORY, OCCUPIED"/>
+<country countryValue="PANAMA"/>
+<country countryValue="PAPUA NEW GUINEA"/>
+<country countryValue="PARAGUAY"/>
+<country countryValue="PERU"/>
+<country countryValue="PHILIPPINES"/>
+<country countryValue="PITCAIRN"/>
+<country countryValue="POLAND"/>
+<country countryValue="PORTUGAL"/>
+<country countryValue="PUERTO RICO"/>
+<country countryValue="QATAR"/>
+<country countryValue="ROMANIA"/>
+<country countryValue="RUSSIAN FEDERATION"/>
+<country countryValue="RWANDA"/>
+<country countryValue="RÉUNION"/>
+<country countryValue="SAINT BARTHÉLEMY"/>
+<country countryValue="SAINT HELENA"/>
+<country countryValue="SAINT KITTS AND NEVIS"/>
+<country countryValue="SAINT LUCIA"/>
+<country countryValue="SAINT MARTIN"/>
+<country countryValue="SAINT PIERRE AND MIQUELON"/>
+<country countryValue="SAINT VINCENT AND THE GRENADINES"/>
+<country countryValue="SAMOA"/>
+<country countryValue="SAN MARINO"/>
+<country countryValue="SAO TOME AND PRINCIPE"/>
+<country countryValue="SAUDI ARABIA"/>
+<country countryValue="SENEGAL"/>
+<country countryValue="SERBIA"/>
+<country countryValue="SERBIA AND MONTENEGRO"/>
+<country countryValue="SEYCHELLES"/>
+<country countryValue="SIERRA LEONE"/>
+<country countryValue="SINGAPORE"/>
+<country countryValue="SINT MAARTEN (DUTCH PART"/>
+<country countryValue="SLOVENIA"/>
+<country countryValue="SOLOMON ISLANDS"/>
+<country countryValue="SOMALIA"/>
+<country countryValue="SOUTH AFRICA"/>
+<country countryValue="SOUTH GEORGIA AND THE SOUTH SANDWICH ISLANDS"/>
+<country countryValue="SOUTH SUDAN"/>
+<country countryValue="SPAIN"/>
+<country countryValue="SRI LANKA"/>
+<country countryValue="SUDAN"/>
+<country countryValue="SURINAME"/>
+<country countryValue="SVALBARD AND JAN MAYEN"/>
+<country countryValue="SWAZILAND"/>
+<country countryValue="SWEDEN"/>
+<country countryValue="SWITZERLAND"/>
+<country countryValue="SYRIA (SYRIAN ARAB REPUBLIC)"/>
+<country countryValue="TAIWAN"/>
+<country countryValue="TAJIKISTAN"/>
+<country countryValue="TANZANIA, UNITED REPUBLIC OF"/>
+<country countryValue="THAILAND"/>
+<country countryValue="TIMOR-LESTE (EAST TIMOR)"/>
+<country countryValue="TOGO"/>
+<country countryValue="TOKELAU"/>
+<country countryValue="TONGA"/>
+<country countryValue="TRINIDAD AND TOBAGO"/>
+<country countryValue="TUNISIA"/>
+<country countryValue="TURKEY"/>
+<country countryValue="TURKMENISTAN"/>
+<country countryValue="TURKS AND CAICOS ISLANDS"/>
+<country countryValue="TUVALU"/>
+<country countryValue="UGANDA"/>
+<country countryValue="UKRAINE"/>
+<country countryValue="UNITED ARAB EMIRATES"/>
+<country countryValue="UNITED STATES MINOR OUTLYING ISLANDS"/>
+<country countryValue="URUGUAY"/>
+<country countryValue="UZBEKISTAN"/>
+<country countryValue="VANUATU"/>
+<country countryValue="VATICAN CITY STATE (HOLY SEE"/>
+<country countryValue="VENEZUELA"/>
+<country countryValue="VIET NAM"/>
+<country countryValue="VIRGIN ISLANDS, BRITISH"/>
+<country countryValue="VIRGIN ISLANDS, U.S."/>
+<country countryValue="WALLIS AND FUTUNA"/>
+<country countryValue="WESTERN SAHARA"/>
+<country countryValue="YEMEN"/>
+<country countryValue="ZAMBIA"/>
+<country countryValue="ZIMBABWE"/>
+ </implementationCountries>
+
+  <!-- IDTypes -->
+
+  <implementationIdTypes id="implementationIdTypes">
+    <listSchema elementName="idType" idValue=""/>
+    <idType idValue="SSN"/>
+    <idType idValue="Medical ID"/>
+    <idType idValue="Passport"/>
+    <idType idValue="Driver License"/>
+	<idType idValue="National ID"/>
+	<idType idValue="National Tax No."/>
+  </implementationIdTypes>
+  
+  <!-- Excluded Message Types -->
+  <excludedMessageTypes>  
+    <batchExcludeMessageTypes id="batchExcludeMessageTypes">
+	  <listSchema elementName="excludeMessageType" messageTypeValue=""/>
+        <excludeMessageType messageTypeValue="messageType1"/>
+    </batchExcludeMessageTypes>
+    
+    <realTimeExcludeMessageTypes id="realTimeExcludeMessageTypes">
+	  <listSchema elementName="excludeMessageType" messageTypeValue=""/>
+        <excludeMessageType messageTypeValue="messageType1"/>
+  </realTimeExcludeMessageTypes>
+  </excludedMessageTypes>
+
+  <!-- Countries (for list editing) -->
+
+  <implementationListEntryCountries id="implementationListEntryCountries">
+    <listSchema countryValue="" elementName="country"/>
+    <country countryValue="United States"/>
+    <country countryValue="United Kingdom"/>
+    <country countryValue="Slovakia"/>
+    <country countryValue="Israel"/>
+    <country countryValue="Canada"/>
+	<country countryValue="AFGHANISTAN"/>
+<country countryValue="ALBANIA"/>
+<country countryValue="ALGERIA"/>
+<country countryValue="AMERICAN SAMOA"/>
+<country countryValue="ANDORRA"/>
+<country countryValue="ANGOLA"/>
+<country countryValue="ANGUILLA"/>
+<country countryValue="ANTARCTICA"/>
+<country countryValue="ANTIGUA AND BARBUDA"/>
+<country countryValue="ARGENTINA"/>
+<country countryValue="ARMENIA"/>
+<country countryValue="ARUBA"/>
+<country countryValue="AUSTRALIA"/>
+<country countryValue="AUSTRIA"/>
+<country countryValue="AZERBAIJAN"/>
+<country countryValue="BAHAMAS"/>
+<country countryValue="BAHRAIN"/>
+<country countryValue="BANGLADESH"/>
+<country countryValue="BARBADOS"/>
+<country countryValue="BELARUS"/>
+<country countryValue="BELGIUM"/>
+<country countryValue="BELIZE"/>
+<country countryValue="BENIN"/>
+<country countryValue="BERMUDA"/>
+<country countryValue="BHUTAN"/>
+<country countryValue="BOLIVIA"/>
+<country countryValue="BONAIRE (SINT EUSTATIUS AND SABA)"/>
+<country countryValue="BOSNIA AND HERZEGOVINA"/>
+<country countryValue="BOTSWANA"/>
+<country countryValue="BOUVET ISLAND"/>
+<country countryValue="BRAZIL"/>
+<country countryValue="BRITISH INDIAN OCEAN TERRITORY"/>
+<country countryValue="BRUNEI DARUSSALAM"/>
+<country countryValue="BULGARIA"/>
+<country countryValue="BURKINA FASO"/>
+<country countryValue="BURUNDI"/>
+<country countryValue="CAMBODIA"/>
+<country countryValue="CAMEROON"/>
+<country countryValue="CANADA"/>
+<country countryValue="CAPE VERDE"/>
+<country countryValue="CAYMAN ISLANDS"/>
+<country countryValue="CENTRAL AFRICAN REPUBLIC"/>
+<country countryValue="CHAD"/>
+<country countryValue="CHILE"/>
+<country countryValue="CHINA"/>
+<country countryValue="CHRISTMAS ISLAND"/>
+<country countryValue="COCOS (KEELING) ISLANDS"/>
+<country countryValue="COLOMBIA"/>
+<country countryValue="COMOROS"/>
+<country countryValue="CONGO, DEMOCRATIC REPUBLIC OF THE"/>
+<country countryValue="COOK ISLANDS"/>
+<country countryValue="COSTA RICA"/>
+<country countryValue="CROATIA"/>
+<country countryValue="CUBA"/>
+<country countryValue="CURACAO"/>
+<country countryValue="CYPRUS"/>
+<country countryValue="CZECH REPUBLIC"/>
+<country countryValue="CÔTE D'IVOIRE (IVORY COAST)"/>
+<country countryValue="DENMARK"/>
+<country countryValue="DJIBOUTI"/>
+<country countryValue="DOMINICA"/>
+<country countryValue="DOMINICAN REPUBLIC"/>
+<country countryValue="ECUADOR"/>
+<country countryValue="EGYPT"/>
+<country countryValue="EL SALVADOR"/>
+<country countryValue="EQUATORIAL GUINEA"/>
+<country countryValue="ERITREA"/>
+<country countryValue="ESTONIA"/>
+<country countryValue="ETHIOPIA"/>
+<country countryValue="FALKLAND ISLANDS (MALVINAS)"/>
+<country countryValue="FAROE ISLANDS"/>
+<country countryValue="FIJI"/>
+<country countryValue="FINLAND"/>
+<country countryValue="FRANCE"/>
+<country countryValue="FRANCE, METROPOLITAN"/>
+<country countryValue="FRENCH GUIANA"/>
+<country countryValue="FRENCH POLYNESIA"/>
+<country countryValue="FRENCH SOUTHERN TERRITORIES"/>
+<country countryValue="GABON"/>
+<country countryValue="GAMBIA"/>
+<country countryValue="GEORGIA"/>
+<country countryValue="GERMANY"/>
+<country countryValue="GHANA"/>
+<country countryValue="GIBRALTAR"/>
+<country countryValue="GREECE"/>
+<country countryValue="GREENLAND"/>
+<country countryValue="GRENADA"/>
+<country countryValue="GUADELOUPE"/>
+<country countryValue="GUAM"/>
+<country countryValue="GUATEMALA"/>
+<country countryValue="GUERNSEY"/>
+<country countryValue="GUINEA"/>
+<country countryValue="GUINEA-BISSAU"/>
+<country countryValue="GUYANA"/>
+<country countryValue="HAITI"/>
+<country countryValue="HEARD ISLAND AND MCDONALD ISLANDS"/>
+<country countryValue="HONDURAS"/>
+<country countryValue="HONG KONG"/>
+<country countryValue="HUNGARY"/>
+<country countryValue="ICELAND"/>
+<country countryValue="INDIA"/>
+<country countryValue="INDONESIA"/>
+<country countryValue="IRAN, ISLAMIC REPUBLIC OF"/>
+<country countryValue="IRAQ"/>
+<country countryValue="IRELAND"/>
+<country countryValue="ISLE OF MAN"/>
+<country countryValue="ITALY"/>
+<country countryValue="JAMAICA"/>
+<country countryValue="JAPAN"/>
+<country countryValue="JERSEY"/>
+<country countryValue="JORDAN"/>
+<country countryValue="KAZAKHSTAN"/>
+<country countryValue="KENYA"/>
+<country countryValue="KIRIBATI"/>
+<country countryValue="KOREA, DEMOCRATIC PEOPLE'S REPUBLIC OF (NORTH)"/>
+<country countryValue="KOREA, REPUBLIC OF (SOUTH)"/>
+<country countryValue="KUWAIT"/>
+<country countryValue="KYRGYZSTAN"/>
+<country countryValue="LAO PEOPLE'S DEMOCRATIC REPUBLIC"/>
+<country countryValue="LATVIA"/>
+<country countryValue="LEBANON"/>
+<country countryValue="LESOTHO"/>
+<country countryValue="LIBERIA"/>
+<country countryValue="LIBYA (LIBYAN ARAB JAMAHIRIYA)"/>
+<country countryValue="LIECHTENSTEIN"/>
+<country countryValue="LITHUANIA"/>
+<country countryValue="LLAND ISLANDS"/>
+<country countryValue="LUXEMBOURG"/>
+<country countryValue="MACAO"/>
+<country countryValue="MACEDONIA (FORMER YUGOSLAV REPUBLIC OF)"/>
+<country countryValue="MADAGASCAR"/>
+<country countryValue="MALAWI"/>
+<country countryValue="MALAYSIA"/>
+<country countryValue="MALDIVES"/>
+<country countryValue="MALI"/>
+<country countryValue="MALTA"/>
+<country countryValue="MARSHALL ISLANDS"/>
+<country countryValue="MARTINIQUE"/>
+<country countryValue="MAURITANIA"/>
+<country countryValue="MAURITIUS"/>
+<country countryValue="MAYOTTE"/>
+<country countryValue="MEXICO"/>
+<country countryValue="MICRONESIA, FEDERATED STATES OF"/>
+<country countryValue="MOLDOVA, REPUBLIC OF"/>
+<country countryValue="MONACO"/>
+<country countryValue="MONGOLIA"/>
+<country countryValue="MONTENEGRO"/>
+<country countryValue="MONTSERRAT"/>
+<country countryValue="MOROCCO"/>
+<country countryValue="MOZAMBIQUE"/>
+<country countryValue="MYANMAR"/>
+<country countryValue="NAMIBIA"/>
+<country countryValue="NAURU"/>
+<country countryValue="NEPAL"/>
+<country countryValue="NETHERLANDS"/>
+<country countryValue="NETHERLANDS ANTILLES"/>
+<country countryValue="NEW CALEDONIA"/>
+<country countryValue="NEW ZEALAND"/>
+<country countryValue="DUCT CONFIDENTIAL"/>
+<country countryValue="NICARAGUA"/>
+<country countryValue="NIGER"/>
+<country countryValue="NIGERIA"/>
+<country countryValue="NIUE"/>
+<country countryValue="NORFOLK ISLAND"/>
+<country countryValue="NORTHERN MARIANA ISLANDS"/>
+<country countryValue="NORWAY"/>
+<country countryValue="OMAN"/>
+<country countryValue="PAKISTAN"/>
+<country countryValue="PALAU"/>
+<country countryValue="PALESTINIAN TERRITORY, OCCUPIED"/>
+<country countryValue="PANAMA"/>
+<country countryValue="PAPUA NEW GUINEA"/>
+<country countryValue="PARAGUAY"/>
+<country countryValue="PERU"/>
+<country countryValue="PHILIPPINES"/>
+<country countryValue="PITCAIRN"/>
+<country countryValue="POLAND"/>
+<country countryValue="PORTUGAL"/>
+<country countryValue="PUERTO RICO"/>
+<country countryValue="QATAR"/>
+<country countryValue="ROMANIA"/>
+<country countryValue="RUSSIAN FEDERATION"/>
+<country countryValue="RWANDA"/>
+<country countryValue="RÉUNION"/>
+<country countryValue="SAINT BARTHÉLEMY"/>
+<country countryValue="SAINT HELENA"/>
+<country countryValue="SAINT KITTS AND NEVIS"/>
+<country countryValue="SAINT LUCIA"/>
+<country countryValue="SAINT MARTIN"/>
+<country countryValue="SAINT PIERRE AND MIQUELON"/>
+<country countryValue="SAINT VINCENT AND THE GRENADINES"/>
+<country countryValue="SAMOA"/>
+<country countryValue="SAN MARINO"/>
+<country countryValue="SAO TOME AND PRINCIPE"/>
+<country countryValue="SAUDI ARABIA"/>
+<country countryValue="SENEGAL"/>
+<country countryValue="SERBIA"/>
+<country countryValue="SERBIA AND MONTENEGRO"/>
+<country countryValue="SEYCHELLES"/>
+<country countryValue="SIERRA LEONE"/>
+<country countryValue="SINGAPORE"/>
+<country countryValue="SINT MAARTEN (DUTCH PART"/>
+<country countryValue="SLOVENIA"/>
+<country countryValue="SOLOMON ISLANDS"/>
+<country countryValue="SOMALIA"/>
+<country countryValue="SOUTH AFRICA"/>
+<country countryValue="SOUTH GEORGIA AND THE SOUTH SANDWICH ISLANDS"/>
+<country countryValue="SOUTH SUDAN"/>
+<country countryValue="SPAIN"/>
+<country countryValue="SRI LANKA"/>
+<country countryValue="SUDAN"/>
+<country countryValue="SURINAME"/>
+<country countryValue="SVALBARD AND JAN MAYEN"/>
+<country countryValue="SWAZILAND"/>
+<country countryValue="SWEDEN"/>
+<country countryValue="SWITZERLAND"/>
+<country countryValue="SYRIA (SYRIAN ARAB REPUBLIC)"/>
+<country countryValue="TAIWAN"/>
+<country countryValue="TAJIKISTAN"/>
+<country countryValue="TANZANIA, UNITED REPUBLIC OF"/>
+<country countryValue="THAILAND"/>
+<country countryValue="TIMOR-LESTE (EAST TIMOR)"/>
+<country countryValue="TOGO"/>
+<country countryValue="TOKELAU"/>
+<country countryValue="TONGA"/>
+<country countryValue="TRINIDAD AND TOBAGO"/>
+<country countryValue="TUNISIA"/>
+<country countryValue="TURKEY"/>
+<country countryValue="TURKMENISTAN"/>
+<country countryValue="TURKS AND CAICOS ISLANDS"/>
+<country countryValue="TUVALU"/>
+<country countryValue="UGANDA"/>
+<country countryValue="UKRAINE"/>
+<country countryValue="UNITED ARAB EMIRATES"/>
+<country countryValue="UNITED STATES MINOR OUTLYING ISLANDS"/>
+<country countryValue="URUGUAY"/>
+<country countryValue="UZBEKISTAN"/>
+<country countryValue="VANUATU"/>
+<country countryValue="VATICAN CITY STATE (HOLY SEE"/>
+<country countryValue="VENEZUELA"/>
+<country countryValue="VIET NAM"/>
+<country countryValue="VIRGIN ISLANDS, BRITISH"/>
+<country countryValue="VIRGIN ISLANDS, U.S."/>
+<country countryValue="WALLIS AND FUTUNA"/>
+<country countryValue="WESTERN SAHARA"/>
+<country countryValue="YEMEN"/>
+<country countryValue="ZAMBIA"/>
+<country countryValue="ZIMBABWE"/>
+  </implementationListEntryCountries>
+
+  <!-- IDTypes (for list editing) -->
+
+  <implementationListEntryIdTypes id="implementationListEntryIdTypes">
+    <listSchema elementName="idType" idValue=""/>
+    <idType idValue="SSN"/>
+    <idType idValue="Medical ID"/>
+    <idType idValue="Passport"/>
+    <idType idValue="Drivers License"/>
+	<idType idValue="National ID"/>
+	<idType idValue="National Tax No."/>
+  </implementationListEntryIdTypes>
+
+  <!-- Keywords (for list editing) -->
+
+ <implementationListEntryKeywords id="implementationListEntryIdKeywords">
+  <listSchema keywordValue="" elementName="keyword"/>
+  <keyword keywordValue ="KEYWORD_1"/>
+</implementationListEntryKeywords>
+
+  <!-- Categories (for list editing) -->
+
+ <implementationListEntryCategories id="implementationListEntryIdCategories">
+  <listSchema categoryValue="" elementName="category"/>
+  <category categoryValue ="CATEGORY_1"/>
+ </implementationListEntryCategories>
+
+</configuration>

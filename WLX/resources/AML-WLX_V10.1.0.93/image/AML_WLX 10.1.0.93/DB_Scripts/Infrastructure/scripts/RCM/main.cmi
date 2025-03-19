@@ -1,0 +1,214 @@
+# update to latest RCM Version
+prologue {
+[oracle
+	/*--------------------------
+	This enclosed block is specific to SQLPlus.
+	It ensures that the script output is logged,
+	and that the script will abort immediately if
+	an error occurs.
+	If you are using another tool please remove this block
+	And its corresponding block at script end, and ensure
+	that you are logging the output and that the script will
+	abort when it encounters an error
+	BEGIN SQL*PLUS-specific code
+	----------------------------*/
+	Whenever SQLERROR EXIT SQL.SQLCODE;
+	SET ECHO ON
+	SPOOL @env:wlf_rcm_update_log_filename@;
+	/*--------------------------
+	END SQL*PLUS-specific code
+	----------------------------*/
+
+	set define off
+]
+[mssql
+	SET ANSI_NULL_DFLT_ON ON
+	SET QUOTED_IDENTIFIER ON
+	SET NOCOUNT ON
+	:On Error exit
+	
+]
+}
+
+import 99 Package_RCM_Update_Latest.cmi
+
+[mssql
+	IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID('BIN2DEC') )
+	DROP FUNCTION @env:rcm_schema_name@.BIN2DEC
+	@go@
+	
+	CREATE FUNCTION @env:rcm_schema_name@.BIN2DEC(@BINVAL VARCHAR(10))
+	RETURNS INT
+	AS
+	BEGIN
+	DECLARE
+  		@I                 INT,
+  		@DIGITS            INT,
+  		@CURRENT_DIGIT     CHAR(1),
+  		@CURRENT_DIGIT_DEC  INT,
+  		@RESULT INT 
+  
+  		SET @RESULT = 0
+  		SET @DIGITS = LEN(@BINVAL)
+  		SET @I = 1
+  		WHILE @I <= @DIGITS 
+   		BEGIN
+     		SET @CURRENT_DIGIT = SUBSTRING(@BINVAL, @I, 1);
+     		SET @CURRENT_DIGIT_DEC = CONVERT(INT,@CURRENT_DIGIT); 
+     		SET @RESULT = (@RESULT * 2) + @CURRENT_DIGIT_DEC;
+     		SET @I = @I +1
+   		END 
+   		RETURN(@RESULT) 
+	END
+	@go@
+
+	IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID('CODEUPDATE') )
+		DROP FUNCTION @env:rcm_schema_name@.CODEUPDATE
+	@go@
+	
+	CREATE FUNCTION @env:rcm_schema_name@.CODEUPDATE(@P_STR VARCHAR(300))
+	RETURNS VARCHAR(255) 
+	AS
+	BEGIN
+	DECLARE
+	@STR VARCHAR(300), 
+	@RES VARCHAR(1000),
+	@CODEPOINTBITS VARCHAR(1500),
+	@CODEPOINTSASNUMBER INT,
+	@FINALRES VARCHAR(255)
+ 
+	SET @STR = @P_STR
+	SET @RES = ''
+	SET @FINALRES = ''
+
+	BEGIN
+		WHILE LEN(@STR) > 0 
+  		BEGIN
+    		IF Patindex('%t%',@STR) = 0 
+      		BEGIN
+        		IF Patindex('%f%',@STR) = 0 
+           			SET @STR = '';
+        		ELSE 
+             		BEGIN SET @RES = @RES + '0';  
+                   	SET @STR = SUBSTRING(@STR,Patindex('%f%',@STR)+1,300)
+             		END;        
+       			END 
+     		ELSE IF (Patindex('%f%',@STR) = 0) 
+            	BEGIN SET @RES = @RES + '1';  
+                  	SET @STR = SUBSTRING(@STR,Patindex('%t%',@STR)+1,300)
+            	END;
+     		ELSE IF Patindex('%t%',@STR) < Patindex('%f%',@STR)
+            	BEGIN SET @RES = @RES + '1';  
+                 	SET @STR = SUBSTRING(@STR,Patindex('%t%',@STR)+1,300)
+             	END;
+    		ELSE 
+            	BEGIN SET @RES = @RES + '0';  
+                  	SET @STR = SUBSTRING(@STR,Patindex('%f%',@STR)+1,300)
+             	END;
+    		END
+  		END
+  
+		WHILE LEN(@RES)%6 <> 0 BEGIN
+			SET @RES = @RES + '0';
+		END
+		WHILE LEN(@RES) > 0 BEGIN
+   			SET @CODEPOINTBITS = SUBSTRING(@RES,1,6)
+   			SET @RES = SUBSTRING(@RES,7,300)
+   			SET @CODEPOINTSASNUMBER =dbo.BIN2DEC(@CODEPOINTBITS) + 48
+   			SET @FINALRES = @FINALRES + NCHAR(@CODEPOINTSASNUMBER);
+		END
+		RETURN(@FINALRES)
+	END
+	@go@
+	
+	IF EXISTS ( select 1 
+		 from @env:rcm_schema_name@.acm_md_versions 
+		 where module_name='AML-WLF' 
+		 and
+		 ( version_major <= 3 and version_minor <= 3 and version_sub < 2 )
+			)
+	begin
+
+	BEGIN TRANSACTION
+		UPDATE @env:rcm_schema_name@.acm_alert_custom_attributes SET csm11 = dbo.CODEUPDATE(csm11) 
+		where alert_custom_attributes_id in (select alert_custom_attributes_id from @env:rcm_schema_name@.alerts where alert_type_version = 'AML-EWLF/3.1.1.0' or alert_type_version = 'AML-EWLF/3.2.1.0')
+		and csm11 is not null and  (csm11 like '%true%' or csm11 like '%false%')
+	COMMIT TRANSACTION
+		 
+	end
+]
+[oracle
+	CREATE OR REPLACE FUNCTION @env:rcm_schema_name@.CODEUPDATE(P_STR VARCHAR2 ) 
+		RETURN VARCHAR2
+	AS
+		STR VARCHAR2(300) := P_STR;
+		RES VARCHAR2(1000) := '';
+		CODEPOINTBITS VARCHAR2(1000);
+		CODEPOINTSASNUMBER NUMBER;
+		FINALRES VARCHAR2(255) := '';
+		 
+		FUNCTION BIN2DEC (BINVAL IN CHAR) RETURN NUMBER IS
+  			I                 NUMBER;
+  			DIGITS            NUMBER;
+  			RESULT            NUMBER := 0;
+  			CURRENT_DIGIT     CHAR(1);
+  			CURRENT_DIGIT_DEC NUMBER;
+		BEGIN
+  			DIGITS := LENGTH(BINVAL);
+  			FOR I IN 1..DIGITS LOOP
+     			CURRENT_DIGIT := SUBSTR(BINVAL, I, 1);
+     			CURRENT_DIGIT_DEC := TO_NUMBER(CURRENT_DIGIT);
+     			RESULT := (RESULT * 2) + CURRENT_DIGIT_DEC;
+  			END LOOP;
+  			RETURN RESULT;
+		END BIN2DEC;
+
+	BEGIN
+ 		WHILE LENGTH(STR) > 0 LOOP
+  		BEGIN
+    		IF INSTR(STR,'t') = 0 THEN
+        		IF INSTR(STR,'f') = 0 THEN
+           			STR := '';
+        		ELSE 
+             		BEGIN RES := RES || '0';  
+                   		STR := SUBSTR(STR,INSTR(STR,'f')+1);
+             		END;
+        		END IF; 
+    		ELSIF INSTR(STR,'f') = 0 THEN
+             	BEGIN RES := RES || '1';  
+                   STR := SUBSTR(STR,INSTR(STR,'t')+1);
+             	END;
+    		ELSIF INSTR(STR,'t') < INSTR(STR,'f') THEN
+            	BEGIN RES := RES || '1';  
+                   STR := SUBSTR(STR,INSTR(STR,'t')+1);
+             	END;
+    		ELSE 
+            	BEGIN RES := RES || '0';  
+                   STR := SUBSTR(STR,INSTR(STR,'f')+1);
+             	END;
+    		END IF;
+  		END;
+		END LOOP;
+		WHILE MOD(LENGTH(RES),6) <> 0 LOOP
+			RES := RES||'0';
+		END LOOP;
+		WHILE LENGTH(RES) > 0 LOOP
+   			CODEPOINTBITS := SUBSTR(RES,1,6);
+   			RES := SUBSTR(RES,7);
+   			CODEPOINTSASNUMBER := BIN2DEC(CODEPOINTBITS) + 48;
+   			FINALRES := FINALRES || CHR(CODEPOINTSASNUMBER);
+		END LOOP;
+		RETURN FINALRES;
+	END;
+	@go@
+	
+	UPDATE @env:rcm_schema_name@.acm_alert_custom_attributes SET csm11 = @env:rcm_schema_name@.CODEUPDATE(csm11) 
+		WHERE alert_custom_attributes_id IN (SELECT alert_custom_attributes_id FROM @env:rcm_schema_name@.alerts WHERE alert_type_version = 'AML-EWLF/3.1.1.0' OR alert_type_version = 'AML-EWLF/3.2.1.0')
+			AND csm11 IS NOT NULL AND  (csm11 LIKE '%true%' OR csm11 LIKE '%false%') 
+			AND EXISTS ( SELECT 1 FROM @env:rcm_schema_name@.acm_md_versions WHERE module_name='AML-WLF' AND
+		 		( version_major <= 3 AND version_minor <= 3 AND version_sub < 2 )
+			)
+	@go@
+	COMMIT
+	@go@
+]

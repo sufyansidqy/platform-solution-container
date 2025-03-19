@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<plugin id="wlf.plugin.monitor" version="1.0" includeDoctype="true" classLoaderType="childFirst">
+	<runtime>
+		<lib name="lib/wlf-monitor-plugin.jar" />
+		<extra-lib name="lib/wlf-plugin-common.jar" />
+		<extra-lib name="lib/esapi.jar" />
+		<extra-lib name="lib/json-sanitizer.jar" />
+		<lib name="lib/commons-lang3.jar"/>
+		<lib name="lib/antisamy.jar"/>
+		<lib name="lib/spring-web.jar"/>
+		<lib name="lib/spring-context.jar"/>
+		<lib name="lib/spring-core.jar"/>
+		<lib name="lib/spring-beans.jar"/>
+		<lib name="lib/spring-aop.jar"/>
+		<lib name="lib/commons-codec.jar"/>
+		<lib name="lib/commons-collections.jar"/>
+		<lib name="lib/commons-logging.jar"/>
+		<lib name="lib/xercesImpl.jar" />
+		<lib name="lib/xml-apis.jar"/>
+		<lib name="lib/slf4j-api.jar" />
+		<lib name="lib/slf4j-jdk14.jar"/>
+	</runtime>
+  <module id="admnpending">
+    <main-page id="adminPendingPage" controller="com.actimize.wlf.monitor.controller.AdminPendingJobController" >
+    	<controller-action id="displayJobDetails" method="displayJobDetails"/>
+    	<controller-action id="cancelJob" method="cancelJob"/>
+    	<controller-action id="openMonitorFilterDialog" method="openMonitorFilterDialog"/>
+    	<controller-action id="sort" method="sort"/>
+ 	    <controller-action id="changePageSize" method="changePageSize"/>
+    	<controller-action id="nextPage" method="nextPage"/>
+    	<controller-action id="previousPage" method="previousPage"/>
+    	<controller-action id="lastPage" method="lastPage"/>
+    	<controller-action id="firstPage" method="firstPage"/>
+    	<controller-action id="refreshPage" method="refreshPage"/>
+    </main-page>
+    <page id="detailsPage" controller="com.actimize.wlf.monitor.controller.JobDetailsController" >
+    	<controller-action id="back" method="back"/>
+    </page>
+  </module>
+  <module id="admncompleted">
+    <main-page id="adminCompletedPage" controller="com.actimize.wlf.monitor.controller.AdminCompletedJobController" >
+    	<controller-action id="displayJobDetails" method="displayJobDetails"/>
+    	<controller-action id="openMonitorFilterDialog" method="openMonitorFilterDialog"/>
+    	<controller-action id="showOutputFiles" method="showOutputFiles"/>
+    	<controller-action id="sort" method="sort"/>
+	    <controller-action id="changePageSize" method="changePageSize"/>
+    	<controller-action id="nextPage" method="nextPage"/>
+    	<controller-action id="previousPage" method="previousPage"/>
+    	<controller-action id="lastPage" method="lastPage"/>
+    	<controller-action id="firstPage" method="firstPage"/>
+    	<controller-action id="refreshPage" method="refreshPage"/>
+    </main-page>
+    <page id="detailsPage" controller="com.actimize.wlf.monitor.controller.JobDetailsController" >
+    	<controller-action id="back" method="back"/>
+    </page>
+  </module>
+  <module id="admnetl">  
+    <main-page id="adminEtlPage" controller="com.actimize.wlf.monitor.controller.AdminETLController" >
+    	<controller-action id="sort" method="sort"/>
+    	<controller-action id="openMonitorFilterDialog" method="openMonitorFilterDialog"/>
+	    <controller-action id="changePageSize" method="changePageSize"/>
+    	<controller-action id="nextPage" method="nextPage"/>
+    	<controller-action id="previousPage" method="previousPage"/>
+    	<controller-action id="lastPage" method="lastPage"/>
+    	<controller-action id="firstPage" method="firstPage"/>
+    	<controller-action id="refreshPage" method="refreshPage"/>
+    </main-page>
+  </module>
+  <module id="pending">
+    <main-page id="pendingPage" controller="com.actimize.wlf.monitor.controller.PendingJobController" >
+    	<controller-action id="displayJobDetails" method="displayJobDetails"/>
+    	<controller-action id="cancelJob" method="cancelJob"/>
+    	<controller-action id="openMonitorFilterDialog" method="openMonitorFilterDialog"/>
+    	<controller-action id="sort" method="sort"/>
+	    <controller-action id="changePageSize" method="changePageSize"/>
+    	<controller-action id="nextPage" method="nextPage"/>
+    	<controller-action id="previousPage" method="previousPage"/>
+    	<controller-action id="lastPage" method="lastPage"/>
+    	<controller-action id="firstPage" method="firstPage"/>
+    	<controller-action id="refreshPage" method="refreshPage"/>
+    </main-page>
+    <page id="detailsPage" controller="com.actimize.wlf.monitor.controller.JobDetailsController" >
+    	<controller-action id="back" method="back"/>
+    </page>
+  </module>
+  <module id="completed">
+    <main-page id="completedPage" controller="com.actimize.wlf.monitor.controller.CompletedJobController" >
+    	<controller-action id="displayJobDetails" method="displayJobDetails"/>
+    	<controller-action id="openMonitorFilterDialog" method="openMonitorFilterDialog"/>
+    	<controller-action id="showOutputFiles" method="showOutputFiles"/>
+    	<controller-action id="sort" method="sort"/>
+	    <controller-action id="changePageSize" method="changePageSize"/>
+    	<controller-action id="nextPage" method="nextPage"/>
+    	<controller-action id="previousPage" method="previousPage"/>
+    	<controller-action id="lastPage" method="lastPage"/>
+    	<controller-action id="firstPage" method="firstPage"/>
+    	<controller-action id="refreshPage" method="refreshPage"/>
+    </main-page>
+    <page id="detailsPage" controller="com.actimize.wlf.monitor.controller.JobDetailsController" >
+    	<controller-action id="back" method="back"/>
+    </page>
+  </module>
+  <module id="etl">
+    <main-page id="etlPage" controller="com.actimize.wlf.monitor.controller.ETLController" >
+    	<controller-action id="sort" method="sort"/>
+    	<controller-action id="openMonitorFilterDialog" method="openMonitorFilterDialog"/>
+	    <controller-action id="changePageSize" method="changePageSize"/>
+    	<controller-action id="nextPage" method="nextPage"/>
+    	<controller-action id="previousPage" method="previousPage"/>
+    	<controller-action id="lastPage" method="lastPage"/>
+    	<controller-action id="firstPage" method="firstPage"/>
+    	<controller-action id="refreshPage" method="refreshPage"/>
+    </main-page>
+  </module>
+	<extension id="monitorFilterExtension">
+		<dialog id="pendingDialog">
+			<page id="pendingFilterPage" controller="com.actimize.wlf.monitor.controller.FilterController">
+				<controller-action id="filter" method="filter"/>
+				<controller-action id="clear" method="clear"/>
+			</page>
+		</dialog>
+		<dialog id="completedDialog">
+			<page id="completedFilterPage" controller="com.actimize.wlf.monitor.controller.FilterController">
+				<controller-action id="filter" method="filter"/>
+				<controller-action id="clear" method="clear"/>
+			</page>
+		</dialog>
+		<dialog id="etlDialog">
+			<page id="etlFilterPage" controller="com.actimize.wlf.monitor.controller.FilterController">
+				<controller-action id="filter" method="filter"/>
+				<controller-action id="clear" method="clear"/>
+			</page>
+		</dialog>
+	</extension>
+	  
+</plugin>

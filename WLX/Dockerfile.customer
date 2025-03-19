@@ -1,0 +1,123 @@
+# syntax = docker/dockerfile:1.2.0
+#####################################################################################
+#
+# Description: This docker file creates a customized Linux Docker image for the WLX Solution
+#
+# Components:
+#   - AIS server + WLX Solution + Customization
+#
+# Prerequisites:
+#  - The following items must be provided/present when building the image:
+#       1.)     ./resources-cust/customization/packages (Optional)
+#               - Directory containing the customized AIS objects
+#
+#       2.)     ./resources-cust/customization/configuration-files (Optional)
+#               - Directory containing the customized configs
+#
+#       3.)     ./resources-cust/customization/java-solutions (Optional)
+#               - Directory containing the customized java solutions
+#
+#       4.)     ./resources-cust/license
+#               - Directory containing the solution/PS license.lic
+#
+# Docker folder structure should be like:
+#   ./resources-cust
+#        ├── customization
+#        |   ├── configuration-files
+#        |   |   └── *.ini
+#        |   ├── java-solutions
+#        |   |   └── custom-java-solution
+#        |   |       └── *.jar
+#        |   └── packages
+#        |       └── *.apk
+#        └── license
+#            └── *.lic
+#
+# Written by : WLX
+#
+#####################################################################################
+
+#####################################################################################
+# Build inputs
+#####################################################################################
+ARG FROM_IMAGE=artifactory.actimize.cloud/docker/wlx:10.1.0.38-SNAPSHOT-20220426.367
+FROM ${FROM_IMAGE} AS BUILDER
+#####################################################################################
+
+#####################################################################################
+#  Arguments
+#####################################################################################
+ARG RESOURCE_DIR=resources-cust
+ARG AIS_SERVER_DEFAULT_USER=admin
+ARG AIS_SERVER_DEFAULT_PWD=password
+ARG AIS_SERVER_DEFAULT_PORT=2345
+ARG CUSTOM_APK_DIR=${RESOURCE_DIR}/customization/packages
+ARG CUSTOM_CONF_DIR=${RESOURCE_DIR}/customization/configuration-files
+ARG CUSTOM_JAVA_DIR=${RESOURCE_DIR}/customization/java-solutions
+ARG CUSTOM_APK_TEMP_DIR=/tmp/customization/packages
+ARG CUSTOM_CONF_TEMP_DIR=/tmp/customization/configuration-files
+ARG CUSTOM_JAVA_TEMP_DIR=/tmp/customization/java-solutions
+#####################################################################################
+
+#####################################################################################
+# Inject license for installation
+#####################################################################################
+USER ais_user
+COPY ${RESOURCE_DIR}/license/license.lic $AIS_SERVER_DIR/Instances/actimize_server_1/license/license.lic
+#####################################################################################
+
+#####################################################################################
+# Deploy customization
+#####################################################################################
+COPY ["${CUSTOM_APK_DIR}/","${CUSTOM_APK_TEMP_DIR}/"]
+COPY ["${CUSTOM_CONF_DIR}/","${CUSTOM_CONF_TEMP_DIR}/"]
+COPY ["${CUSTOM_JAVA_DIR}/","${CUSTOM_JAVA_TEMP_DIR}/"]
+RUN $AIS_SERVER_DIR/instances_manager/instances_manager $AIS_SERVER_DIR start --name actimize_server_1 && \
+    if [ "$(ls -A ${CUSTOM_APK_TEMP_DIR})" ]; then \
+        for i in ${CUSTOM_APK_TEMP_DIR}/*;\
+        do \
+            $AIS_SERVER_DIR/ais_admin --import --server localhost --port ${AIS_SERVER_DEFAULT_PORT} --user ${AIS_SERVER_DEFAULT_USER} --password ${AIS_SERVER_DEFAULT_PWD} -f ${CUSTOM_APK_TEMP_DIR}/"$( basename "$i")" -w; \
+        done \
+    fi && \
+    if [ "$(ls -A ${CUSTOM_CONF_TEMP_DIR})" ]; then \
+        for i in ${CUSTOM_CONF_TEMP_DIR}/*;\
+        do \
+            $AIS_SERVER_DIR/ais_admin --deploy-configuration --keep-current-values --server localhost --port ${AIS_SERVER_DEFAULT_PORT} --user ${AIS_SERVER_DEFAULT_USER} --password ${AIS_SERVER_DEFAULT_PWD} --source-file ${CUSTOM_CONF_TEMP_DIR}/"$( basename "$i")" --target-file $AIS_SERVER_DIR/Instances/actimize_server_1/WLX_Config/"$( basename "$i")"; \
+        done \
+    fi && \
+    if [ "$(ls -A ${CUSTOM_JAVA_TEMP_DIR})" ]; then \
+        for i in ${CUSTOM_JAVA_TEMP_DIR}/*;\
+        do \
+            $AIS_SERVER_DIR/ais_admin --deploy-java --server localhost --port ${AIS_SERVER_DEFAULT_PORT} --user ${AIS_SERVER_DEFAULT_USER} --password ${AIS_SERVER_DEFAULT_PWD} --solution-name "$( basename "$i")" --solution-path ${CUSTOM_JAVA_TEMP_DIR}/"$( basename "$i")" --overwrite; \
+        done \
+    fi && \
+    $AIS_SERVER_DIR/instances_manager/instances_manager $AIS_SERVER_DIR stop --name actimize_server_1
+#####################################################################################
+
+#####################################################################################
+# Clean up after build
+#####################################################################################
+USER root
+RUN rm -rf $AIS_SERVER_DIR/Instances/actimize_server_1/license/license.lic && \
+    rm -rf ${CUSTOM_APK_TEMP_DIR} && \
+    rm -rf ${CUSTOM_CONF_TEMP_DIR} && \
+    rm -rf ${CUSTOM_JAVA_TEMP_DIR}
+USER ais_user
+#####################################################################################
+
+#####################################################################################
+# Build final solution image
+#####################################################################################
+FROM ${FROM_IMAGE} AS FINAL
+ARG WLX_VERSION
+RUN rm -rf $AIS_SERVER_DIR/Instances/actimize_server_1 $AIS_SERVER_DIR/Instances/actimize_server_1
+COPY --chown=ais_user:ais_user --from=BUILDER $AIS_SERVER_DIR/Instances/actimize_server_1 $AIS_SERVER_DIR/Instances/actimize_server_1
+LABEL WLX_VERSION=$WLX_VERSION
+#####################################################################################
+
+#####################################################################################
+# Set workdir
+#####################################################################################
+USER ais_user
+WORKDIR $AIS_SERVER_DIR
+#####################################################################################

@@ -1,0 +1,23 @@
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:camel="http://camel.apache.org/schema/spring"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+  http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+
+        <camel:camelContext id="camel" allowUseOriginalMessage="false" autoStartup="false">
+    </camel:camelContext>
+
+    <bean id="shutdown" class="org.apache.camel.impl.engine.DefaultShutdownStrategy">
+                        <property name="timeout" value="60"/>
+        </bean>
+
+    <bean id="replicationSvc" class="com.actimize.profiles.replication.ReplicationService">
+                <property name="replicationPropertiesPath" value="/opt/actimize/ais_server/Instances/actimize_server_1/profiles_amq.properties"/>
+        </bean>
+
+        <bean id="builder" class="com.actimize.profiles.replication.ReplicationRouteBuilder" destroy-method="shutdown">
+        <property name="embeddedBrokerVM" value="vm://wlx-perf-customer-wlx-batch-0-ba-fb-77-7b-41-90-actimize_server_1?create=false"/>
+                <property name="replicationService" ref="replicationSvc"/>
+        </bean>
+
+</beans>

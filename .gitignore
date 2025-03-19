@@ -1,1 +1,5 @@
 ActOne/required/*.war
+*.jar
+*.apk
+*.apf
+*.zip

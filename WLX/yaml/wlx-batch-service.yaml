@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: test-wlx-master
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-additional-resource-tags:
+      Name=test-wlx-master,
+      Created_By=,
+      BudgetTeam=,
+      EnvType=,
+      Environment=,
+      Service=,
+      Team=
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: tcp
+    service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: "60"
+    service.beta.kubernetes.io/aws-load-balancer-internal: 0.0.0.0/0
+    service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
+spec:
+  type: LoadBalancer
+  externalTrafficPolicy: Local
+  selector:
+    app: test-wlx-master
+  ports:
+    - protocol: TCP
+      port: 2345
+      targetPort: 2345
+      name: listener-port

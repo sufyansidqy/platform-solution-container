@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Archiver-Version: Plexus Archiver
+Built-By: ContainerAdministrator
+Created-By: Apache Maven 3.8.1
+Build-Jdk: 1.8.0_192
+
+Name: WLF Core
+Build-Time: 2025-02-06 10:49
+ArtifactId: wlf-core
+Version: 10.1.0.93
+GroupId: com.actimize.wlf
+

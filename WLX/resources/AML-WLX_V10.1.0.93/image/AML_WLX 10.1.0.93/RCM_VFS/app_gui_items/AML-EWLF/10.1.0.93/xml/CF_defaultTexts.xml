@@ -1,0 +1,143 @@
+<texts>
+	<alertHighlights>
+		<jobDetails>Job Details</jobDetails>
+		<jobID>Job ID:</jobID>
+		<jobName>Job Name:</jobName>
+		<jobType>Job Type:</jobType>
+		<alertID>Alert ID:</alertID>
+		<alertDateTime>Alert Date Time:</alertDateTime>
+		<score>Score:</score>
+		<numberOfHits>Number of Hits:</numberOfHits>
+		<partyKey>Party Key:</partyKey>
+		<partyName>Party Name:</partyName>
+		<entityExcludeListsNames>Entity Exclude Lists Names:</entityExcludeListsNames>
+		<hitExcludeListsNames>Hit Exclude Lists Names:</hitExcludeListsNames>
+		<partyDetails>Party Details</partyDetails>
+		<partyType>Entity Type:</partyType>
+		<partyDOB>Date of Birth:</partyDOB>
+		<partyBirthCountry>Country of Birth:</partyBirthCountry>
+		<partyGender>Gender:</partyGender>
+		<title>Additional Party Data</title>
+		<partyAddresses>Address:</partyAddresses>
+		<partyIds>ID:</partyIds>
+		<partyNationalityCountries>Nationality Country:</partyNationalityCountries>
+		<partyAliases>Aliases:</partyAliases>
+		<customFields>Custom Fields</customFields>
+	</alertHighlights>
+	<hits>
+		<sortHitsBy>Sort By:</sortHitsBy>
+		<sortByHitScore>Hit Score</sortByHitScore>
+		<sortByViewedHits>Minimized Hits</sortByViewedHits>
+		<entryId>Entry ID:</entryId>
+		<score>Score</score>
+		<listId>Watch List:</listId>
+		<keywords>Keywords:</keywords>
+		<matchType>Match Type:</matchType>
+		<entryType>Entity Type:</entryType>
+		<viewedHit>Minimized</viewedHit>
+		<categories>Categories:</categories>
+		<entryUpdateDate>Entry Update Date:</entryUpdateDate>
+		<entryCreatedDate>Entry Created Date:</entryCreatedDate>
+		<listUpdateDate>List Update Date:</listUpdateDate>
+		<hit>Hit</hit>
+		<aliases>Aliases</aliases>
+		<ids>IDs</ids>
+		<addresses>Address</addresses>
+		<dob>Date and Places of Birth</dob>
+		<matchedName>Alias</matchedName>
+		<scoreFactors>Hit Score Details</scoreFactors>
+		<hitScore>Hit Score:</hitScore>
+		<factor>Factor</factor>
+		<value>Value</value>
+		<factorScore>Score</factorScore>
+		<impact>Impact</impact>
+		<customFields>Custom Fields</customFields>
+		<!-- Uncomment required custom fields -->
+		<!--<cs_1>Custom Field #1:</cs_1>
+			<cs_2>Custom Field #2:</cs_2>
+			<cs_3>Custom Field #3:</cs_3>
+			<cs_4>Custom Field #4:</cs_4>
+			<cs_5>Custom Field #5:</cs_5>
+			<cs_6>Custom Field #6:</cs_6>
+			<cs_7>Custom Field #7:</cs_7>
+			<cs_8>Custom Field #8:</cs_8>
+			<cs_9>Custom Field #9:</cs_9>
+			<cs_10>Custom Field #10:</cs_10>
+			<cs_11>Custom Field #11:</cs_11>
+			<cs_12>Custom Field #12:</cs_12>
+			<cs_13>Custom Field #13:</cs_13>
+			<cs_14>Custom Field #14:</cs_14>
+			<cs_15>Custom Field #15:</cs_15>
+			<cs_16>Custom Field #16:</cs_16>
+			<cs_17>Custom Field #17:</cs_17>
+			<cs_18>Custom Field #18:</cs_18>-->
+		<addl-hit-title>Additional Hit Details</addl-hit-title>
+		<matchedName>Alias</matchedName>
+		<additionalInfo>Additional Information</additionalInfo>
+		<profileNotes>ProfileNotes</profileNotes>
+		<images>Images</images>
+		<otherRoles>Other Roles</otherRoles>
+		<previousRoles>Previous Roles</previousRoles>
+		<sanctionReferences>Sanction References</sanctionReferences>
+		<furtherInfo>Further Information</furtherInfo>
+		<externalSource>External Source</externalSource>
+		<company>Company</company>
+		<linkedTo>Linked To</linkedTo>
+		<gender>Gender:</gender>
+		<title>Title:</title>
+		<position>Position:</position>
+		<deceasedDate>Deceased Date:</deceasedDate>
+		<dateOfBirth>Date of Birth:</dateOfBirth>
+		<age>Age:</age>
+		<ageAsOfDate>Age as of Date:</ageAsOfDate>
+		<countryOfBirth>Country of Birth:</countryOfBirth>
+		<placeOfBirth>Date and Place of Birth:</placeOfBirth>
+		<nationalityCountries>Nationality Countries:</nationalityCountries>
+		<trackingNumber>Tracking Number</trackingNumber>
+		<phoneNumber>Phone Numbers</phoneNumber>
+		<pepStatus>PEP Status</pepStatus>
+		<pepRole>PEP Role</pepRole>
+		<pepRoleLevel>PEP Role Level</pepRoleLevel>
+		<pepPosition>PEP Position</pepPosition>
+		<pepRoleStatus>PEP Role Status</pepRoleStatus>
+		<pepRoleStartDate>PEP Role Start Date</pepRoleStartDate>
+		<pepRoleEndDate>PEP Role End Date</pepRoleEndDate>
+		<pepRoleBio>PEP Role Bio</pepRoleBio>
+	</hits>
+	<buttons>
+		<priorAlerts>Prior Alerts</priorAlerts>
+	</buttons>
+	<impacts>
+		<HIGH>HIGH</HIGH>
+		<MEDIUM>MEDIUM</MEDIUM>
+		<LOW>LOW</LOW>
+		<CORRECTIVE>CORRECTIVE</CORRECTIVE>
+	</impacts>
+	<jobTypes>
+		<etl>List Loading</etl>
+		<listsync>List Synchronization</listsync>
+		<sb>Scheduled Batch Scan</sb>
+		<ssb>Self Service Batch Scan</ssb>
+		<od>On Demand</od>
+		<rt>Real-time</rt>
+	</jobTypes>
+	<entityTypes>
+		<person>PERSON</person>
+		<org>ORGANIZATION</org>
+		<country>COUNTRY</country>
+	</entityTypes>
+	<matchTypes>
+		<name>NAME</name>
+		<id>ID</id>
+		<country>COUNTRY</country>
+	</matchTypes>
+	<boolTypes>
+		<trueVal>TRUE</trueVal>
+		<falseVal>FALSE</falseVal>
+	</boolTypes>
+	<gender>
+		<MALE>MALE</MALE>
+		<FEMALE>FEMALE</FEMALE>
+		<UNKNOWN>UNKNOWN</UNKNOWN>
+	</gender>
+</texts>

@@ -1,0 +1,143 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: test-wlx-realtime
+spec:
+  serviceName: test-wlx-realtime
+  replicas: 1
+  selector:
+    matchLabels:
+      app: test-wlx-realtime
+
+  volumeClaimTemplates:
+    - metadata:
+        name: logs
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: "40Gi"
+        storageClassName: aws-ebs-gp3-csi-delete
+
+  template:
+    metadata:
+      labels:
+        app: test-wlx-realtime
+    spec:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        runAsNonRoot: true
+
+      # use this setting to specify required node AWS instance type and availability zone
+      nodeSelector:
+
+
+
+      hostAliases:
+        - ip: 10.220.169.251
+          hostnames:
+            - actimize.database.server
+
+      volumes:
+        - name: ais-config
+          configMap:
+            name: wlx-ais-config
+            defaultMode: 0755
+        - name: db
+          configMap:
+            name: wlx-db
+            defaultMode: 0755
+        - name: entrpnt-lctn
+          configMap:
+            name: wlx-entrpnt-lctn
+            defaultMode: 0755
+        - name: config
+          configMap:
+            name: wlx-config
+            defaultMode: 0755
+        - name: license
+          secret:
+            secretName: wlx-license
+            defaultMode: 0644
+
+
+        #
+
+        # make sure that NFS server hostname is correct
+
+
+
+        - name: ais-addons
+          nfs:
+            server: wlx-efs.actimize.services
+            path: /wlx-dev2/udm-integration-data
+
+
+
+
+
+
+      #
+
+      containers:
+        - name: wlx
+
+          image: "artifactory.actimize.cloud/docker/wlx:10.1.0.20-SNAPSHOT-20220213.239"
+
+          imagePullPolicy: Always
+
+          # use this section to set required machine resources
+
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "4096Mi"
+              cpu: "500m"
+
+          ports:
+            - containerPort: 2345
+              name: ais
+          readinessProbe:
+            httpGet:
+              path: /eh/heartbeat
+              port: 2347
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+          livenessProbe:
+            tcpSocket:
+              port: 2347
+            initialDelaySeconds: 10
+            periodSeconds: 10
+
+          volumeMounts:
+
+            - name: db
+              mountPath: /opt/actimize/ais_server/Instances/actimize_server_1/temp/ais-cnf-db/
+
+            - name: config
+              mountPath: /opt/actimize/ais_server/Instances/actimize_server_1/temp/wlx-cnf-wlx/
+
+            - name: ais-config
+              mountPath: /opt/actimize/ais_server/Instances/actimize_server_1/temp/ais-cnf-ais/
+
+            - name: entrpnt-lctn
+              mountPath: /opt/actimize/ais_server/Instances/actimize_server_1/temp/sltn_entrpnt_lctn/
+
+            - name: logs
+              mountPath: /opt/actimize/ais_server/Instances/actimize_server_1/logs
+
+          #
+
+          #
+
+          # uncomment this parameter if additional AIS configuration files needs to be overwritten with ConfigMaps ,
+          # refer to AIS installation guide for creating AIS ConfigMaps
+
+          env:
+            - name: SLTN_ENTRPNT_LCTN
+              value: /opt/actimize/ais_server/Instances/actimize_server_1/temp/sltn_entrpnt_lctn

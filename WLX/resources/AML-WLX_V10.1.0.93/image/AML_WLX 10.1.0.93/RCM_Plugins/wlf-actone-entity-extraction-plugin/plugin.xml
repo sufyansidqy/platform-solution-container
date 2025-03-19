@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin id="actOne-wlf-entityExtractionPlugin" version="1.0" includeDoctype="true" classLoaderType="childFirst">
+	<runtime>
+		<lib name="actOne-entityExtractionPlugin.jar"/>
+		<lib name="lib/batik-ext-1.17.jar"/>
+		<lib name="lib/batik-shared-resources-1.17.jar"/>
+		<lib name="lib/javax.activation-api-1.2.0.jar"/>
+		<lib name="lib/jaxb-api-2.3.1.jar"/>
+		<lib name="lib/jaxb-impl-2.1.jar"/>
+		<lib name="lib/serializer-2.7.3.jar"/>
+		<lib name="lib/xercesImpl-2.12.2.jar"/>
+		<lib name="lib/xml-apis-1.4.01.jar"/>
+		<extra-lib name="resources"/>
+	</runtime>
+	<!-- For each alert type, register one of the following extension points -->
+	<extension-points>
+		<!--  Entities Extraction Via Scheduler (recommended for imporved performance) -->
+		<extension-point id="async_external_entity_extraction" 
+			point="rcm.externalEntities.extraction" actions="ITEM_CREATED,ITEM_MANUALLY_CREATED" 
+			class="com.actimize.rcm.entity_extraction.entity_extraction_plugin.handlers.EntityExtractionHandler">
+			<invocationAttributes>
+				<attr name="alert_type" value="ACT_AML_WLF_SCA"/>
+				<attr name="alert_type" value="ACT_AML_WLF_RTA"/>
+			</invocationAttributes>
+		</extension-point>
+	</extension-points>
+</plugin>

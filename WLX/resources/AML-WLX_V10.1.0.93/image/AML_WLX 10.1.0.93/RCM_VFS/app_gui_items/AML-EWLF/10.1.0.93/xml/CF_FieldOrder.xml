@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fields>
+	<alert-header>
+		<field-group labelKey="jobDetails" cols="2">
+			<row>
+				<field>jobName</field>
+				<field>score</field>
+			</row>
+			<row>
+				<field>numberOfHits</field>
+				<field>jobID</field>
+			</row>
+			<row>
+				<field>alertDateTime</field>
+				<field></field>
+			</row>
+		</field-group>
+		<field-group labelKey="partyDetails" cols="2">
+			<row>
+				<field>partyName</field>
+				<field>partyType</field>
+			</row>
+			<row>
+				<field>partyKey</field>
+				<field>partyAddresses</field>
+			</row>
+			<row>
+				<field>partyDOB</field>
+				<field>partyIds</field>
+			</row>
+			<row>
+				<field>partyBirthCountry</field>
+				<field>partyNationalityCountries</field>
+			</row>
+			<row>
+				<field>partyGender</field>
+				<field>partyAliases</field>
+			</row>
+		</field-group>
+	</alert-header>
+	<alert-detail>
+		<field-group labelKey="partyDetails" cols="2">
+			<row>
+				<field>entityExcludeListsNames</field>
+				<field>hitExcludeListsNames</field>
+			</row>
+		</field-group>
+		<field-section labelKey="customFields" set="partyCustomFields"/>
+	</alert-detail>
+	<hit-header>
+		<field-group labelKey="alertDetails" cols="3">
+			<row>
+				<field>listId</field>
+				<field>entryId</field>
+				<field>score</field>
+			</row>
+			<row>
+				<field>keywords</field>
+				<field>matchType</field>
+				<field>entryType</field>
+			</row>
+			<row>
+				<field>categories</field>
+				<field>entryUpdateDate</field>
+				<field>listUpdateDate</field>
+			</row>
+			<row>
+				<field>nationalityCountries</field>
+				<field>entryCreatedDate</field>
+				<field></field>
+			</row>
+		</field-group>
+	</hit-header>
+	<hit-detail>
+		<field-section set="aliasesAndIds"/>
+		<field-section set="dobAndAddresses"/>
+	</hit-detail>
+	<hit-addl-detail>
+		<field-section set="miscSection"/>
+		<field-section labelKey="scoreFactors" set="scoreFactors"/>
+		<field-section labelKey="additionalInfo" set="additionalInfo"/>
+		<field-section labelKey="customFields" set="customFields"/>
+	</hit-addl-detail>
+	<misc-sections>
+		<field-group cols="2">
+			<row>
+				<field>title</field>
+				<field>position</field>
+			</row>
+			<row>
+				<field>gender</field>
+				<field>deceasedDate</field>
+			</row>
+		</field-group>
+	</misc-sections>
+</fields>

@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans
+xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+	<bean id="mssqlAdapter" class="com.actimize.util.dbupgrade.dbadapters.BaseDatabaseAdapter">
+		<property name="name" value="mssql" />
+		<property name="urlIdentifyingFeature" value="sqlserver" />
+		<property name="databaseEnvironment" ref="mssqlDatabaseEnvironment"/>
+		<property name="defaultEnvironmentMap" ref="mssqlDefaultEnvironmentMap" />
+		<property name="driverClassName" value="com.microsoft.sqlserver.jdbc.SQLServerDriver" />
+
+		<property name="reservedWords">
+			<map>
+				<entry key="[osd]{0,3}m[osd]{0,3}:([^@]+)"><value>$1</value></entry>
+				<entry key="[sod]{1,3}:[^@]+"><value/></entry>
+				<entry key="now"><value>getdate()</value></entry>
+				<entry key="soon"><value>dateadd(second,1,getDate())</value></entry>
+				<entry key="dbo"><value>dbo.</value></entry>
+				<entry key="go"><value>go&#13;&#10;</value></entry>
+				<entry key="datetime"><value>datetime</value></entry>
+				<entry key="number"><value>numeric</value></entry>
+				<entry key="int"><value>int</value></entry>
+				<entry key="smallint"><value>smallint</value></entry>
+				<entry key="tinyint"><value>tinyint</value></entry>
+				<entry key="string"><value>varchar</value></entry>
+				<entry key="ustring"><value>nvarchar</value></entry>
+				<!-- <entry key="clob"><value>varchar(max)</value></entry> -->
+				<entry key="clob"><value>ntext</value></entry>
+				<entry key="uclob"><value>nvarchar(max)</value></entry>
+				<entry key="blob"><value>image</value></entry>
+				<entry key="identity"><value>identity not null</value></entry>
+				<entry key="nvl"><value>COALESCE</value></entry>
+				<entry key="convert (.*)[ \t](.*)"><value>$1</value></entry>
+				<entry key="rename table (.*)[ \t](.*)"><value>sp_rename $1,$2</value></entry>
+				<entry key="rename column (.*)\.(.*)[ \t](.*)"><value>sp_rename '$1.[$2]','$3','COLUMN'</value></entry>
+				<entry key="modify"><value>alter column</value></entry>
+				<entry key="nullable"><value>null</value></entry>
+				<entry key="drop column"><value>drop column</value></entry>
+				<entry key="concat"><value>+</value></entry>
+				<entry key="bigint"><value>bigint</value></entry>
+				<entry key="char"><value>char</value></entry>
+				<entry key="chr"><value>char</value></entry>
+				<entry key="datetime2"><value>datetime</value></entry>
+				<entry key="float"><value>float</value></entry>
+				<entry key="local"><value></value></entry>
+				<entry key="money"><value>float</value></entry>
+				<entry key="nonclustered"><value>nonclustered</value></entry>
+				<entry key="nonPrecisionNumber"><value>float</value></entry>
+				<entry key="timestamp"><value>datetime2</value></entry>
+				<entry key="tablespace"><value>on</value></entry>
+				<entry key="create table (.*) as"><value></value></entry>
+				<entry key="into temp (.*)"><value>into $1</value></entry>
+        		<entry key="logsoff[ \t]([^ ]+)"><value>
+-- the cmi token @logsoff@ is not supported for current database type
+
+</value></entry>
+				<entry key="modify nullable column type[ \t]([^ ]+)[ \t]([^ ]+)[ \t]([^ ]+)"><value>alter table $1 alter column $2 $3 null</value></entry>
+				<entry key="modify not null column type[ \t]([^ ]+)[ \t]([^ ]+)[ \t]([^ ]+)"><value>alter table $1 alter column $2 $3 not null</value></entry>
+				<entry key="change nullable column type[ \t]([^ ]+)[ \t]([^ ]+)[ \t]([^ ]+)">
+		  	<value>
+alter table $1 alter column $2 $3 null</value>
+		</entry>
+        <entry key="change nullable expanded column type[ \t]([^ ]+)[ \t]([^ ]+)[ \t]([^ ]+)">
+		  	<value>
+alter table $1 add xyz_temp $3 null 
+go
+
+update $1 set xyz_temp = $2
+go
+
+alter table $1 drop column $2 
+go
+
+alter table $1 add $2 $3 null
+go
+
+update $1 set $2 = xyz_temp
+go
+
+alter table $1 drop column xyz_temp</value>
+		</entry>
+				<entry key="change nullable column type with fk[ \t]([^ ]+)[ \t]([^ ]+)[ \t]([^ ]+)">
+				<value>
+alter table $1 alter column $2 $3 null</value>
+				</entry>
+        <entry key="change not null column type[ \t]([^ ]+)[ \t]([^ ]+)[ \t]([^ ]+)">
+		  <value>
+alter table $1 alter column $2 $3 not null</value>
+		</entry>
+        <entry key="change not null column type with unique constraint[ \t]([^ ]+)[ \t]([^ ]+)[ \t]([^ ]+)[ \t]([^ ]+)">
+		  <value>
+alter table $1 drop constraint $4
+go
+
+alter table $1 alter column $2 $3 not null
+go
+
+alter table $1 add constraint $4 unique($2)</value>
+		</entry>
+		<entry key="change not null column type with unique index[ \t]([^ ]+)[ \t]([^ ]+)[ \t]([^ ]+)[ \t]([^ ]+)">
+		  <value>
+drop index $1.$4
+go
+
+alter table $1 alter column $2 $3 not null
+go
+
+create unique index $4 on $1($2)</value>
+		</entry>
+<entry key="add not null column with values[ \t]([^ ]+)[ \t]([^ ]+)[ \t]([^ ]+)[ \t]([^ ]+)">
+		  <value>
+alter table $1 add $2 $3 not null constraint def_constr default $4
+go
+
+alter table $1 drop constraint def_constr</value>
+		</entry>
+		<entry key="add default constraint (.*)\.(.*)[ \t](.*)[ \t](.*)"><value>alter table dbo.$1 add constraint $3 default $4  for $2</value></entry>		
+		<entry key="disable trigger (.*)[ \t](.*)"><value>alter table dbo.$2 disable trigger $1</value></entry>
+		<entry key="enable trigger (.*)[ \t](.*)"><value>alter table dbo.$2 enable trigger $1</value></entry>
+		<entry key="drop trigger if exists[ \t]([^ ]+)">
+			  <value>
+if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[$1]') and OBJECTPROPERTY(id, N'IsTrigger') = 1)
+drop trigger $1</value>
+		</entry>
+		<entry key="drop trigger if exists[ \t]([^ ]+)[ \t]([^ ]+)">
+			  <value>
+if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[$1]') and OBJECTPROPERTY(id, N'IsTrigger') = 1)
+drop trigger $1</value>
+		</entry>
+		<entry key="drop view if exists[ \t]([^ ]+)">
+		  <value>
+if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[$1]') and OBJECTPROPERTY(id, N'IsView') = 1)
+drop view $1</value>
+		</entry>
+		<entry key="drop view if exists[ \t]([^ ]+)[ \t]([^ ]+)">
+		  <value>
+if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[$1]') and OBJECTPROPERTY(id, N'IsView') = 1)
+drop view $1</value>
+		</entry>
+		<entry key="drop index if exists[ \t]([^ ]+)[ \t]([^ ]+)">
+			  <value>
+if exists (select * from dbo.sysindexes where name = N'$2' and id = object_id(N'[dbo].[$1]'))
+drop index $1.$2</value>
+		</entry>
+		<entry key="drop index if exists[ \t]([^ ]+)[ \t]([^ ]+)[ \t]([^ ]+)">
+			  <value>
+if exists (select * from dbo.sysindexes where name = N'$2' and id = object_id(N'[dbo].[$1]'))
+drop index $1.$2</value>
+		</entry>
+		<entry key="drop fk if exists[ \t]([^ ]+)[ \t]([^ ]+)">
+			  <value>if (object_id('$2', 'F') is not null)
+begin
+    alter table dbo.$1 drop constraint $2
+end</value>
+		</entry>
+		<entry key="drop fk if exists[ \t]([^ ]+)[ \t]([^ ]+)[ \t]([^ ]+)">
+			  <value>if (object_id('$2', 'F') is not null)
+begin
+    alter table dbo.$1 drop constraint $2
+end</value>
+		</entry>
+		<entry key="drop pk if exists[ \t]([^ ]+)[ \t]([^ ]+)">
+			  <value>if (object_id('$2', 'PK') is not null)
+begin
+    alter table dbo.$1 drop constraint $2
+end</value>
+		</entry>
+		<entry key="drop pk if exists[ \t]([^ ]+)[ \t]([^ ]+)[ \t]([^ ]+)">
+			  <value>if (object_id('$2', 'PK') is not null)
+begin
+    alter table dbo.$1 drop constraint $2
+end</value>
+		</entry>
+		<entry key="drop unique constraint if exists[ \t]([^ ]+)[ \t]([^ ]+)">
+			  <value>
+if exists (select * from dbo.sysindexes where name = N'$2' and id = object_id(N'[dbo].[$1]'))
+alter table $1 drop constraint $2</value>
+		</entry>
+		<entry key="drop unique constraint if exists[ \t]([^ ]+)[ \t]([^ ]+)[ \t]([^ ]+)">
+			  <value>
+if exists (select * from dbo.sysindexes where name = N'$2' and id = object_id(N'[dbo].[$1]'))
+alter table $1 drop constraint $2</value>
+		</entry>
+        <entry key="drop index ([^ ]+) ([^ ]+)">
+		  <value>
+drop index $1.$2</value>
+		</entry>
+				<entry key="comment (.*)"><value>-- CHANGELOG: $1</value></entry>
+				<entry key="if not exists ([^.]+)\.([^ ]+) = (.*?) then (.*)">
+<value>if not exists (select $2 from $1 where $2 = $3) 
+$4</value>
+				</entry>
+				<entry key="if not exists \((.*)\) then (.*)">
+<value>if not exists ($1)
+$2</value>
+				</entry>
+		<entry key="startif not exists \((.*)\)">
+			<value>
+if not exists ($1)
+begin
+			</value>
+		</entry>	
+		<entry key="endif not exist">
+			<value>
+end
+			</value>
+		</entry>
+		
+		<entry key="if table not exists[ \t]([^ ]+)[ \t]([^ ]+) then do">
+			<value>
+if not exists (select * from INFORMATION_SCHEMA.TABLES where TABLE_NAME = N'$2')
+begin</value>
+		</entry>	
+		<entry key="endif table not exist">
+			<value>end
+			</value>
+		</entry>	
+			<entry key="fullSchemaName[ \t]+([^ ]+)[ \t]*([^ ]*)"><value>$1.$2</value></entry>
+			<entry key="procedure_param\(([^\)]*)\)"><value>@$1</value></entry>
+			<entry key="storage_index_insert_only[ \t]+([^ ]+)[ \t]+([^ ]+)[ \t]*([^ ]*)"><value></value></entry>
+			<entry key="storage_index_insert_update[ \t]+([^ ]+)[ \t]+([^ ]+)[ \t]*([^ ]*)"><value></value></entry>
+			<entry key="storage_index_static_data[ \t]+([^ ]+)[ \t]+([^ ]+)[ \t]*([^ ]*)"><value></value></entry>
+			<entry key="storage_params_insert_only[ \t]+([^ ]+)[ \t]+([^ ]+)"><value></value></entry>
+			<entry key="storage_params_insert_update[ \t]+([^ ]+)[ \t]+([^ ]+)"><value></value></entry>
+			<entry key="storage_params_static_data[ \t]+([^ ]+)[ \t]+([^ ]+)"><value></value></entry>
+			<entry key="storage_primary_insert_only[ \t]+([^ ]+)[ \t]+([^ ]+)[ \t]*([^ ]*)"><value></value></entry>
+			<entry key="storage_primary_insert_update[ \t]+([^ ]+)[ \t]+([^ ]+)[ \t]*([^ ]*)"><value></value></entry>
+			<entry key="storage_primary_static_data[ \t]+([^ ]+)[ \t]+([^ ]+)[ \t]*([^ ]*)"><value></value></entry>
+			<entry key="substring1\(([^\)]*),([^\)]*)\)"><value>substring($1, $2, len($1) - ($2) + 1)</value></entry>
+			<entry key="substring2\(([^\)]*),([^\)]*),([^\)]*)\)"><value>substring($1, $2, $3)</value></entry>
+			<entry key="trim\(([^\)]*)\)"><value>ltrim(rtrim($1))</value></entry>
+			</map>
+		</property>
+	</bean>
+
+	<bean id="mssqlSEAdapter" class="com.actimize.util.dbupgrade.dbadapters.DatabaseSpecialization">
+		<property name="name" value="mssqlse" />
+		<property name="baseDB" ref="mssqlAdapter"/>
+	</bean>
+
+	<bean id="mssqlEEAdapter" class="com.actimize.util.dbupgrade.dbadapters.DatabaseSpecialization">
+	    <property name="name" value="mssqlee" />
+	    <property name="baseDB" ref="mssqlAdapter" />
+	</bean>
+
+	<bean id="nmssqlAdapter" class="com.actimize.util.dbupgrade.dbadapters.DatabaseSpecialization">
+	    <property name="name" value="nmssql" />
+	    <property name="baseDB" ref="mssqlAdapter" />
+	</bean>
+
+	<bean id="nmssqlSEAdapter" class="com.actimize.util.dbupgrade.dbadapters.DatabaseSpecialization">
+		<property name="name" value="nmssqlse" />
+		<property name="baseDB" ref="nmssqlAdapter"/>
+	</bean>
+
+	<bean id="nmssqlEEAdapter" class="com.actimize.util.dbupgrade.dbadapters.DatabaseSpecialization">
+		<property name="name" value="nmssqlee" />
+		<property name="baseDB" ref="nmssqlAdapter" />
+	</bean>
+	
+</beans>

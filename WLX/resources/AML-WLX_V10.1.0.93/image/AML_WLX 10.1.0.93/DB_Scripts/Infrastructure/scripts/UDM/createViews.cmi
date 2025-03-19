@@ -1,0 +1,1981 @@
+version 1.0.0.0 add {
+[oracle	
+	CREATE OR REPLACE VIEW @env:udm_wlf_schema@.DW_VERSION
+	AS
+	SELECT
+		ID,
+		VERSION_CONTROL_LABEL,
+		UPDATE_DATE,
+		SCRIPT_FILE_NAME,
+		APP_TYPE
+	FROM
+		@env:udm_cds_schema_name@.DW_VERSION
+	@go@
+	
+	CREATE OR REPLACE VIEW @env:udm_wlf_schema@.PARTY_COUNTRY
+    AS
+    SELECT
+    	party.PARTY_KEY,
+    	ctry.COUNTRY_CD, 
+    	ctry.COUNTRY_NAME,
+    	relation.COUNTRY_RELATION_TYPE_CD as COUNTRY_RELATION_TYPE_CD,
+    	ctryrel.COUNTRY_RELATION_TYPE_DV as COUNTRY_RELATION_TYPE_DV,
+    	relation.COUNTRY_RELATION_ID,
+    	relation.ENTITY_KEY,
+    	relation.ENTITY_TYPE_CD,
+		relation.TENANT_CD,
+		NVL(relation.IS_TO_BE_DELETED, 0) IS_TO_BE_DELETED
+    FROM
+    	@env:udm_cds_schema_name@.V_COUNTRY ctry,
+    	@env:udm_cds_schema_name@.V_ENTITY_COUNTRY_RELATION_BASE relation,
+    	@env:udm_cds_schema_name@.V_PARTY_BASE party,
+    	@env:udm_cds_schema_name@.V_COUNTRY_RELATION_TYPE ctryrel
+    WHERE
+    	ctry.ENTITY_SK = relation.COUNTRY_SK
+    	AND relation.COUNTRY_RELATION_TYPE_SK = ctryrel.ENTITY_SK
+		AND relation.REF_ENTITY_SK = party.ENTITY_SK
+		AND NVL(relation.IS_TO_BE_DELETED, 0) != 1
+    	AND (relation.COUNTRY_RELATION_ID = '1' OR  relation.COUNTRY_RELATION_ID = '2'
+	   		OR  relation.COUNTRY_RELATION_ID = '3' OR  relation.COUNTRY_RELATION_ID = '4'
+    		OR  relation.COUNTRY_RELATION_ID = '5')
+	@go@
+	
+	CREATE OR REPLACE VIEW @env:udm_wlf_schema@.PARTY
+	AS
+	SELECT
+		party.PARTY_KEY,
+		party.BIRTH_INCORP_DATE,
+		CASE WHEN type.IS_INDIVIDUAL = 1 OR NULLIF(party.PARTY_NAME, '') IS NULL THEN party.FIRST_NAME ELSE '' END AS PARTY_FIRST_NAME,
+		CASE WHEN type.IS_INDIVIDUAL = 1 THEN party.LAST_NAME ELSE NVL(NULLIF(party.PARTY_NAME,''), party.LAST_NAME) END AS PARTY_LAST_NAME,
+		CASE WHEN type.IS_INDIVIDUAL = 1 OR NULLIF(party.PARTY_NAME, '') IS NULL THEN party.MAIDEN_NAME ELSE '' END AS PARTY_MAIDEN_NAME,
+		CASE WHEN type.IS_INDIVIDUAL = 1 OR NULLIF(party.PARTY_NAME, '') IS NULL THEN party.MIDDLE_NAME ELSE '' END AS PARTY_MIDDLE_NAME,
+		party.PARTY_NAME,
+		party.PLACE_OF_BIRTH,
+		type.PARTY_TYPE_CD,
+		gender.GENDER_CD AS GENDER,
+		party.IS_TO_BE_DELETED,
+		party.EFFECTIVE_DATE,
+		party.BATCH_DATE_TIME,
+		party.TENANT_CD,
+		party.NAME_PREFIX,
+		(SELECT COUNTRY_CD
+		 FROM @env:udm_wlf_schema@.PARTY_COUNTRY party_nationality
+		 WHERE 
+			party.PARTY_KEY = party_nationality.PARTY_KEY 
+			AND (party_nationality.COUNTRY_RELATION_TYPE_DV = 'UDM.Party.Place_Of_Birth_Country_Cd' OR party_nationality.COUNTRY_RELATION_TYPE_CD = 'UDM.Party.Place_Of_Birth_Country_Cd' )
+			AND party_nationality.COUNTRY_RELATION_ID = '1') AS PLACE_OF_BIRTH_COUNTRY,
+		(SELECT COUNTRY_CD
+		 FROM @env:udm_wlf_schema@.PARTY_COUNTRY party_nationality
+		 WHERE 
+			party.PARTY_KEY = party_nationality.PARTY_KEY 
+			AND (party_nationality.COUNTRY_RELATION_TYPE_DV = 'UDM.Party.Citizenship_Country_Cd' OR party_nationality.COUNTRY_RELATION_TYPE_CD = 'UDM.Party.Citizenship_Country_Cd')
+			AND party_nationality.COUNTRY_RELATION_ID = '1') AS CITIZENSHIP_COUNTRY_CD,
+		(SELECT COUNTRY_CD
+		 FROM @env:udm_wlf_schema@.PARTY_COUNTRY party_nationality
+		 WHERE 
+			party.PARTY_KEY = party_nationality.PARTY_KEY 
+			AND (party_nationality.COUNTRY_RELATION_TYPE_DV = 'UDM.Party.Citizenship_Country_Cd' OR party_nationality.COUNTRY_RELATION_TYPE_CD = 'UDM.Party.Citizenship_Country_Cd')
+			AND party_nationality.COUNTRY_RELATION_ID = '2') AS CITIZENSHIP_COUNTRY_CD_2,
+		(SELECT COUNTRY_CD
+		 FROM @env:udm_wlf_schema@.PARTY_COUNTRY party_nationality
+		 WHERE 
+			party.PARTY_KEY = party_nationality.PARTY_KEY 
+			AND (party_nationality.COUNTRY_RELATION_TYPE_DV = 'UDM.Party.Citizenship_Country_Cd' OR party_nationality.COUNTRY_RELATION_TYPE_CD = 'UDM.Party.Citizenship_Country_Cd')
+			AND party_nationality.COUNTRY_RELATION_ID = '3') AS CITIZENSHIP_COUNTRY_CD_3,
+		(SELECT COUNTRY_CD
+		 FROM @env:udm_wlf_schema@.PARTY_COUNTRY party_nationality
+		 WHERE 
+			party.PARTY_KEY = party_nationality.PARTY_KEY 
+			AND (party_nationality.COUNTRY_RELATION_TYPE_DV = 'UDM.Party.Citizenship_Country_Cd' OR party_nationality.COUNTRY_RELATION_TYPE_CD = 'UDM.Party.Citizenship_Country_Cd')
+			AND party_nationality.COUNTRY_RELATION_ID = '4') AS CITIZENSHIP_COUNTRY_CD_4,
+		(SELECT COUNTRY_CD
+		 FROM @env:udm_wlf_schema@.PARTY_COUNTRY party_nationality
+		 WHERE 
+			party.PARTY_KEY = party_nationality.PARTY_KEY 
+			AND (party_nationality.COUNTRY_RELATION_TYPE_DV = 'UDM.Party.Citizenship_Country_Cd' OR party_nationality.COUNTRY_RELATION_TYPE_CD = 'UDM.Party.Citizenship_Country_Cd')
+			AND party_nationality.COUNTRY_RELATION_ID = '5') AS CITIZENSHIP_COUNTRY_CD_5
+	FROM 
+		@env:udm_cds_schema_name@.V_PARTY_BASE party LEFT OUTER JOIN @env:udm_cds_schema_name@.V_PARTY_TYPE type
+		on party.PARTY_TYPE_SK = type.ENTITY_SK LEFT OUTER JOIN @env:udm_cds_schema_name@.V_GENDER gender
+		on party.GENDER_SK = gender.ENTITY_SK
+	WHERE
+		NVL(party.IS_TO_BE_DELETED, 0) != 1
+	@go@
+	
+	CREATE OR REPLACE VIEW @env:udm_wlf_schema@.PARTY_DOCUMENTATION
+	AS
+	SELECT
+		party.PARTY_KEY,
+    	doc.DOCUMENT_NUMBER AS DOC_NUMBER, 
+    	doc.DOCUMENT_TYPE_CD AS DOC_TYPE_CD, 
+    	ctry.COUNTRY_CD AS ISSUE_COUNTRY_CD, 
+    	relation.DOCUMENT_REQUIREMENT_CD, 
+    	relation.ENTITY_KEY, 
+    	relation.ENTITY_TYPE_CD,
+		COALESCE(type.DOCUMENT_TYPE_DV, type.DOCUMENT_TYPE_DESC, type.DOCUMENT_TYPE_CD) as WLF_DOCUMENT_TYPE_CD,
+		party.ENTITY_SK PARTY_SK,
+		doc.TENANT_CD,
+		COALESCE(relation.IS_TO_BE_DELETED, 0) REL_IS_TO_BE_DELETED, 
+    	COALESCE(doc.IS_TO_BE_DELETED, 0) DOC_IS_TO_BE_DELETED 
+	FROM 
+    	@env:udm_cds_schema_name@.V_DOCUMENT_BASE doc,
+    	@env:udm_cds_schema_name@.V_COUNTRY ctry,
+    	@env:udm_cds_schema_name@.V_ENTITY_DOCUMENT_RELATIO_BASE relation, 
+    	@env:udm_cds_schema_name@.V_PARTY_BASE party,
+    	@env:udm_cds_schema_name@.V_DOCUMENT_TYPE type
+	WHERE 
+    	doc.ISSUE_COUNTRY_SK                        = ctry.ENTITY_SK(+)
+    	AND doc.ENTITY_SK                           = relation.DOCUMENT_SK 
+    	AND relation.REF_ENTITY_SK                  = party.ENTITY_SK 
+    	AND type.DOCUMENT_TYPE_CD                   = doc.DOCUMENT_TYPE_CD
+    	AND NVL(relation.IS_TO_BE_DELETED, 0) != 1 
+    	AND NVL(doc.IS_TO_BE_DELETED, 0)      != 1
+	@go@
+	
+	CREATE OR REPLACE VIEW @env:udm_wlf_schema@.PARTY_ADDRESS
+	AS
+	SELECT 
+		address.ADDRESS_KEY,
+		address.ADDRESS_LINE_1,
+		address.ADDRESS_LINE_2,
+		address.ADDRESS_LINE_3,
+		address.ADDRESS_LINE_4,
+		address.ADDRESS_LINE_5, 
+		address.APARTMENT_SUITE_NUMBER, 
+		address.BUILDING_NUMBER, 
+		address.CITY, 
+		address.PO_BOX, 
+		address.STREET, 
+		address.ZIP_POSTCODE AS ZIP_CODE, 
+		ctry.COUNTRY_CD, 
+		stprov.STATE_PROVINCE_CD AS STATE_PROVINCE, 
+		relation.ADDRESS_RELATION_TYPE_CD, 
+		relation.ENTITY_TYPE_CD,
+		address.TENANT_CD,
+		party.PARTY_KEY,
+		NVL(address.IS_TO_BE_DELETED, 0) IS_TO_BE_DELETED
+	FROM 
+    	@env:udm_cds_schema_name@.V_ADDRESS_BASE address,
+    	@env:udm_cds_schema_name@.V_ENTITY_ADDRESS_RELATION_BASE relation,
+    	@env:udm_cds_schema_name@.V_COUNTRY ctry,
+    	@env:udm_cds_schema_name@.V_STATE_PROVINCE stprov,
+    	@env:udm_cds_schema_name@.V_PARTY_BASE party 
+	WHERE
+    	address.ENTITY_SK = relation.ADDRESS_SK 
+		AND address.COUNTRY_SK = ctry.ENTITY_SK(+) 
+		AND address.STATE_PROVINCE_SK = stprov.ENTITY_SK(+) 
+		AND relation.REF_ENTITY_SK = party.ENTITY_SK
+		AND NVL(address.IS_TO_BE_DELETED, 0) != 1
+		AND NVL(relation.IS_TO_BE_DELETED, 0) != 1
+	@go@
+	
+		
+	CREATE OR REPLACE VIEW @env:udm_wlf_schema@.PARTY_ALIAS
+	AS
+	SELECT
+		alias.PARTY_ALIAS_KEY,
+   		alias.PARTY_KEY,
+   		alias.PARTY_FIRST_NAME,
+   		alias.PARTY_LAST_NAME,
+   		alias.PARTY_MAIDEN_NAME,
+   		alias.PARTY_MIDDLE_NAME,
+		alias.TENANT_CD,
+    	NVL(alias.IS_TO_BE_DELETED, 0) IS_TO_BE_DELETED
+   	FROM
+   		@env:udm_cds_schema_name@.V_PARTY_ALIAS_BASE alias
+   	WHERE
+   		NVL(alias.IS_TO_BE_DELETED, 0) != 1
+	@go@
+	
+	CREATE OR REPLACE VIEW @env:udm_wlf_schema@.PARTY_BUSINESS_UNIT
+	AS
+	SELECT
+		PARTY_KEY,
+		PARTY_SK,
+		BUSINESS_UNIT_CD AS BUSINESS_UNIT,
+		IS_PRIMARY_BU,
+		IS_TO_BE_DELETED
+		FROM 
+			@env:udm_cds_schema_name@.V_PARTY_BUSINESS_UNIT_BASE
+		WHERE
+			NVL(IS_TO_BE_DELETED, 0) != 1
+	@go@
+		
+	CREATE OR REPLACE VIEW @env:udm_wlf_schema@.V_WLF_PARTY
+	AS
+	SELECT
+		party.PARTY_KEY,
+		party.FIRST_NAME,
+		party.LAST_NAME,
+		party.MAIDEN_NAME,
+		party.MIDDLE_NAME,
+		party.PARTY_NAME,
+		party.BIRTH_INCORP_DATE,
+		gender.GENDER_CD,
+		gender.GENDER_DV,
+		type.PARTY_TYPE_CD,
+		party.PLACE_OF_BIRTH,
+		type.PARTY_TYPE_DESC,
+		type.IS_INDIVIDUAL,
+		party.EFFECTIVE_DATE,
+		party.BATCH_DATE_TIME,
+		party.TENANT_CD,
+		NVL(party.IS_TO_BE_DELETED, 0) IS_TO_BE_DELETED,
+		bu.IS_PRIMARY_BU,
+		bu.BUSINESS_UNIT,
+		NVL(representative.REPRESENTATIVE_KEY, 'N/A') REPRESENTATIVE_KEY,
+		party_classification.PARTY_CLASSIFICATION_CD,
+		pty_cty_codes.country_codes PARTY_NATIONALITY_COUNTRIES,
+		pty_doc_ids.party_ids PARTY_IDS,
+		pty_addresses.addresses PARTY_ADDRESSES,
+		pty_aliases.aliases PARTY_ALIASES
+	FROM
+		@env:udm_cds_schema_name@.V_PARTY_BASE party,
+		@env:udm_cds_schema_name@.V_PARTY_TYPE type,
+		@env:udm_cds_schema_name@.V_GENDER gender,
+		@env:udm_wlf_schema@.PARTY_BUSINESS_UNIT bu,
+		@env:udm_cds_schema_name@.V_REPRESENTATIVE_BASE representative,
+		@env:udm_cds_schema_name@.V_PARTY_CLASSIFICATION party_classification,
+		(SELECT PARTY_KEY, listagg (COUNTRY_CD, '~@^*^@~') WITHIN GROUP (ORDER BY COUNTRY_RELATION_ID) country_codes
+       	FROM 
+       		@env:udm_wlf_schema@.PARTY_COUNTRY
+       	GROUP BY 
+       		PARTY_KEY) pty_cty_codes,
+       	(SELECT PARTY_KEY,
+       		listagg (DOC_TYPE_CD||'~##~'||DOC_NUMBER||'~##~'||ISSUE_COUNTRY_CD, '~@^*^@~') WITHIN GROUP (ORDER BY DOC_TYPE_CD||DOC_NUMBER||ISSUE_COUNTRY_CD) party_ids
+		FROM 
+			@env:udm_wlf_schema@.PARTY_DOCUMENTATION
+		GROUP BY 
+			PARTY_KEY) pty_doc_ids,
+		(SELECT PARTY_KEY,
+			listagg (ADDRESS_LINE_1||'~##~'||ADDRESS_LINE_2||'~##~'||CITY||'~##~'||ZIP_CODE||'~##~'||STATE_PROVINCE||'~##~'||COUNTRY_CD, '~@^*^@~') WITHIN GROUP (ORDER BY ADDRESS_LINE_1||ADDRESS_LINE_2||CITY||ZIP_CODE||STATE_PROVINCE||COUNTRY_CD) addresses
+		FROM 
+			@env:udm_wlf_schema@.PARTY_ADDRESS
+		GROUP BY 
+			PARTY_KEY) pty_addresses,
+		(SELECT PARTY_KEY,
+			listagg(PARTY_FIRST_NAME||'~##~'||PARTY_MIDDLE_NAME||'~##~'||PARTY_MAIDEN_NAME||'~##~'||PARTY_LAST_NAME||'~@^*^@~') WITHIN GROUP (ORDER BY PARTY_FIRST_NAME||PARTY_LAST_NAME||PARTY_MIDDLE_NAME||PARTY_MAIDEN_NAME) aliases
+		FROM @env:udm_wlf_schema@.PARTY_ALIAS
+       	GROUP BY PARTY_KEY) pty_aliases
+	WHERE
+     	party.PARTY_TYPE_SK = type.ENTITY_SK 
+		AND party.GENDER_SK = gender.ENTITY_SK(+)
+		AND party.ENTITY_SK = bu.PARTY_SK
+		AND party.PRIMARY_REPRESENTATIVE_SK = representative.ENTITY_SK(+)
+		AND party.CLASSIFICATION_SK = party_classification.ENTITY_SK(+)
+		AND NVL(party.IS_TO_BE_DELETED, 0)  != 1
+		AND NVL(bu.IS_TO_BE_DELETED, 0) != 1
+		AND bu.IS_PRIMARY_BU = 1
+		AND NOT(party.FIRST_NAME IS NULL and party.LAST_NAME IS NULL and party.MAIDEN_NAME IS NULL and party.MIDDLE_NAME IS NULL and party.PARTY_NAME IS NULL)
+		AND party.PARTY_KEY = pty_cty_codes.PARTY_KEY(+)
+		AND party.PARTY_KEY = pty_doc_ids.PARTY_KEY(+)
+		AND party.PARTY_KEY = pty_addresses.PARTY_KEY(+)
+		AND party.PARTY_KEY = pty_aliases.PARTY_KEY(+)
+	@go@
+	
+	CREATE OR REPLACE VIEW @env:udm_wlf_schema@.MESSAGES
+	AS
+	SELECT
+		message.MESSAGE_KEY,
+		message.ADDITIONAL_MESSAGE_INFO,
+		message.BASE_CURR_AMOUNT AS AMOUNT,
+		message.EXECUTION_GLOBAL_DATE_TIME AS MESSAGE_DATE_TIME,
+		message.BENEFICIARY_ADDITIONAL_INFO,
+		message.BENEFICIARY_ADDRESS_LINE_1,
+		message.BENEFICIARY_ADDRESS_LINE_2,
+		message.BENEFICIARY_ADDRESS_LINE_3,
+		message.BENEFICIARY_CITY,
+		bene_party_type.PARTY_TYPE_CD AS BENEFICIARY_FI_PARTY_TYPE_CD,
+		message.BENEFICIARY_NAME,
+		message.BENEFICIARY_PO_BOX,
+		bene_st_prov.STATE_PROVINCE_CD AS BENEFICIARY_STATE_PROVINCE,
+		message.BENEFICIARY_ZIP_POSTCODE AS BENEFICIARY_ZIP_CD,
+		currency.CURRENCY_CD,
+		message.FI_TO_FI_INFO,
+		message.FULL_MESSAGE,
+		message.MESSAGE_FORMAT,
+		message.MESSAGE_INSTRUCTIONS,
+		message.MESSAGE_REF_NUMBER,
+		message.MESSAGE_SOURCE_TYPE,
+		trans_code.TRANSACTION_CODE_CD AS MESSAGE_TYPE_CD,
+		message.ORIGINATOR_ADDITIONAL_INFO,
+		message.ORIGINATOR_ADDRESS_LINE_1,
+		message.ORIGINATOR_ADDRESS_LINE_2,
+		message.ORIGINATOR_ADDRESS_LINE_3,
+		message.ORIGINATOR_CITY,
+		originator_ctry.COUNTRY_CD AS ORIGINATOR_COUNTRY_CD,
+		message.ORIGINATOR_NAME,
+		orig_party_type.PARTY_TYPE_CD AS ORIGINATOR_PARTY_TYPE_CD,
+		message.ORIGINATOR_PO_BOX,
+		orig_st_prov.STATE_PROVINCE_CD AS ORIGINATOR_STATE_PROVINCE,
+		message.ORIGINATOR_ZIP_POSTCODE AS ORIGINATOR_ZIP_CD,
+		product.PRODUCT_KEY,
+		message.BENEFICIARY_DOCUMENT_NUMBER AS BENEFICIARY_PRIMARY_PARTY_ID,
+		message.ORIGINATOR_DOCUMENT_NUMBER AS ORIGINATOR_PRIMARY_PARTY_ID,
+		beneficiary_ctry.COUNTRY_CD AS BENEFICIARY_COUNTRY_CD,
+		(SELECT 
+			org.ORGANIZATION_KEY
+		FROM
+			@env:udm_cds_schema_name@.V_BRANCH_BASE branch,
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch,
+			@env:udm_cds_schema_name@.V_ORGANIZATION_BASE org
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK(+)
+			AND msg_branch.MESSAGE_ROLE_CD = 'BENEFICIARY'
+			AND msg_branch.BRANCH_SK = branch.ENTITY_SK(+)
+ 			AND branch.ORGANIZATION_SK = org.ENTITY_SK(+)) AS BENEFICIARY_FI_CD,
+ 		(SELECT 
+			ctry.COUNTRY_CD
+		FROM
+			@env:udm_cds_schema_name@.V_BRANCH_BASE branch,
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch,
+			@env:udm_cds_schema_name@.V_COUNTRY ctry
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK(+)
+			AND msg_branch.MESSAGE_ROLE_CD = 'BENEFICIARY'
+			AND msg_branch.BRANCH_SK = branch.ENTITY_SK(+)
+			AND branch.COUNTRY_SK = ctry.ENTITY_SK(+)) AS BENEFICIARY_FI_COUNTRY_CD,
+		(SELECT 
+			org.ORGANIZATION_NAME
+		FROM
+			@env:udm_cds_schema_name@.V_BRANCH_BASE branch,
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch,
+			@env:udm_cds_schema_name@.V_ORGANIZATION_BASE org
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK(+)
+			AND msg_branch.MESSAGE_ROLE_CD = 'BENEFICIARY'
+			AND msg_branch.BRANCH_SK = branch.ENTITY_SK(+)
+			AND branch.ORGANIZATION_SK = org.ENTITY_SK(+)) AS BENEFICIARY_FI_ORG_NAME,
+		(SELECT
+			org.ORGANIZATION_KEY
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch,
+			@env:udm_cds_schema_name@.V_BRANCH_BASE branch,
+			@env:udm_cds_schema_name@.V_ORGANIZATION_BASE org
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK(+)
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 11
+			AND msg_branch.BRANCH_SK = branch.ENTITY_SK(+)
+			AND branch.ORGANIZATION_SK = org.ENTITY_SK(+)) AS INTERMEDIATE_FI_CD,
+		(SELECT 
+			ctry.COUNTRY_CD
+		FROM
+			@env:udm_cds_schema_name@.V_BRANCH_BASE branch,
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch,
+			@env:udm_cds_schema_name@.V_COUNTRY ctry
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK(+)
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 11
+			AND msg_branch.BRANCH_SK = branch.ENTITY_SK(+)
+			AND branch.COUNTRY_SK = ctry.ENTITY_SK(+)) AS INTERMEDIATE_FI_COUNTRY_CD,
+		(SELECT 
+			org.ORGANIZATION_NAME
+		FROM
+			@env:udm_cds_schema_name@.V_BRANCH_BASE branch,
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch,
+ 			@env:udm_cds_schema_name@.V_ORGANIZATION_BASE org
+		WHERE
+ 			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK(+)
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 11
+			AND msg_branch.BRANCH_SK = branch.ENTITY_SK(+)
+			AND branch.ORGANIZATION_SK = org.ENTITY_SK(+)) AS INTERMEDIATE_FI_ORG_NAME,
+		(SELECT
+			org.ORGANIZATION_KEY
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch,
+			@env:udm_cds_schema_name@.V_BRANCH_BASE branch,
+			@env:udm_cds_schema_name@.V_ORGANIZATION_BASE org
+		WHERE
+ 			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK(+)
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 1
+			AND msg_branch.BRANCH_SK = branch.ENTITY_SK(+)
+			AND branch.ORGANIZATION_SK = org.ENTITY_SK(+)) AS INTERMEDIARY1_FI_CD,
+		(SELECT 
+			ctry.COUNTRY_CD
+		FROM
+			@env:udm_cds_schema_name@.V_BRANCH_BASE branch,
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch,
+			@env:udm_cds_schema_name@.V_COUNTRY ctry
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK(+)
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 1
+			AND msg_branch.BRANCH_SK = branch.ENTITY_SK(+)
+			AND branch.COUNTRY_SK = ctry.ENTITY_SK(+)) AS INTERMEDIARY1_FI_COUNTRY_CD,
+		(SELECT 
+			org.ORGANIZATION_NAME
+		FROM
+			@env:udm_cds_schema_name@.V_BRANCH_BASE branch,
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch,
+			@env:udm_cds_schema_name@.V_ORGANIZATION_BASE org
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK(+)
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 1
+			AND msg_branch.BRANCH_SK = branch.ENTITY_SK(+)
+			AND branch.ORGANIZATION_SK = org.ENTITY_SK(+)) AS INTERMEDIARY1_FI_ORG_NAME,
+		(SELECT
+			org.ORGANIZATION_KEY
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch,
+			@env:udm_cds_schema_name@.V_BRANCH_BASE branch,
+			@env:udm_cds_schema_name@.V_ORGANIZATION_BASE org
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK(+)
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 2
+			AND msg_branch.BRANCH_SK = branch.ENTITY_SK(+)
+			AND branch.ORGANIZATION_SK = org.ENTITY_SK(+)) AS INTERMEDIARY2_FI_CD,
+		(SELECT 
+			ctry.COUNTRY_CD
+		FROM
+			@env:udm_cds_schema_name@.V_BRANCH_BASE branch,
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch,
+			@env:udm_cds_schema_name@.V_COUNTRY ctry
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK(+)
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 2
+			AND msg_branch.BRANCH_SK = branch.ENTITY_SK(+)
+			AND branch.COUNTRY_SK = ctry.ENTITY_SK(+)) AS INTERMEDIARY2_FI_COUNTRY_CD,
+		(SELECT 
+			org.ORGANIZATION_NAME
+ 		FROM
+			@env:udm_cds_schema_name@.V_BRANCH_BASE branch,
+ 			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch,
+ 			@env:udm_cds_schema_name@.V_ORGANIZATION_BASE org
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK(+)
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 2
+			AND msg_branch.BRANCH_SK = branch.ENTITY_SK(+)
+			AND branch.ORGANIZATION_SK = org.ENTITY_SK(+)) AS INTERMEDIARY2_FI_ORG_NAME,
+		(SELECT
+			org.ORGANIZATION_KEY
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch,
+			@env:udm_cds_schema_name@.V_BRANCH_BASE branch,
+			@env:udm_cds_schema_name@.V_ORGANIZATION_BASE org
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK(+)
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 3
+			AND msg_branch.BRANCH_SK = branch.ENTITY_SK(+)
+			AND branch.ORGANIZATION_SK = org.ENTITY_SK(+)) AS INTERMEDIARY3_FI_CD,
+		(SELECT 
+			ctry.COUNTRY_CD
+		FROM
+			@env:udm_cds_schema_name@.V_BRANCH_BASE branch,
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch,
+			@env:udm_cds_schema_name@.V_COUNTRY ctry
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK(+)
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+ 			AND msg_branch.SEQUENCE_NUMBER = 3
+ 			AND msg_branch.BRANCH_SK = branch.ENTITY_SK(+)
+ 			AND branch.COUNTRY_SK = ctry.ENTITY_SK(+)) AS INTERMEDIARY3_FI_COUNTRY_CD,
+		(SELECT 
+			org.ORGANIZATION_NAME
+		FROM
+			@env:udm_cds_schema_name@.V_BRANCH_BASE branch,
+ 			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch,
+			@env:udm_cds_schema_name@.V_ORGANIZATION_BASE org
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK(+)
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 3
+			AND msg_branch.BRANCH_SK = branch.ENTITY_SK(+)
+			AND branch.ORGANIZATION_SK = org.ENTITY_SK(+)) AS INTERMEDIARY3_FI_ORG_NAME,
+		(SELECT
+			org.ORGANIZATION_KEY
+ 			FROM
+				@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch,
+				@env:udm_cds_schema_name@.V_BRANCH_BASE branch,
+				@env:udm_cds_schema_name@.V_ORGANIZATION_BASE org
+			WHERE
+				message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+				AND message.DAY_SK = msg_branch.DAY_SK(+)
+				AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+ 				AND msg_branch.SEQUENCE_NUMBER = 4
+				AND msg_branch.BRANCH_SK = branch.ENTITY_SK(+)
+				AND branch.ORGANIZATION_SK = org.ENTITY_SK(+)) AS INTERMEDIARY4_FI_CD,
+		(SELECT 
+			ctry.COUNTRY_CD
+		FROM
+			@env:udm_cds_schema_name@.V_BRANCH_BASE branch,
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch,
+			@env:udm_cds_schema_name@.V_COUNTRY ctry
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK(+)
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 4
+			AND msg_branch.BRANCH_SK = branch.ENTITY_SK(+)
+			AND branch.COUNTRY_SK = ctry.ENTITY_SK(+)) AS INTERMEDIARY4_FI_COUNTRY_CD,
+		(SELECT 
+			org.ORGANIZATION_NAME
+		FROM
+			@env:udm_cds_schema_name@.V_BRANCH_BASE branch,
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch,
+			@env:udm_cds_schema_name@.V_ORGANIZATION_BASE org
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK(+)
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 4
+			AND msg_branch.BRANCH_SK = branch.ENTITY_SK(+)
+			AND branch.ORGANIZATION_SK = org.ENTITY_SK(+)) AS INTERMEDIARY4_FI_ORG_NAME,
+		(SELECT
+			org.ORGANIZATION_KEY
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch,
+			@env:udm_cds_schema_name@.V_BRANCH_BASE branch,
+			@env:udm_cds_schema_name@.V_ORGANIZATION_BASE org
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK(+)
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 5
+			AND msg_branch.BRANCH_SK = branch.ENTITY_SK(+)
+			AND branch.ORGANIZATION_SK = org.ENTITY_SK(+)) AS INTERMEDIARY5_FI_CD,
+		(SELECT 
+			ctry.COUNTRY_CD
+		FROM
+			@env:udm_cds_schema_name@.V_BRANCH_BASE branch,
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch,
+			@env:udm_cds_schema_name@.V_COUNTRY ctry
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK(+)
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 5
+			AND msg_branch.BRANCH_SK = branch.ENTITY_SK(+)
+			AND branch.COUNTRY_SK = ctry.ENTITY_SK(+)) AS INTERMEDIARY5_FI_COUNTRY_CD,
+		(SELECT 
+			org.ORGANIZATION_NAME
+		FROM
+			@env:udm_cds_schema_name@.V_BRANCH_BASE branch,
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch,
+			@env:udm_cds_schema_name@.V_ORGANIZATION_BASE org
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK(+)
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 5
+			AND msg_branch.BRANCH_SK = branch.ENTITY_SK(+)
+			AND branch.ORGANIZATION_SK = org.ENTITY_SK(+)) AS INTERMEDIARY5_FI_ORG_NAME,
+		(SELECT
+			org.ORGANIZATION_KEY
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch,
+			@env:udm_cds_schema_name@.V_BRANCH_BASE branch,
+			@env:udm_cds_schema_name@.V_ORGANIZATION_BASE org
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK(+)
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 6
+			AND msg_branch.BRANCH_SK = branch.ENTITY_SK(+)
+			AND branch.ORGANIZATION_SK = org.ENTITY_SK(+)) AS INTERMEDIARY6_FI_CD,
+		(SELECT 
+			ctry.COUNTRY_CD
+		FROM
+			@env:udm_cds_schema_name@.V_BRANCH_BASE branch,
+ 			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch,
+			@env:udm_cds_schema_name@.V_COUNTRY ctry
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK(+)
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 6
+			AND msg_branch.BRANCH_SK = branch.ENTITY_SK(+)
+ 			AND branch.COUNTRY_SK = ctry.ENTITY_SK(+)) AS INTERMEDIARY6_FI_COUNTRY_CD,
+ 		(SELECT 
+			org.ORGANIZATION_NAME
+		FROM
+			@env:udm_cds_schema_name@.V_BRANCH_BASE branch,
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch,
+			@env:udm_cds_schema_name@.V_ORGANIZATION_BASE org
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+ 			AND message.DAY_SK = msg_branch.DAY_SK(+)
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 6
+			AND msg_branch.BRANCH_SK = branch.ENTITY_SK(+)
+			AND branch.ORGANIZATION_SK = org.ENTITY_SK(+)) AS INTERMEDIARY6_FI_ORG_NAME,
+		(SELECT
+			org.ORGANIZATION_KEY
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch,
+ 			@env:udm_cds_schema_name@.V_BRANCH_BASE branch,
+			@env:udm_cds_schema_name@.V_ORGANIZATION_BASE org
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK(+)
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+ 			AND msg_branch.SEQUENCE_NUMBER = 7
+ 			AND msg_branch.BRANCH_SK = branch.ENTITY_SK(+)
+			AND branch.ORGANIZATION_SK = org.ENTITY_SK(+)) AS INTERMEDIARY7_FI_CD,
+		(SELECT 
+			ctry.COUNTRY_CD
+		FROM
+			@env:udm_cds_schema_name@.V_BRANCH_BASE branch,
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch,
+			@env:udm_cds_schema_name@.V_COUNTRY ctry
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK(+)
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 7
+			AND msg_branch.BRANCH_SK = branch.ENTITY_SK(+)
+			AND branch.COUNTRY_SK = ctry.ENTITY_SK(+)) AS INTERMEDIARY7_FI_COUNTRY_CD,
+		(SELECT 
+			org.ORGANIZATION_NAME
+		FROM
+			@env:udm_cds_schema_name@.V_BRANCH_BASE branch,
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch,
+			@env:udm_cds_schema_name@.V_ORGANIZATION_BASE org
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK(+)
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 7
+			AND msg_branch.BRANCH_SK = branch.ENTITY_SK(+)
+			AND branch.ORGANIZATION_SK = org.ENTITY_SK(+)) AS INTERMEDIARY7_FI_ORG_NAME,
+		(SELECT
+			org.ORGANIZATION_KEY
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch,
+			@env:udm_cds_schema_name@.V_BRANCH_BASE branch,
+			@env:udm_cds_schema_name@.V_ORGANIZATION_BASE org
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK(+)
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 8
+			AND msg_branch.BRANCH_SK = branch.ENTITY_SK(+)
+			AND branch.ORGANIZATION_SK = org.ENTITY_SK(+)) AS INTERMEDIARY8_FI_CD,
+		(SELECT 
+			ctry.COUNTRY_CD
+		FROM
+			@env:udm_cds_schema_name@.V_BRANCH_BASE branch,
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch,
+			@env:udm_cds_schema_name@.V_COUNTRY ctry
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK(+)
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 8
+			AND msg_branch.BRANCH_SK = branch.ENTITY_SK(+)
+			AND branch.COUNTRY_SK = ctry.ENTITY_SK(+)) AS INTERMEDIARY8_FI_COUNTRY_CD,
+		(SELECT 
+			org.ORGANIZATION_NAME
+		FROM
+			@env:udm_cds_schema_name@.V_BRANCH_BASE branch,
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch,
+			@env:udm_cds_schema_name@.V_ORGANIZATION_BASE org
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK(+)
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 8
+			AND msg_branch.BRANCH_SK = branch.ENTITY_SK(+)
+			AND branch.ORGANIZATION_SK = org.ENTITY_SK(+)) AS INTERMEDIARY8_FI_ORG_NAME,
+		(SELECT
+			org.ORGANIZATION_KEY
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch,
+			@env:udm_cds_schema_name@.V_BRANCH_BASE branch,
+			@env:udm_cds_schema_name@.V_ORGANIZATION_BASE org
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK(+)
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 9
+			AND msg_branch.BRANCH_SK = branch.ENTITY_SK(+)
+			AND branch.ORGANIZATION_SK = org.ENTITY_SK(+)) AS INTERMEDIARY9_FI_CD,
+		(SELECT 
+			ctry.COUNTRY_CD
+		FROM
+			@env:udm_cds_schema_name@.V_BRANCH_BASE branch,
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch,
+			@env:udm_cds_schema_name@.V_COUNTRY ctry
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK(+)
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 9
+			AND msg_branch.BRANCH_SK = branch.ENTITY_SK(+)
+			AND branch.COUNTRY_SK = ctry.ENTITY_SK(+)) AS INTERMEDIARY9_FI_COUNTRY_CD,
+		(SELECT 
+			org.ORGANIZATION_NAME
+		FROM
+			@env:udm_cds_schema_name@.V_BRANCH_BASE branch,
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch,
+			@env:udm_cds_schema_name@.V_ORGANIZATION_BASE org
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK(+)
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 9
+			AND msg_branch.BRANCH_SK = branch.ENTITY_SK(+)
+			AND branch.ORGANIZATION_SK = org.ENTITY_SK(+)) AS INTERMEDIARY9_FI_ORG_NAME,
+		(SELECT
+			org.ORGANIZATION_KEY
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch,
+			@env:udm_cds_schema_name@.V_BRANCH_BASE branch,
+			@env:udm_cds_schema_name@.V_ORGANIZATION_BASE org
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK(+)
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 10
+			AND msg_branch.BRANCH_SK = branch.ENTITY_SK(+)
+			AND branch.ORGANIZATION_SK = org.ENTITY_SK(+)) AS INTERMEDIARY10_FI_CD,
+		(SELECT 
+			ctry.COUNTRY_CD
+		FROM
+			@env:udm_cds_schema_name@.V_BRANCH_BASE branch,
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch,
+			@env:udm_cds_schema_name@.V_COUNTRY ctry
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK(+)
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 10
+			AND msg_branch.BRANCH_SK = branch.ENTITY_SK(+)
+			AND branch.COUNTRY_SK = ctry.ENTITY_SK(+)) AS INTERMEDIARY10_FI_COUNTRY_CD,
+		(SELECT 
+			org.ORGANIZATION_NAME
+		FROM
+			@env:udm_cds_schema_name@.V_BRANCH_BASE branch,
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch,
+			@env:udm_cds_schema_name@.V_ORGANIZATION_BASE org
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK(+)
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 10
+			AND msg_branch.BRANCH_SK = branch.ENTITY_SK(+)
+			AND branch.ORGANIZATION_SK = org.ENTITY_SK(+)) AS INTERMEDIARY10_FI_ORG_NAME,
+		(SELECT 
+			org.ORGANIZATION_KEY
+		FROM
+			@env:udm_cds_schema_name@.V_BRANCH_BASE branch,
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch,
+			@env:udm_cds_schema_name@.V_ORGANIZATION_BASE org
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK(+)
+			AND msg_branch.MESSAGE_ROLE_CD = 'ORIGINATOR'
+			AND msg_branch.BRANCH_SK = branch.ENTITY_SK(+)
+			AND branch.ORGANIZATION_SK = org.ENTITY_SK(+)) AS ORIGINATING_FI_CD,
+		(SELECT 
+			ctry.COUNTRY_CD
+		FROM
+			@env:udm_cds_schema_name@.V_BRANCH_BASE branch,
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch,
+			@env:udm_cds_schema_name@.V_COUNTRY ctry
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK(+)
+			AND msg_branch.MESSAGE_ROLE_CD = 'ORIGINATOR'
+			AND msg_branch.BRANCH_SK = branch.ENTITY_SK(+)
+			AND branch.COUNTRY_SK = ctry.ENTITY_SK(+)) AS ORIGINATING_FI_COUNTRY_CD,
+		(SELECT 
+			org.ORGANIZATION_NAME
+		FROM
+			@env:udm_cds_schema_name@.V_BRANCH_BASE branch,
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch,
+			@env:udm_cds_schema_name@.V_ORGANIZATION_BASE org
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK(+)
+			AND msg_branch.MESSAGE_ROLE_CD = 'ORIGINATOR'
+			AND msg_branch.BRANCH_SK = branch.ENTITY_SK(+)
+			AND branch.ORGANIZATION_SK = org.ENTITY_SK(+)) AS ORIGINATING_FI_ORG_NAME,
+		(SELECT
+			org.ORGANIZATION_KEY
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch,
+			@env:udm_cds_schema_name@.V_BRANCH_BASE branch,
+			@env:udm_cds_schema_name@.V_ORGANIZATION_BASE org
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK(+)
+			AND msg_branch.MESSAGE_ROLE_CD = 'RECEIVER'
+			AND msg_branch.BRANCH_SK = branch.ENTITY_SK(+)
+			AND branch.ORGANIZATION_SK = org.ENTITY_SK(+)) AS RECIEVING_FI_CD,
+		(SELECT 
+			ctry.COUNTRY_CD
+		FROM
+			@env:udm_cds_schema_name@.V_BRANCH_BASE branch,
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch,
+			@env:udm_cds_schema_name@.V_COUNTRY ctry
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK(+)
+			AND msg_branch.MESSAGE_ROLE_CD = 'RECEIVER'
+			AND msg_branch.BRANCH_SK = branch.ENTITY_SK(+)
+			AND branch.COUNTRY_SK = ctry.ENTITY_SK(+)) AS RECIEVING_FI_COUNTRY_CD,
+		(SELECT 
+			org.ORGANIZATION_NAME
+		FROM
+			@env:udm_cds_schema_name@.V_BRANCH_BASE branch,
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch,
+			@env:udm_cds_schema_name@.V_ORGANIZATION_BASE org
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK(+)
+			AND msg_branch.MESSAGE_ROLE_CD = 'RECEIVER'
+			AND msg_branch.BRANCH_SK = branch.ENTITY_SK(+)
+			AND branch.ORGANIZATION_SK = org.ENTITY_SK(+)) AS RECIEVING_FI_ORGANIZATION_NAME,
+		(SELECT
+			org.ORGANIZATION_KEY
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch,
+			@env:udm_cds_schema_name@.V_BRANCH_BASE branch,
+			@env:udm_cds_schema_name@.V_ORGANIZATION_BASE org
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK(+)
+			AND msg_branch.MESSAGE_ROLE_CD = 'SENDER'
+			AND msg_branch.BRANCH_SK = branch.ENTITY_SK(+)
+			AND branch.ORGANIZATION_SK = org.ENTITY_SK(+)) AS SENDING_FI_CD,
+		(SELECT 
+			ctry.COUNTRY_CD
+		FROM
+			@env:udm_cds_schema_name@.V_BRANCH_BASE branch,
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch,
+			@env:udm_cds_schema_name@.V_COUNTRY ctry
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK(+)
+			AND msg_branch.MESSAGE_ROLE_CD = 'SENDER'
+			AND msg_branch.BRANCH_SK = branch.ENTITY_SK(+)
+			AND branch.COUNTRY_SK = ctry.ENTITY_SK(+)) AS SENDING_FI_COUNTRY_CD,
+		(SELECT 
+			org.ORGANIZATION_NAME
+		FROM
+			@env:udm_cds_schema_name@.V_BRANCH_BASE branch,
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch,
+			@env:udm_cds_schema_name@.V_ORGANIZATION_BASE org
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK(+)
+			AND msg_branch.MESSAGE_ROLE_CD = 'SENDER'
+			AND msg_branch.BRANCH_SK = branch.ENTITY_SK(+)
+			AND branch.ORGANIZATION_SK = org.ENTITY_SK(+)) AS SENDING_FI_ORGANIZATION_NAME,
+		(SELECT
+			msg_branch.ADDITIONAL_MESSAGE_INFO
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK(+)
+			AND msg_branch.MESSAGE_ROLE_CD = 'RECEIVER') AS RECEIVING_FI_ADDITIONAL_INFO,
+		(SELECT
+			msg_branch.ADDITIONAL_MESSAGE_INFO
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK(+)
+			AND msg_branch.MESSAGE_ROLE_CD = 'SENDER') AS SENDING_FI_ADDITIONAL_INFO,
+		(SELECT
+			branch.BRANCH_KEY
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch,
+			@env:udm_cds_schema_name@.V_BRANCH_BASE branch
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK(+)
+			AND msg_branch.MESSAGE_ROLE_CD='RECEIVER'
+			AND msg_branch.BRANCH_SK = branch.ENTITY_SK(+)) AS SWIFT_RECEIVER_ADDRESS,
+		(SELECT
+			branch.BRANCH_KEY
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch,
+			@env:udm_cds_schema_name@.V_BRANCH_BASE branch
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK(+)
+			AND msg_branch.MESSAGE_ROLE_CD='SENDER'
+			AND msg_branch.BRANCH_SK = branch.ENTITY_SK(+)) AS SWIFT_SENDER_ADDRESS
+	FROM
+		@env:udm_cds_schema_name@.V_MESSAGE_BASE message,
+		@env:udm_cds_schema_name@.V_COUNTRY beneficiary_ctry,
+		@env:udm_cds_schema_name@.V_COUNTRY originator_ctry,
+		@env:udm_cds_schema_name@.V_PARTY_TYPE bene_party_type,
+		@env:udm_cds_schema_name@.V_PARTY_TYPE orig_party_type,
+		@env:udm_cds_schema_name@.V_STATE_PROVINCE bene_st_prov,
+		@env:udm_cds_schema_name@.V_STATE_PROVINCE orig_st_prov,
+		@env:udm_cds_schema_name@.V_CURRENCY currency,
+		@env:udm_cds_schema_name@.V_TRANSACTION_CODE trans_code,
+		@env:udm_cds_schema_name@.V_PRODUCT_BASE product
+	WHERE
+		message.BENEFICIARY_COUNTRY_SK = beneficiary_ctry.ENTITY_SK(+)
+		AND message.ORIGINATOR_COUNTRY_SK = originator_ctry.ENTITY_SK(+)
+		AND message.BENEFICIARY_PARTY_TYPE_SK = bene_party_type.ENTITY_SK(+)
+		AND message.ORIGINATOR_PARTY_TYPE_SK = orig_party_type.ENTITY_SK(+)
+		AND message.BENEFICIARY_STATE_PROVINCE1_SK = bene_st_prov.ENTITY_SK(+)
+		AND message.ORIGINATOR_STATE_PROVINCE_1_SK = orig_st_prov.ENTITY_SK(+)
+		AND message.ORIG_CURR_SK = currency.ENTITY_SK(+)
+		AND message.TRANSACTION_CODE_SK = trans_code.ENTITY_SK(+)
+		AND message.PRODUCT_SK = product.ENTITY_SK(+)
+	@go@
+
+	CREATE OR REPLACE VIEW @env:udm_wlf_schema@.ENTITY (
+                 ENTITY_KEY
+               , ENTITY_TYPE_CD
+               , ENTITY_SK
+               , ENTITY_BUCKET
+               , TENANT_CD
+               , IS_DELETED
+               )
+        AS SELECT
+                 v.ENTITY_KEY
+               , v.ENTITY_TYPE_CD
+               , v.ENTITY_SK
+               , v.ENTITY_BUCKET
+               , v.TENANT_CD
+               , v.IS_DELETED
+        FROM @env:udm_cds_schema_name@.V_ENTITY v
+        WHERE v.ENTITY_TYPE_CD='PARTY';
+        @go@
+
+]
+[mssql
+	IF EXISTS(SELECT schema_id FROM sys.schemas WHERE name = '@env:udm_wlf_schema@')
+	BEGIN
+		IF EXISTS(SELECT v.name FROM sys.views v, sys.schemas s WHERE s.name = '@env:udm_wlf_schema@' AND s.schema_id = v.schema_id AND v.name = 'PARTY_ADDRESS')
+		BEGIN
+			EXEC('DROP VIEW @env:udm_wlf_schema@.PARTY_ADDRESS');
+		END;
+		IF EXISTS(SELECT v.name FROM sys.views v, sys.schemas s WHERE s.name = '@env:udm_wlf_schema@' AND s.schema_id = v.schema_id AND v.name = 'PARTY_COUNTRY')
+		BEGIN
+			EXEC('DROP VIEW @env:udm_wlf_schema@.PARTY_COUNTRY');
+		END;
+		IF EXISTS(SELECT v.name FROM sys.views v, sys.schemas s WHERE s.name = '@env:udm_wlf_schema@' AND s.schema_id = v.schema_id AND v.name = 'PARTY_DOCUMENTATION')
+		BEGIN
+			EXEC('DROP VIEW @env:udm_wlf_schema@.PARTY_DOCUMENTATION');
+		END;
+		IF EXISTS(SELECT v.name FROM sys.views v, sys.schemas s WHERE s.name = '@env:udm_wlf_schema@' AND s.schema_id = v.schema_id AND v.name = 'PARTY_ALIAS')
+		BEGIN
+			EXEC('DROP VIEW @env:udm_wlf_schema@.PARTY_ALIAS');
+		END;
+		IF EXISTS(SELECT v.name FROM sys.views v, sys.schemas s WHERE s.name = '@env:udm_wlf_schema@' AND s.schema_id = v.schema_id AND v.name = 'PARTY_BUSINESS_UNIT')
+		BEGIN
+			EXEC('DROP VIEW @env:udm_wlf_schema@.PARTY_BUSINESS_UNIT');
+		END;
+		IF EXISTS(SELECT v.name FROM sys.views v, sys.schemas s WHERE s.name = '@env:udm_wlf_schema@' AND s.schema_id = v.schema_id AND v.name = 'PARTY')
+		BEGIN
+			EXEC('DROP VIEW @env:udm_wlf_schema@.PARTY');
+		END;
+		IF EXISTS(SELECT v.name FROM sys.views v, sys.schemas s WHERE s.name = '@env:udm_wlf_schema@' AND s.schema_id = v.schema_id AND v.name = 'V_WLF_PARTY')
+		BEGIN
+			EXEC('DROP VIEW @env:udm_wlf_schema@.V_WLF_PARTY');
+		END;
+		IF EXISTS(SELECT v.name FROM sys.views v, sys.schemas s WHERE s.name = '@env:udm_wlf_schema@' AND s.schema_id = v.schema_id AND v.name = 'MESSAGES')
+		BEGIN
+			EXEC('DROP VIEW @env:udm_wlf_schema@.MESSAGES');
+		END;
+		IF EXISTS(SELECT v.name FROM sys.views v, sys.schemas s WHERE s.name = '@env:udm_wlf_schema@' AND s.schema_id = v.schema_id AND v.name = 'DW_VERSION')
+		BEGIN
+			EXEC('DROP VIEW @env:udm_wlf_schema@.DW_VERSION');
+		END;
+		IF EXISTS(SELECT v.name FROM sys.views v, sys.schemas s WHERE s.name = '@env:udm_wlf_schema@' AND s.schema_id = v.schema_id AND v.name = 'ENTITY')
+        BEGIN
+            EXEC('DROP VIEW @env:udm_wlf_schema@.ENTITY');
+        END;
+
+		
+	END
+	@go@
+	
+	
+	
+	CREATE VIEW @env:udm_wlf_schema@.DW_VERSION
+	AS
+	SELECT
+		ID,
+		VERSION_CONTROL_LABEL,
+		UPDATE_DATE,
+		SCRIPT_FILE_NAME,
+		APP_TYPE
+	FROM
+		@env:udm_cds_schema_name@.DW_VERSION
+	@go@
+	
+	CREATE VIEW @env:udm_wlf_schema@.PARTY_ADDRESS
+	AS
+	SELECT
+		address.ADDRESS_KEY,
+		address.ADDRESS_LINE_1,
+		address.ADDRESS_LINE_2, 
+    	address.ADDRESS_LINE_3, 
+    	address.ADDRESS_LINE_4, 
+    	address.ADDRESS_LINE_5, 
+    	address.APARTMENT_SUITE_NUMBER, 
+    	address.BUILDING_NUMBER, 
+    	address.CITY, 
+    	address.PO_BOX, 
+    	address.STREET, 
+    	address.ZIP_POSTCODE AS ZIP_CODE, 
+    	ctry.COUNTRY_CD, 
+    	stprov.STATE_PROVINCE_CD AS STATE_PROVINCE, 
+    	relation.ADDRESS_RELATION_TYPE_CD, 
+    	relation.ENTITY_TYPE_CD, 
+    	address.TENANT_CD, 
+    	party.PARTY_KEY, 
+    	ISNULL(address.IS_TO_BE_DELETED, 0) IS_TO_BE_DELETED
+    FROM
+    	@env:udm_cds_schema_name@.V_ENTITY_ADDRESS_RELATION_BASE relation,
+    	@env:udm_cds_schema_name@.V_PARTY_BASE party,
+    	@env:udm_cds_schema_name@.V_ADDRESS_BASE address
+	LEFT OUTER JOIN @env:udm_cds_schema_name@.V_COUNTRY ctry
+    	ON address.COUNTRY_SK = ctry.ENTITY_SK
+	LEFT OUTER JOIN @env:udm_cds_schema_name@.V_STATE_PROVINCE stprov
+    	ON address.STATE_PROVINCE_SK = stprov.ENTITY_SK
+    WHERE
+    	address.ENTITY_SK = relation.ADDRESS_SK
+		AND relation.REF_ENTITY_SK = party.ENTITY_SK
+        AND ISNULL(address.IS_TO_BE_DELETED, 0) != 1
+        AND ISNULL(relation.IS_TO_BE_DELETED, 0) != 1
+
+    @go@
+    
+    CREATE VIEW @env:udm_wlf_schema@.PARTY_COUNTRY
+    AS
+    SELECT
+    	ctry.COUNTRY_CD, 
+    	ctry.COUNTRY_NAME,
+    	relation.COUNTRY_RELATION_TYPE_CD as COUNTRY_RELATION_TYPE_CD,
+    	ctryrel.COUNTRY_RELATION_TYPE_DV as COUNTRY_RELATION_TYPE_DV,
+    	relation.COUNTRY_RELATION_ID,
+    	relation.ENTITY_KEY,
+    	relation.ENTITY_TYPE_CD,
+    	relation.TENANT_CD,
+    	party.PARTY_KEY,
+    	ISNULL(relation.IS_TO_BE_DELETED, 0) IS_TO_BE_DELETED
+    FROM
+    	@env:udm_cds_schema_name@.V_COUNTRY ctry,
+    	@env:udm_cds_schema_name@.V_ENTITY_COUNTRY_RELATION_BASE relation,
+    	@env:udm_cds_schema_name@.V_PARTY_BASE party,
+    	@env:udm_cds_schema_name@.V_COUNTRY_RELATION_TYPE ctryrel
+    WHERE
+    	ctry.ENTITY_SK = relation.COUNTRY_SK
+    	AND relation.COUNTRY_RELATION_TYPE_SK = ctryrel.ENTITY_SK
+		AND relation.REF_ENTITY_SK = party.ENTITY_SK
+		AND ISNULL(relation.IS_TO_BE_DELETED, 0) != 1
+    	AND (relation.COUNTRY_RELATION_ID = '1' OR  relation.COUNTRY_RELATION_ID = '2'
+    		OR  relation.COUNTRY_RELATION_ID = '3' OR  relation.COUNTRY_RELATION_ID = '4'
+    		OR  relation.COUNTRY_RELATION_ID = '5')
+	@go@
+	
+	CREATE VIEW @env:udm_wlf_schema@.PARTY_DOCUMENTATION
+	AS
+	SELECT
+    	doc.DOCUMENT_NUMBER AS DOC_NUMBER, 
+    	doc.DOCUMENT_TYPE_CD as DOC_TYPE_CD, 
+    	coalesce(type.DOCUMENT_TYPE_DV, type.DOCUMENT_TYPE_DESC, type.DOCUMENT_TYPE_CD) as WLF_DOCUMENT_TYPE_CD, 
+    	ctry.COUNTRY_CD AS ISSUE_COUNTRY_CD, 
+    	relation.DOCUMENT_REQUIREMENT_CD, 
+    	relation.ENTITY_KEY, 
+    	relation.ENTITY_TYPE_CD, 
+    	party.PARTY_KEY,
+		party.ENTITY_SK PARTY_SK,
+    	doc.TENANT_CD, 
+    	COALESCE(relation.IS_TO_BE_DELETED, 0) REL_IS_TO_BE_DELETED, 
+    	COALESCE(doc.IS_TO_BE_DELETED, 0) DOC_IS_TO_BE_DELETED 
+	FROM 
+    	@env:udm_cds_schema_name@.V_PARTY_BASE party
+	INNER JOIN    
+		@env:udm_cds_schema_name@.V_ENTITY_DOCUMENT_RELATIO_BASE relation
+		ON relation.REF_ENTITY_SK = party.ENTITY_SK
+	INNER JOIN	
+    	@env:udm_cds_schema_name@.V_DOCUMENT_BASE doc
+    	ON doc.ENTITY_SK = relation.DOCUMENT_SK
+	INNER JOIN
+    	@env:udm_cds_schema_name@.V_DOCUMENT_TYPE type
+		ON type.DOCUMENT_TYPE_CD = doc.DOCUMENT_TYPE_CD
+	LEFT OUTER JOIN
+    	@env:udm_cds_schema_name@.V_COUNTRY ctry
+		ON doc.ISSUE_COUNTRY_SK = ctry.ENTITY_SK
+	WHERE 
+    	COALESCE(relation.IS_TO_BE_DELETED, 0) != 1 
+    	and COALESCE(doc.IS_TO_BE_DELETED, 0)  != 1
+	@go@
+	
+	CREATE VIEW @env:udm_wlf_schema@.PARTY_ALIAS
+	AS
+	SELECT
+		alias.PARTY_ALIAS_KEY,
+    	alias.PARTY_KEY,
+    	alias.PARTY_FIRST_NAME,
+    	alias.PARTY_LAST_NAME,
+    	alias.PARTY_MAIDEN_NAME,
+    	alias.PARTY_MIDDLE_NAME,
+		alias.TENANT_CD,
+    	ISNULL(alias.IS_TO_BE_DELETED, 0) IS_TO_BE_DELETED
+    FROM
+    	@env:udm_cds_schema_name@.V_PARTY_ALIAS_BASE alias
+    WHERE
+    	ISNULL(alias.IS_TO_BE_DELETED, 0) != 1
+	@go@
+    	
+	CREATE VIEW @env:udm_wlf_schema@.PARTY_BUSINESS_UNIT
+	AS
+	SELECT
+		PARTY_KEY,
+		PARTY_SK,
+		BUSINESS_UNIT_CD AS BUSINESS_UNIT,
+		IS_PRIMARY_BU,
+		IS_TO_BE_DELETED
+		FROM 
+			@env:udm_cds_schema_name@.V_PARTY_BUSINESS_UNIT_BASE
+		WHERE
+			COALESCE(IS_TO_BE_DELETED, 0) != 1
+	
+	@go@
+	
+	CREATE VIEW @env:udm_wlf_schema@.PARTY
+	AS
+	SELECT
+		party.PARTY_KEY,
+		party.BIRTH_INCORP_DATE,
+		CASE WHEN type.IS_INDIVIDUAL = 1 OR NULLIF(party.PARTY_NAME, '') IS NULL THEN party.FIRST_NAME ELSE '' END AS PARTY_FIRST_NAME,
+		CASE WHEN type.IS_INDIVIDUAL = 1 THEN party.LAST_NAME ELSE ISNULL(NULLIF(party.PARTY_NAME,''), party.LAST_NAME) END AS PARTY_LAST_NAME,
+		CASE WHEN type.IS_INDIVIDUAL = 1 OR NULLIF(party.PARTY_NAME, '') IS NULL THEN party.MAIDEN_NAME ELSE '' END AS PARTY_MAIDEN_NAME,
+		CASE WHEN type.IS_INDIVIDUAL = 1 OR NULLIF(party.PARTY_NAME, '') IS NULL THEN party.MIDDLE_NAME ELSE '' END AS PARTY_MIDDLE_NAME,
+		party.PARTY_NAME,
+		party.PLACE_OF_BIRTH,
+		type.PARTY_TYPE_CD,
+		gender.GENDER_CD AS GENDER,
+		party.IS_TO_BE_DELETED,
+		party.EFFECTIVE_DATE,
+		party.BATCH_DATE_TIME,
+		party.TENANT_CD,
+		party.NAME_PREFIX,
+		(SELECT COUNTRY_CD
+		 FROM @env:udm_wlf_schema@.PARTY_COUNTRY party_nationality
+		 WHERE 
+			party.PARTY_KEY = party_nationality.PARTY_KEY 
+			AND (party_nationality.COUNTRY_RELATION_TYPE_DV = 'UDM.Party.Place_Of_Birth_Country_Cd' OR party_nationality.COUNTRY_RELATION_TYPE_CD = 'UDM.Party.Place_Of_Birth_Country_Cd')
+			AND party_nationality.COUNTRY_RELATION_ID = '1') AS PLACE_OF_BIRTH_COUNTRY,
+		(SELECT COUNTRY_CD
+		 FROM @env:udm_wlf_schema@.PARTY_COUNTRY party_nationality
+		 WHERE 
+			party.PARTY_KEY = party_nationality.PARTY_KEY 
+			AND (party_nationality.COUNTRY_RELATION_TYPE_DV = 'UDM.Party.Citizenship_Country_Cd' OR party_nationality.COUNTRY_RELATION_TYPE_CD = 'UDM.Party.Citizenship_Country_Cd')
+			AND party_nationality.COUNTRY_RELATION_ID = '1') AS CITIZENSHIP_COUNTRY_CD,
+		(SELECT COUNTRY_CD
+		 FROM @env:udm_wlf_schema@.PARTY_COUNTRY party_nationality
+		 WHERE 
+			party.PARTY_KEY = party_nationality.PARTY_KEY 
+			AND (party_nationality.COUNTRY_RELATION_TYPE_DV = 'UDM.Party.Citizenship_Country_Cd' OR party_nationality.COUNTRY_RELATION_TYPE_CD = 'UDM.Party.Citizenship_Country_Cd')
+			AND party_nationality.COUNTRY_RELATION_ID = '2') AS CITIZENSHIP_COUNTRY_CD_2,
+		(SELECT COUNTRY_CD
+		 FROM @env:udm_wlf_schema@.PARTY_COUNTRY party_nationality
+		 WHERE 
+			party.PARTY_KEY = party_nationality.PARTY_KEY 
+			AND (party_nationality.COUNTRY_RELATION_TYPE_DV = 'UDM.Party.Citizenship_Country_Cd' OR party_nationality.COUNTRY_RELATION_TYPE_CD = 'UDM.Party.Citizenship_Country_Cd')
+			AND party_nationality.COUNTRY_RELATION_ID = '3') AS CITIZENSHIP_COUNTRY_CD_3,
+		(SELECT COUNTRY_CD
+		 FROM @env:udm_wlf_schema@.PARTY_COUNTRY party_nationality
+		 WHERE 
+			party.PARTY_KEY = party_nationality.PARTY_KEY 
+			AND (party_nationality.COUNTRY_RELATION_TYPE_DV = 'UDM.Party.Citizenship_Country_Cd' OR party_nationality.COUNTRY_RELATION_TYPE_CD = 'UDM.Party.Citizenship_Country_Cd')
+			AND party_nationality.COUNTRY_RELATION_ID = '4') AS CITIZENSHIP_COUNTRY_CD_4,
+		(SELECT COUNTRY_CD
+		 FROM @env:udm_wlf_schema@.PARTY_COUNTRY party_nationality
+		 WHERE 
+			party.PARTY_KEY = party_nationality.PARTY_KEY 
+			AND (party_nationality.COUNTRY_RELATION_TYPE_DV = 'UDM.Party.Citizenship_Country_Cd' OR party_nationality.COUNTRY_RELATION_TYPE_CD = 'UDM.Party.Citizenship_Country_Cd')
+			AND party_nationality.COUNTRY_RELATION_ID = '5') AS CITIZENSHIP_COUNTRY_CD_5
+	FROM 
+		@env:udm_cds_schema_name@.V_PARTY_BASE party
+	LEFT OUTER JOIN @env:udm_cds_schema_name@.V_PARTY_TYPE type
+   		ON party.PARTY_TYPE_SK = type.ENTITY_SK
+	LEFT OUTER JOIN @env:udm_cds_schema_name@.V_GENDER gender
+   		ON party.GENDER_SK = gender.ENTITY_SK
+	WHERE   
+   		COALESCE(party.IS_TO_BE_DELETED, 0)  != 1
+	@go@
+	
+	CREATE VIEW @env:udm_wlf_schema@.V_WLF_PARTY
+	AS
+	SELECT
+   		party.PARTY_KEY,
+   		party.BIRTH_INCORP_DATE,
+   		party.FIRST_NAME,
+   		gender.GENDER_CD,
+   		party.LAST_NAME,
+   		party.MAIDEN_NAME,
+   		party.MIDDLE_NAME,
+   		party.PARTY_NAME,
+   		type.PARTY_TYPE_CD,
+   		party.PLACE_OF_BIRTH,
+   		type.PARTY_TYPE_DESC,
+   		type.IS_INDIVIDUAL,
+   		party.EFFECTIVE_DATE,
+   		party.BATCH_DATE_TIME,
+   		COALESCE(party.IS_TO_BE_DELETED, 0) IS_TO_BE_DELETED,
+   		bu.IS_PRIMARY_BU,
+   		bu.BUSINESS_UNIT,
+   		COALESCE(representative.REPRESENTATIVE_KEY, 'N/A') REPRESENTATIVE_KEY,
+   		party_classification.PARTY_CLASSIFICATION_CD,
+   		(SELECT STUFF((SELECT '~@^*^@~'+wlf_prty_ctry.COUNTRY_CD
+		              FROM @env:udm_wlf_schema@.PARTY_COUNTRY wlf_prty_ctry
+					  WHERE wlf_prty_ctry.PARTY_KEY = PARTY_KEY
+					  ORDER BY wlf_prty_ctry.COUNTRY_RELATION_ID
+					  FOR XML PATH('')),1,7,'') AS PTY_CTY_CODES) AS PARTY_NATIONALITY_COUNTRIES,
+		(SELECT STUFF((SELECT '~@^*^@~'+wlf_prty_docs.WLF_DOCUMENT_TYPE_CD+'~##~'+ISNULL(wlf_prty_docs.DOC_NUMBER,'')+'~##~'+ISNULL(wlf_prty_docs.ISSUE_COUNTRY_CD,'')
+		              FROM @env:udm_wlf_schema@.PARTY_DOCUMENTATION wlf_prty_docs
+					  WHERE wlf_prty_docs.PARTY_KEY = PARTY_KEY
+					  ORDER BY wlf_prty_docs.WLF_DOCUMENT_TYPE_CD
+					  FOR XML PATH('')),1,7,'') AS PTY_DOC_IDS) AS PARTY_IDS,
+	    (SELECT STUFF((SELECT '~@^*^@~'+ISNULL(wlf_prty_addr.ADDRESS_LINE_1,'')+'~##~'+ISNULL(wlf_prty_addr.ADDRESS_LINE_2,'')+'~##~'+ISNULL(wlf_prty_addr.CITY,'')+'~##~'+ISNULL(wlf_prty_addr.ZIP_CODE,'')+'~##~'+ISNULL(wlf_prty_addr.COUNTRY_CD,'')
+		              FROM @env:udm_wlf_schema@.PARTY_ADDRESS wlf_prty_addr
+					  WHERE wlf_prty_addr.PARTY_KEY = PARTY_KEY
+					  ORDER BY wlf_prty_addr.PARTY_KEY
+					  FOR XML PATH('')),1,7,'') AS PTY_ADDRESSES) AS PARTY_ADDRESSES,
+		(SELECT STUFF((SELECT '~@^*^@~'+ISNULL(wlf_prty_alias.PARTY_FIRST_NAME,'')+'~##~'+ISNULL(wlf_prty_alias.PARTY_MIDDLE_NAME,'')+'~##~'+ISNULL(wlf_prty_alias.PARTY_MAIDEN_NAME,'')+'~##~'+ISNULL(wlf_prty_alias.PARTY_LAST_NAME,'')
+		              FROM @env:udm_wlf_schema@.PARTY_ALIAS wlf_prty_alias
+					  WHERE wlf_prty_alias.PARTY_KEY = PARTY_KEY
+					  ORDER BY wlf_prty_alias.PARTY_KEY
+					  FOR XML PATH('')),1,7,'') AS PTY_ALIASES) AS PARTY_ALIASES
+	FROM
+   		@env:udm_cds_schema_name@.V_PARTY_BASE party
+	INNER JOIN @env:udm_cds_schema_name@.V_PARTY_TYPE type
+   		ON party.PARTY_TYPE_SK = type.ENTITY_SK
+	LEFT OUTER JOIN @env:udm_cds_schema_name@.V_GENDER gender
+   		ON party.GENDER_SK = gender.ENTITY_SK
+	INNER JOIN @env:udm_wlf_schema@.PARTY_BUSINESS_UNIT bu
+   		ON party.ENTITY_SK = bu.PARTY_SK
+	LEFT OUTER JOIN @env:udm_cds_schema_name@.V_REPRESENTATIVE_BASE representative
+   		ON party.PRIMARY_REPRESENTATIVE_SK = representative.ENTITY_SK
+	LEFT OUTER JOIN @env:udm_cds_schema_name@.V_PARTY_CLASSIFICATION party_classification
+   		ON party.CLASSIFICATION_SK = party_classification.ENTITY_SK
+	WHERE   
+   		COALESCE(party.IS_TO_BE_DELETED, 0)  != 1
+		AND COALESCE(bu.IS_TO_BE_DELETED, 0) != 1
+		AND bu.IS_PRIMARY_BU = 1
+		AND NOT(party.FIRST_NAME IS NULL and party.LAST_NAME IS NULL and party.MAIDEN_NAME IS NULL and party.MIDDLE_NAME IS NULL and party.PARTY_NAME IS NULL)	
+	@go@
+
+	CREATE VIEW @env:udm_wlf_schema@.MESSAGES
+	AS
+	SELECT
+		message.MESSAGE_KEY,
+		message.ADDITIONAL_MESSAGE_INFO,
+		message.BASE_CURR_AMOUNT AS AMOUNT,
+		message.EXECUTION_GLOBAL_DATE_TIME AS MESSAGE_DATE_TIME,
+		message.BENEFICIARY_ADDITIONAL_INFO,
+		message.BENEFICIARY_ADDRESS_LINE_1,
+		message.BENEFICIARY_ADDRESS_LINE_2,
+		message.BENEFICIARY_ADDRESS_LINE_3,
+		message.BENEFICIARY_CITY,
+		beneficiary_ctry.COUNTRY_CD AS BENEFICIARY_COUNTRY_CD,
+		bene_party_type.PARTY_TYPE_CD AS BENEFICIARY_FI_PARTY_TYPE_CD,
+		message.BENEFICIARY_NAME,
+		message.BENEFICIARY_PO_BOX,
+		bene_st_prov.STATE_PROVINCE_CD AS BENEFICIARY_STATE_PROVINCE,
+		message.BENEFICIARY_ZIP_POSTCODE AS BENEFICIARY_ZIP_CD,
+		currency.CURRENCY_CD,
+		message.FI_TO_FI_INFO,
+		message.FULL_MESSAGE,
+		message.MESSAGE_FORMAT,
+		message.MESSAGE_INSTRUCTIONS,
+		message.MESSAGE_REF_NUMBER,
+		message.MESSAGE_SOURCE_TYPE,
+		trans_code.TRANSACTION_CODE_CD AS MESSAGE_TYPE_CD,
+		message.ORIGINATOR_ADDITIONAL_INFO,
+		message.ORIGINATOR_ADDRESS_LINE_1,
+		message.ORIGINATOR_ADDRESS_LINE_2,
+		message.ORIGINATOR_ADDRESS_LINE_3,
+		message.ORIGINATOR_CITY,
+		originator_ctry.COUNTRY_CD AS ORIGINATOR_COUNTRY_CD,
+		message.ORIGINATOR_NAME,
+		orig_party_type.PARTY_TYPE_CD AS ORIGINATOR_PARTY_TYPE_CD,
+		message.ORIGINATOR_PO_BOX,
+		orig_st_prov.STATE_PROVINCE_CD AS ORIGINATOR_STATE_PROVINCE,
+		message.ORIGINATOR_ZIP_POSTCODE AS ORIGINATOR_ZIP_CD,
+		product.PRODUCT_KEY,
+		message.BENEFICIARY_DOCUMENT_NUMBER AS BENEFICIARY_PRIMARY_PARTY_ID,
+		message.ORIGINATOR_DOCUMENT_NUMBER AS ORIGINATOR_PRIMARY_PARTY_ID,
+		(SELECT
+			org.ORGANIZATION_KEY 
+		FROM 
+			 @env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch
+				
+			LEFT JOIN @env:udm_cds_schema_name@.V_BRANCH_BASE branch
+			ON msg_branch.BRANCH_SK = branch.ENTITY_SK
+			LEFT JOIN @env:udm_cds_schema_name@.V_ORGANIZATION_BASE org
+			ON branch.ORGANIZATION_SK = org.ENTITY_SK
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			and message.DAY_SK = msg_branch.DAY_SK
+			AND msg_branch.MESSAGE_ROLE_CD = 'BENEFICIARY') AS BENEFICIARY_FI_CD,
+		(SELECT
+			ctry.COUNTRY_CD
+		FROM
+			 @env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch
+			LEFT JOIN @env:udm_cds_schema_name@.V_BRANCH_BASE branch
+			ON msg_branch.BRANCH_SK = branch.ENTITY_SK
+			LEFT JOIN @env:udm_cds_schema_name@.V_COUNTRY ctry
+			ON branch.COUNTRY_SK = ctry.ENTITY_SK
+		WHERE 
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK
+			AND msg_branch.MESSAGE_ROLE_CD = 'BENEFICIARY') AS BENEFICIARY_FI_COUNTRY_CD,
+		(SELECT 
+			org.ORGANIZATION_NAME
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch
+			LEFT JOIN @env:udm_cds_schema_name@.V_BRANCH_BASE branch
+			ON msg_branch.BRANCH_SK = branch.ENTITY_SK
+			LEFT JOIN @env:udm_cds_schema_name@.V_ORGANIZATION_BASE org
+			ON branch.ORGANIZATION_SK = org.ENTITY_SK
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK
+			AND msg_branch.MESSAGE_ROLE_CD = 'BENEFICIARY') AS BENEFICIARY_FI_ORG_NAME,
+		(SELECT
+			org.ORGANIZATION_KEY 
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch
+						LEFT JOIN @env:udm_cds_schema_name@.V_BRANCH_BASE branch
+			ON msg_branch.BRANCH_SK = branch.ENTITY_SK
+			LEFT JOIN @env:udm_cds_schema_name@.V_ORGANIZATION_BASE org
+			ON branch.ORGANIZATION_SK = org.ENTITY_SK
+			
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 11) AS INTERMEDIATE_FI_CD,
+		(SELECT 
+			ctry.COUNTRY_CD
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch
+			LEFT JOIN @env:udm_cds_schema_name@.V_BRANCH_BASE branch
+			ON msg_branch.BRANCH_SK = branch.ENTITY_SK
+			LEFT JOIN @env:udm_cds_schema_name@.V_COUNTRY ctry
+			ON branch.COUNTRY_SK = ctry.ENTITY_SK
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK 
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 11)AS INTERMEDIATE_FI_COUNTRY_CD,
+		(SELECT 
+			org.ORGANIZATION_NAME
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch
+			LEFT JOIN @env:udm_cds_schema_name@.V_BRANCH_BASE branch
+			ON msg_branch.BRANCH_SK = branch.ENTITY_SK
+			LEFT JOIN @env:udm_cds_schema_name@.V_ORGANIZATION_BASE org
+			ON branch.ORGANIZATION_SK = org.ENTITY_SK
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK 
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 11) AS INTERMEDIATE_FI_ORG_NAME,
+		(SELECT
+			org.ORGANIZATION_KEY
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch
+			LEFT JOIN @env:udm_cds_schema_name@.V_BRANCH_BASE branch
+			ON msg_branch.BRANCH_SK = branch.ENTITY_SK
+			LEFT JOIN @env:udm_cds_schema_name@.V_ORGANIZATION_BASE org
+			ON branch.ORGANIZATION_SK = org.ENTITY_SK
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK 
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 1) AS INTERMEDIARY1_FI_CD,
+		(SELECT 
+			ctry.COUNTRY_CD
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch
+			LEFT JOIN @env:udm_cds_schema_name@.V_BRANCH_BASE branch
+			ON msg_branch.BRANCH_SK = branch.ENTITY_SK
+			LEFT JOIN @env:udm_cds_schema_name@.V_COUNTRY ctry
+			ON branch.COUNTRY_SK = ctry.ENTITY_SK
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 1) AS INTERMEDIARY1_FI_COUNTRY_CD,
+		(SELECT 
+			org.ORGANIZATION_NAME
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch
+			LEFT JOIN @env:udm_cds_schema_name@.V_BRANCH_BASE branch
+			ON msg_branch.BRANCH_SK = branch.ENTITY_SK
+			LEFT JOIN @env:udm_cds_schema_name@.V_ORGANIZATION_BASE org
+			ON branch.ORGANIZATION_SK = org.ENTITY_SK
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 1) AS INTERMEDIARY1_FI_ORG_NAME,
+		(SELECT
+			org.ORGANIZATION_KEY
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch
+			LEFT JOIN @env:udm_cds_schema_name@.V_BRANCH_BASE branch
+			ON msg_branch.BRANCH_SK = branch.ENTITY_SK
+			LEFT JOIN @env:udm_cds_schema_name@.V_ORGANIZATION_BASE org
+			ON branch.ORGANIZATION_SK = org.ENTITY_SK
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 2) AS INTERMEDIARY2_FI_CD,
+		(SELECT 
+			ctry.COUNTRY_CD
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch
+			LEFT JOIN @env:udm_cds_schema_name@.V_BRANCH_BASE branch
+			ON msg_branch.BRANCH_SK = branch.ENTITY_SK
+			LEFT JOIN @env:udm_cds_schema_name@.V_COUNTRY ctry
+			ON branch.COUNTRY_SK = ctry.ENTITY_SK
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND  message.DAY_SK = msg_branch.DAY_SK
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 2) AS INTERMEDIARY2_FI_COUNTRY_CD,
+		(SELECT 
+			org.ORGANIZATION_NAME
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch
+			LEFT JOIN @env:udm_cds_schema_name@.V_BRANCH_BASE branch
+			ON msg_branch.BRANCH_SK = branch.ENTITY_SK
+			LEFT JOIN @env:udm_cds_schema_name@.V_ORGANIZATION_BASE org
+			ON branch.ORGANIZATION_SK = org.ENTITY_SK
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 2) AS INTERMEDIARY2_FI_ORG_NAME,
+		(SELECT
+			org.ORGANIZATION_KEY
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch
+			LEFT JOIN @env:udm_cds_schema_name@.V_BRANCH_BASE branch
+			ON msg_branch.BRANCH_SK = branch.ENTITY_SK
+			LEFT JOIN @env:udm_cds_schema_name@.V_ORGANIZATION_BASE org
+			ON branch.ORGANIZATION_SK = org.ENTITY_SK
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 3) AS INTERMEDIARY3_FI_CD,
+		(SELECT 
+			ctry.COUNTRY_CD
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch
+			LEFT JOIN @env:udm_cds_schema_name@.V_BRANCH_BASE branch
+			ON msg_branch.BRANCH_SK = branch.ENTITY_SK
+			LEFT JOIN @env:udm_cds_schema_name@.V_COUNTRY ctry
+			ON branch.COUNTRY_SK = ctry.ENTITY_SK
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 3) AS INTERMEDIARY3_FI_COUNTRY_CD,
+		(SELECT 
+			org.ORGANIZATION_NAME
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch
+			LEFT JOIN @env:udm_cds_schema_name@.V_BRANCH_BASE branch
+			ON msg_branch.BRANCH_SK = branch.ENTITY_SK
+			LEFT JOIN @env:udm_cds_schema_name@.V_ORGANIZATION_BASE org
+			ON branch.ORGANIZATION_SK = org.ENTITY_SK
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 3) AS INTERMEDIARY3_FI_ORG_NAME,
+		(SELECT
+			org.ORGANIZATION_KEY
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch
+			LEFT JOIN @env:udm_cds_schema_name@.V_BRANCH_BASE branch
+			ON msg_branch.BRANCH_SK = branch.ENTITY_SK
+			LEFT JOIN @env:udm_cds_schema_name@.V_ORGANIZATION_BASE org
+			ON branch.ORGANIZATION_SK = org.ENTITY_SK
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 4) AS INTERMEDIARY4_FI_CD,
+		(SELECT 
+			ctry.COUNTRY_CD
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch
+			LEFT JOIN @env:udm_cds_schema_name@.V_BRANCH_BASE branch
+			ON msg_branch.BRANCH_SK = branch.ENTITY_SK
+			LEFT JOIN @env:udm_cds_schema_name@.V_COUNTRY ctry
+			ON branch.COUNTRY_SK = ctry.ENTITY_SK
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 4) AS INTERMEDIARY4_FI_COUNTRY_CD,
+		(SELECT 
+			org.ORGANIZATION_NAME
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch
+			LEFT JOIN @env:udm_cds_schema_name@.V_BRANCH_BASE branch
+			ON msg_branch.BRANCH_SK = branch.ENTITY_SK
+			LEFT JOIN @env:udm_cds_schema_name@.V_ORGANIZATION_BASE org
+			ON branch.ORGANIZATION_SK = org.ENTITY_SK
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 4) AS INTERMEDIARY4_FI_ORG_NAME,
+		(SELECT
+			org.ORGANIZATION_KEY
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch
+			LEFT JOIN @env:udm_cds_schema_name@.V_BRANCH_BASE branch
+			ON msg_branch.BRANCH_SK = branch.ENTITY_SK
+			LEFT JOIN @env:udm_cds_schema_name@.V_ORGANIZATION_BASE org
+			ON branch.ORGANIZATION_SK = org.ENTITY_SK
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 5) AS INTERMEDIARY5_FI_CD,
+		(SELECT 
+			ctry.COUNTRY_CD
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch
+			LEFT JOIN @env:udm_cds_schema_name@.V_BRANCH_BASE branch
+			ON msg_branch.BRANCH_SK = branch.ENTITY_SK
+			LEFT JOIN @env:udm_cds_schema_name@.V_COUNTRY ctry
+			ON branch.COUNTRY_SK = ctry.ENTITY_SK
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 5) AS INTERMEDIARY5_FI_COUNTRY_CD,
+		(SELECT 
+			org.ORGANIZATION_NAME
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch
+			LEFT JOIN @env:udm_cds_schema_name@.V_BRANCH_BASE branch
+			ON msg_branch.BRANCH_SK = branch.ENTITY_SK
+			LEFT JOIN @env:udm_cds_schema_name@.V_ORGANIZATION_BASE org
+			ON branch.ORGANIZATION_SK = org.ENTITY_SK
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 5) AS INTERMEDIARY5_FI_ORG_NAME,
+		(SELECT
+			org.ORGANIZATION_KEY
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch
+			LEFT JOIN @env:udm_cds_schema_name@.V_BRANCH_BASE branch
+			ON msg_branch.BRANCH_SK = branch.ENTITY_SK
+			LEFT JOIN @env:udm_cds_schema_name@.V_ORGANIZATION_BASE org
+			ON branch.ORGANIZATION_SK = org.ENTITY_SK
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 6) AS INTERMEDIARY6_FI_CD,
+		(SELECT 
+			ctry.COUNTRY_CD
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch
+			LEFT JOIN @env:udm_cds_schema_name@.V_BRANCH_BASE branch
+			ON msg_branch.BRANCH_SK = branch.ENTITY_SK
+			LEFT JOIN @env:udm_cds_schema_name@.V_COUNTRY ctry
+			ON branch.COUNTRY_SK = ctry.ENTITY_SK
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 6) AS INTERMEDIARY6_FI_COUNTRY_CD,
+		(SELECT 
+			org.ORGANIZATION_NAME
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch
+			LEFT JOIN @env:udm_cds_schema_name@.V_BRANCH_BASE branch
+			ON msg_branch.BRANCH_SK = branch.ENTITY_SK
+			LEFT JOIN @env:udm_cds_schema_name@.V_ORGANIZATION_BASE org
+			ON branch.ORGANIZATION_SK = org.ENTITY_SK
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 6) AS INTERMEDIARY6_FI_ORG_NAME,
+		(SELECT
+			org.ORGANIZATION_KEY
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch
+			LEFT JOIN @env:udm_cds_schema_name@.V_BRANCH_BASE branch
+			ON msg_branch.BRANCH_SK = branch.ENTITY_SK
+			LEFT JOIN @env:udm_cds_schema_name@.V_ORGANIZATION_BASE org
+			ON branch.ORGANIZATION_SK = org.ENTITY_SK
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 7) AS INTERMEDIARY7_FI_CD,
+		(SELECT 
+			ctry.COUNTRY_CD
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch
+			LEFT JOIN @env:udm_cds_schema_name@.V_BRANCH_BASE branch
+			ON msg_branch.BRANCH_SK = branch.ENTITY_SK
+			LEFT JOIN @env:udm_cds_schema_name@.V_COUNTRY ctry
+			ON branch.COUNTRY_SK = ctry.ENTITY_SK
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 7) AS INTERMEDIARY7_FI_COUNTRY_CD,
+		(SELECT 
+			org.ORGANIZATION_NAME
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch
+			LEFT JOIN @env:udm_cds_schema_name@.V_BRANCH_BASE branch
+			ON msg_branch.BRANCH_SK = branch.ENTITY_SK
+			LEFT JOIN @env:udm_cds_schema_name@.V_ORGANIZATION_BASE org
+			ON branch.ORGANIZATION_SK = org.ENTITY_SK
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 7) AS INTERMEDIARY7_FI_ORG_NAME,
+		(SELECT
+			org.ORGANIZATION_KEY
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch
+			LEFT JOIN @env:udm_cds_schema_name@.V_BRANCH_BASE branch
+			ON msg_branch.BRANCH_SK = branch.ENTITY_SK
+			LEFT JOIN @env:udm_cds_schema_name@.V_ORGANIZATION_BASE org
+			ON branch.ORGANIZATION_SK = org.ENTITY_SK
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 8) AS INTERMEDIARY8_FI_CD,
+		(SELECT 
+			ctry.COUNTRY_CD
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch
+			LEFT JOIN @env:udm_cds_schema_name@.V_BRANCH_BASE branch
+			ON msg_branch.BRANCH_SK = branch.ENTITY_SK
+			LEFT JOIN @env:udm_cds_schema_name@.V_COUNTRY ctry
+			ON branch.COUNTRY_SK = ctry.ENTITY_SK
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 8) AS INTERMEDIARY8_FI_COUNTRY_CD,
+		(SELECT 
+			org.ORGANIZATION_NAME
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch
+			LEFT JOIN @env:udm_cds_schema_name@.V_BRANCH_BASE branch
+			ON msg_branch.BRANCH_SK = branch.ENTITY_SK
+			LEFT JOIN @env:udm_cds_schema_name@.V_ORGANIZATION_BASE org
+			ON branch.ORGANIZATION_SK = org.ENTITY_SK
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 8) AS INTERMEDIARY8_FI_ORG_NAME,
+		(SELECT
+			org.ORGANIZATION_KEY
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch
+			LEFT JOIN @env:udm_cds_schema_name@.V_BRANCH_BASE branch
+			ON msg_branch.BRANCH_SK = branch.ENTITY_SK
+			LEFT JOIN @env:udm_cds_schema_name@.V_ORGANIZATION_BASE org
+			ON branch.ORGANIZATION_SK = org.ENTITY_SK
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 9) AS INTERMEDIARY9_FI_CD,
+		(SELECT 
+			ctry.COUNTRY_CD
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch
+			LEFT JOIN @env:udm_cds_schema_name@.V_BRANCH_BASE branch
+			ON msg_branch.BRANCH_SK = branch.ENTITY_SK
+			LEFT JOIN @env:udm_cds_schema_name@.V_COUNTRY ctry
+			ON branch.COUNTRY_SK = ctry.ENTITY_SK
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			
+			AND message.DAY_SK = msg_branch.DAY_SK
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 9) AS INTERMEDIARY9_FI_COUNTRY_CD,
+		(SELECT 
+			org.ORGANIZATION_NAME
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch
+			LEFT JOIN @env:udm_cds_schema_name@.V_BRANCH_BASE branch
+			ON msg_branch.BRANCH_SK = branch.ENTITY_SK
+			LEFT JOIN @env:udm_cds_schema_name@.V_ORGANIZATION_BASE org
+			ON branch.ORGANIZATION_SK = org.ENTITY_SK
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 9) AS INTERMEDIARY9_FI_ORG_NAME,
+		(SELECT
+			org.ORGANIZATION_KEY
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch
+			LEFT JOIN @env:udm_cds_schema_name@.V_BRANCH_BASE branch
+			ON msg_branch.BRANCH_SK = branch.ENTITY_SK
+			LEFT JOIN @env:udm_cds_schema_name@.V_ORGANIZATION_BASE org
+			ON branch.ORGANIZATION_SK = org.ENTITY_SK
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 10) AS INTERMEDIARY10_FI_CD,
+		(SELECT 
+			ctry.COUNTRY_CD
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch
+			LEFT JOIN @env:udm_cds_schema_name@.V_BRANCH_BASE branch
+			ON msg_branch.BRANCH_SK = branch.ENTITY_SK
+			LEFT JOIN @env:udm_cds_schema_name@.V_COUNTRY ctry
+			ON branch.COUNTRY_SK = ctry.ENTITY_SK
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 10) AS INTERMEDIARY10_FI_COUNTRY_CD,
+		(SELECT 
+			org.ORGANIZATION_NAME
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch
+			LEFT JOIN @env:udm_cds_schema_name@.V_BRANCH_BASE branch
+			ON msg_branch.BRANCH_SK = branch.ENTITY_SK
+			LEFT JOIN @env:udm_cds_schema_name@.V_ORGANIZATION_BASE org
+			ON branch.ORGANIZATION_SK = org.ENTITY_SK
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK
+			AND msg_branch.MESSAGE_ROLE_CD = 'INTERMEDIARY'
+			AND msg_branch.SEQUENCE_NUMBER = 10) AS INTERMEDIARY10_FI_ORG_NAME,
+		(SELECT 
+			org.ORGANIZATION_KEY
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch
+			LEFT JOIN @env:udm_cds_schema_name@.V_BRANCH_BASE branch
+			ON msg_branch.BRANCH_SK = branch.ENTITY_SK
+			LEFT JOIN @env:udm_cds_schema_name@.V_ORGANIZATION_BASE org
+			ON branch.ORGANIZATION_SK = org.ENTITY_SK
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK
+			AND msg_branch.MESSAGE_ROLE_CD = 'ORIGINATOR') AS ORIGINATING_FI_CD,
+		(SELECT 
+			ctry.COUNTRY_CD
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch
+			LEFT JOIN @env:udm_cds_schema_name@.V_BRANCH_BASE branch
+			ON msg_branch.BRANCH_SK = branch.ENTITY_SK
+			LEFT JOIN @env:udm_cds_schema_name@.V_COUNTRY ctry
+			ON branch.COUNTRY_SK = ctry.ENTITY_SK
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK
+			AND msg_branch.MESSAGE_ROLE_CD = 'ORIGINATOR') AS ORIGINATING_FI_COUNTRY_CD,
+		(SELECT 
+			org.ORGANIZATION_NAME
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch
+			LEFT JOIN @env:udm_cds_schema_name@.V_BRANCH_BASE branch
+			ON msg_branch.BRANCH_SK = branch.ENTITY_SK
+			LEFT JOIN @env:udm_cds_schema_name@.V_ORGANIZATION_BASE org
+			ON branch.ORGANIZATION_SK = org.ENTITY_SK
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK
+			AND msg_branch.MESSAGE_ROLE_CD = 'ORIGINATOR') AS ORIGINATING_FI_ORG_NAME,
+		(SELECT
+			org.ORGANIZATION_KEY
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch
+			LEFT JOIN @env:udm_cds_schema_name@.V_BRANCH_BASE branch
+			ON msg_branch.BRANCH_SK = branch.ENTITY_SK
+			LEFT JOIN @env:udm_cds_schema_name@.V_ORGANIZATION_BASE org
+			ON branch.ORGANIZATION_SK = org.ENTITY_SK
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK
+			AND msg_branch.MESSAGE_ROLE_CD = 'RECEIVER') AS RECIEVING_FI_CD,
+		(SELECT 
+			ctry.COUNTRY_CD
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch
+			LEFT JOIN @env:udm_cds_schema_name@.V_BRANCH_BASE branch
+			ON msg_branch.BRANCH_SK = branch.ENTITY_SK
+			LEFT JOIN @env:udm_cds_schema_name@.V_COUNTRY ctry
+			ON branch.COUNTRY_SK = ctry.ENTITY_SK
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK
+			AND msg_branch.MESSAGE_ROLE_CD = 'RECEIVER') AS RECIEVING_FI_COUNTRY_CD,
+		(SELECT 
+			org.ORGANIZATION_NAME
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch
+			LEFT JOIN @env:udm_cds_schema_name@.V_BRANCH_BASE branch
+			ON msg_branch.BRANCH_SK = branch.ENTITY_SK
+			LEFT JOIN @env:udm_cds_schema_name@.V_ORGANIZATION_BASE org
+			ON branch.ORGANIZATION_SK = org.ENTITY_SK
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK
+			AND msg_branch.MESSAGE_ROLE_CD = 'RECEIVER') AS RECIEVING_FI_ORGANIZATION_NAME,
+		(SELECT
+			org.ORGANIZATION_KEY
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch
+			LEFT JOIN @env:udm_cds_schema_name@.V_BRANCH_BASE branch
+			ON msg_branch.BRANCH_SK = branch.ENTITY_SK
+			LEFT JOIN @env:udm_cds_schema_name@.V_ORGANIZATION_BASE org
+			ON branch.ORGANIZATION_SK = org.ENTITY_SK
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK
+			AND msg_branch.MESSAGE_ROLE_CD = 'SENDER') AS SENDING_FI_CD,
+		(SELECT 
+			ctry.COUNTRY_CD
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch
+			LEFT JOIN @env:udm_cds_schema_name@.V_BRANCH_BASE branch
+			ON msg_branch.BRANCH_SK = branch.ENTITY_SK
+			LEFT JOIN @env:udm_cds_schema_name@.V_COUNTRY ctry
+			ON branch.COUNTRY_SK = ctry.ENTITY_SK
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK
+			AND msg_branch.MESSAGE_ROLE_CD = 'SENDER') AS SENDING_FI_COUNTRY_CD,
+		(SELECT 
+			org.ORGANIZATION_NAME
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch
+			LEFT JOIN @env:udm_cds_schema_name@.V_BRANCH_BASE branch
+			ON msg_branch.BRANCH_SK = branch.ENTITY_SK
+			LEFT JOIN @env:udm_cds_schema_name@.V_ORGANIZATION_BASE org
+			ON branch.ORGANIZATION_SK = org.ENTITY_SK
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK
+			AND msg_branch.MESSAGE_ROLE_CD = 'SENDER') AS SENDING_FI_ORGANIZATION_NAME,
+		(SELECT
+			msg_branch.ADDITIONAL_MESSAGE_INFO
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK
+			AND msg_branch.MESSAGE_ROLE_CD = 'RECEIVER') AS RECEIVING_FI_ADDITIONAL_INFO,
+		(SELECT
+			msg_branch.ADDITIONAL_MESSAGE_INFO
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK
+			AND msg_branch.MESSAGE_ROLE_CD = 'SENDER') AS SENDING_FI_ADDITIONAL_INFO,
+		(SELECT
+			branch.BRANCH_KEY
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch
+			LEFT JOIN @env:udm_cds_schema_name@.V_BRANCH_BASE branch
+			ON msg_branch.BRANCH_SK = branch.ENTITY_SK
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK
+			AND msg_branch.MESSAGE_ROLE_CD='RECEIVER') AS SWIFT_RECEIVER_ADDRESS,
+		(SELECT
+			branch.BRANCH_KEY
+		FROM
+			@env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE msg_branch
+			LEFT JOIN @env:udm_cds_schema_name@.V_BRANCH_BASE branch
+			ON msg_branch.BRANCH_SK = branch.ENTITY_SK
+		WHERE
+			message.MESSAGE_KEY = msg_branch.MESSAGE_KEY
+			AND message.DAY_SK = msg_branch.DAY_SK
+			AND msg_branch.MESSAGE_ROLE_CD='SENDER') AS SWIFT_SENDER_ADDRESS
+	FROM
+		@env:udm_cds_schema_name@.V_MESSAGE_BASE message
+	LEFT OUTER JOIN @env:udm_cds_schema_name@.V_COUNTRY beneficiary_ctry
+		ON message.BENEFICIARY_COUNTRY_SK = beneficiary_ctry.ENTITY_SK
+	LEFT OUTER JOIN @env:udm_cds_schema_name@.V_COUNTRY originator_ctry
+		ON message.ORIGINATOR_COUNTRY_SK = originator_ctry.ENTITY_SK
+	LEFT OUTER JOIN @env:udm_cds_schema_name@.V_PARTY_TYPE bene_party_type
+		ON message.BENEFICIARY_PARTY_TYPE_SK = bene_party_type.ENTITY_SK
+	LEFT OUTER JOIN @env:udm_cds_schema_name@.V_PARTY_TYPE orig_party_type
+		ON message.ORIGINATOR_PARTY_TYPE_SK = orig_party_type.ENTITY_SK
+	LEFT OUTER JOIN @env:udm_cds_schema_name@.V_STATE_PROVINCE bene_st_prov
+		ON message.BENEFICIARY_STATE_PROVINCE1_SK = bene_st_prov.ENTITY_SK
+	LEFT OUTER JOIN @env:udm_cds_schema_name@.V_STATE_PROVINCE orig_st_prov
+		ON message.ORIGINATOR_STATE_PROVINCE_1_SK = orig_st_prov.ENTITY_SK
+	LEFT OUTER JOIN @env:udm_cds_schema_name@.V_CURRENCY currency
+		ON message.ORIG_CURR_SK = currency.ENTITY_SK
+	LEFT OUTER JOIN @env:udm_cds_schema_name@.V_TRANSACTION_CODE trans_code
+		ON message.TRANSACTION_CODE_SK = trans_code.ENTITY_SK
+	LEFT OUTER JOIN @env:udm_cds_schema_name@.V_PRODUCT_BASE product
+		ON message.PRODUCT_SK = product.ENTITY_SK
+	@go@
+
+	CREATE VIEW @env:udm_wlf_schema@.ENTITY (
+                   ENTITY_KEY
+                   , ENTITY_TYPE_CD
+                   , ENTITY_SK
+                   , ENTITY_BUCKET
+                   , TENANT_CD
+                   , IS_DELETED
+                   )
+            AS SELECT
+                     v.ENTITY_KEY
+                   , v.ENTITY_TYPE_CD
+                   , v.ENTITY_SK
+                   , v.ENTITY_BUCKET
+                   , v.TENANT_CD
+                   , v.IS_DELETED
+            FROM @env:udm_cds_schema_name@.V_ENTITY v
+            WHERE v.ENTITY_TYPE_CD='PARTY';
+            @go@
+
+]
+}

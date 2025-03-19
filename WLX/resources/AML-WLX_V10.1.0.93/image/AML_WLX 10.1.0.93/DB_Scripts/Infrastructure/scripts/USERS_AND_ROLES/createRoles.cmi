@@ -1,0 +1,104 @@
+version 2.0.0.0 add {
+
+
+
+
+[mssql
+
+	---------------- CREATE APP DB -------------------
+  USE master;
+	GO
+
+	--- CREATE DB WITH CONFIGURED COLLATION 
+  IF (NOT EXISTS (SELECT name FROM [master].dbo.sysdatabases WHERE name = N'@env:lm_db_name@'))
+    BEGIN
+	    CREATE DATABASE @env:lm_db_name@ COLLATE @env:lm_db_collation@;
+    END
+	GO
+
+]
+
+
+	----------------------------------- LIST MANAGEMENT ROLES -----------------------------------
+	---- THE FOLLOWING TWO ROLES NEED TO BE ASSIGNED TO LM'S USERS SO THE
+	---- SOLUTION CAN FUNCTION CORRECTLY:
+	---- * @env:role_batch_lm@
+[oracle
+	DECLARE
+	ROLE_EXISTS INTEGER;
+    BEGIN
+		begin     
+			select 1 into ROLE_EXISTS from DBA_ROLES where ROLE='@env:role_batch_lm_objects@';
+            exception
+            when no_data_found then
+            ROLE_EXISTS:=0;
+		end;
+        if (nvl(ROLE_EXISTS,0) = 0) then
+			execute immediate 'create role @env:role_batch_lm_objects@';
+        end if;
+	END;
+	/
+	DECLARE
+	ROLE_EXISTS INTEGER;
+    BEGIN
+		begin     
+			select 1 into ROLE_EXISTS from DBA_ROLES where ROLE='@env:role_batch_lm_procs@';
+            exception
+            when no_data_found then
+            ROLE_EXISTS:=0;
+		end;
+        if (nvl(ROLE_EXISTS,0) = 0) then
+			execute immediate 'create role @env:role_batch_lm_procs@';
+        end if;
+	END;
+	/
+	DECLARE
+	ROLE_EXISTS INTEGER;
+    BEGIN
+		begin     
+			select 1 into ROLE_EXISTS from DBA_ROLES where ROLE='@env:role_batch_lm@';
+            exception
+            when no_data_found then
+            ROLE_EXISTS:=0;
+		end;
+        if (nvl(ROLE_EXISTS,0) = 0) then
+			execute immediate 'create role @env:role_batch_lm@';
+        end if;
+	END;
+  /
+	grant @env:role_batch_lm_procs@ to @env:role_batch_lm@
+  /
+	grant @env:role_batch_lm_objects@ to @env:role_batch_lm@
+  /
+]
+[mssql
+  use @env:lm_db_name@;
+  go
+  BEGIN
+	  IF DATABASE_PRINCIPAL_ID('@env:role_batch_lm_objects@') IS NULL
+    begin
+	    create role @env:role_batch_lm_objects@;
+    end
+	END
+
+  BEGIN
+	  IF DATABASE_PRINCIPAL_ID('@env:role_batch_lm_procs@') IS NULL
+    begin
+	    create role @env:role_batch_lm_procs@;
+    end
+	END
+
+  BEGIN
+	  IF DATABASE_PRINCIPAL_ID('@env:role_batch_lm@') IS NULL
+    begin
+	    create role @env:role_batch_lm@;
+    end
+  END
+  go
+  sp_addrolemember '@env:role_batch_lm@', '@env:role_batch_lm_procs@';
+  go
+  sp_addrolemember '@env:role_batch_lm@', '@env:role_batch_lm_objects@';
+  go
+  sp_addrolemember 'db_owner', '@env:role_batch_lm@';
+]
+}

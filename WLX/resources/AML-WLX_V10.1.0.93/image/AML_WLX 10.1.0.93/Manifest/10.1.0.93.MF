@@ -1,0 +1,4 @@
+ProductIdentifier=AML_WLF
+ReleaseIdentifier=10.1.0
+BuildNumber=10.1.0.93
+Description=Watch List Filtering

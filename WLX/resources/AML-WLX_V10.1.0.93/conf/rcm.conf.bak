@@ -1,0 +1,73 @@
+##Legend:
+##Two pound signs (##): Comment
+##One pound sign (#): Commented out parameter. Commented out parameters can be uncommented and defined.
+
+###############################################
+## RCM Properties
+###############################################
+
+## Pointer to db-common, do not change
+rcm.db =${db-common}
+
+## Populate MSSQL database name. Leave parameter blank for Oracle.
+rcm.db.mssql.name = ACTONE
+
+## RCM database username
+rcm.db.user = ACTONE_USER
+
+## Encrypted password of rcm.db.user
+^rcm.db.password= OnxEd63qbhiueHAY8fFa0g==
+
+## RCM database schema name
+rcm.db.schema-name = dbo
+
+##choose one and only one of the following based on the Oracle driver version
+#rcm.db.oracle.service-name = <Service Name>
+#rcm.db.oracle.sid = <SID>
+
+## Valid RCM application user name
+rcm.app.user = admin
+
+## Encrypted password for the rcm.app.user
+^rcm.app.password = OnxEd63qbhiueHAY8fFa0g==S
+
+## Windows Authentication Configuration
+rcm.app.use-windows-auth= 0
+
+## RCM Application connection timeout
+rcm.app.connection-timeout = 12000
+
+## URL example: http://localhost:8080/RCM
+rcm.app.url = <RCM_App_URL>
+
+## The path to the RCM application's working directory
+rcm.working-dir = <RCM_Application_Directory>
+
+## The path to the RCM application's setup utilities
+rcm.setup.utilities.path = <RCM_Utilities_Path>
+
+###############################################
+## RCM SSL Properties
+###############################################
+
+## SSL Configuration, 1 is true, 0 is false.  If enabled, remaining items in this section must be defined.
+rcm.app.use-ssl = 0
+
+## Path and file name of the SSL key store for the encrypted communication used by RCM utilities.
+rcm.app.private-key.filename =
+
+## The encrypted password of the SSL key store for encrypted communication used by RCM utilities.
+rcm.app.private-key.password =
+
+## The path and file name of the SSL trust store for encrypted communication used by RCM utilities.
+rcm.app.trusted-certificates.filename =
+
+## The encrypted password of the SSL trust store for encrypted communication used by RCM utilities.
+^rcm.app.trusted-certificates.password =
+
+## The trusted keystore type. e.g. JKS
+rcm.app.trusted-certificates.type=<RCM_TRUSTED_CERTIFICATE_TYPE>
+
+## The private key type. e.g. JKS
+rcm.app.private-key.type=<RCM_PRIVATE_KEY_TYPE>
+

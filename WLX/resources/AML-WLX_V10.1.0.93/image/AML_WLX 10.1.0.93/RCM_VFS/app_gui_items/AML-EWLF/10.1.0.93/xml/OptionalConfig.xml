@@ -1,0 +1,22 @@
+<optional_config>
+	<party_view_transpose>
+		<is_active>false</is_active>
+		<header_width_pct>50</header_width_pct>
+	</party_view_transpose>
+	<party_related_alerts>
+		<is_active>false</is_active>
+		<widget_height_px>150</widget_height_px>
+		<data_source_identifier>WLF_party_related_alerts</data_source_identifier>
+		<alert_view>ACT_AML_WLF_RTA</alert_view>
+	</party_related_alerts>
+	<message_view_transpose>
+		<is_active>false</is_active>
+		<header_width_pct>50</header_width_pct>
+	</message_view_transpose>
+	<message_related_alerts>
+		<is_active>false</is_active>
+		<widget_height_px>150</widget_height_px>
+		<data_source_identifier>WLF_message_related_alerts</data_source_identifier>
+		<alert_view>ACT_AML_WLF_RT_MSGA_VIEW</alert_view>
+	</message_related_alerts>
+</optional_config>

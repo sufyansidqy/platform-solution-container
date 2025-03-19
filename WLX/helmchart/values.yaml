@@ -1,0 +1,335 @@
+# Default values for wlx.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# is_batch: true
+# is_realtime: true
+
+NFSServer: wlx-efs.actimize.services
+NFSServerPath:
+  ##Set the Database IP Address
+actimizeDatabaseServer:
+# Configuration for the statefulset
+sts:
+  replicas: 1
+  replicasRT: 1
+  # -- Optional: Set a different service name for the statefulset (affects the node name in the license)
+  serviceName:
+
+  hostAliases:
+    enabled: false
+    hosts:
+
+  nodeSelector: {}
+
+  affinity: {}
+
+  tolerations: []
+
+  container:
+    name: wlx
+    image: "artifactory.actimize.cloud/docker/wlx"
+    # image: "artifactory.actimize.cloud/docker-dev/wlx"
+    tag: "10.1.0.86"
+    imagePullPolicy: IfNotPresent
+
+    resources:
+      requests:
+        memory: "512Mi"
+        cpu: "250m"
+      limits:
+        memory: "4096Mi"
+        cpu: "500m"
+
+  probes:
+    startupProbe:
+      enabled: true
+      httpGet:
+        path: /eh/heartbeat
+        port: 2347
+      failureThreshold: 30
+      periodSeconds: 90
+
+    readinessProbe:
+      enabled: true
+      httpGet:
+        path: /eh/heartbeat
+        port: 2347
+      initialDelaySeconds: 210
+      periodSeconds: 10
+      timeoutSeconds: 5
+
+    livenessProbe:
+      enabled: true
+      tcpSocket:
+        port: 2347
+      initialDelaySeconds: 300
+      periodSeconds: 10
+      failureThreshold: 30
+
+  # Add-Ons Shared Volume example
+  AddOnsSharedStorage:
+    # -- enable mount of Add-Ons from shared folder -- must be enabled
+    enabled: true
+    # -- the path in AIS Container to mount the Add-Ons shared folder
+    mountPath: /opt/actimize/ais_server/Add-Ons
+    # -- the shared folder server address
+    nfsServer: "wlx-efs.actimize.services"
+    # -- the shared folder path on the server address
+    nfsPath: "/wlx-ci/ais-addons/"
+
+  # Logs Shared Volume example
+  logsSharedStorage:
+    # -- enable mount of Logs from shared folder -- optional
+    enabled: true
+    # -- the shared folder server address
+    nfsServer: "wlx-efs.actimize.services"
+    # -- the shared folder path on the server address
+    nfsPath: "/wlx-ci/logs/"
+    # -- logs mount path in container
+    mountPath: "/opt/actimize/ais_server/Instances/actimize_server_1/temp/ais-logs"
+
+  env:
+    timezone:
+      enabled: true
+      value: "Asia/Jerusalem" # use linux based timezone string
+    amq_drainer:
+      enabled: false
+    aaf_ais_flow:
+      enabled: false
+    solution_entrypoint_location:
+      # -- environment variable to used by ais start pod script for the solution
+      enabled: true
+      # -- path for solution specific scripts different from instance folder
+      path: /opt/actimize/ais_server/Instances/actimize_server_1/temp/sltn_entrpnt_lctn
+    customer_entrypoint_location:
+      # -- environment variable to used by ais start pod script for the customer
+      enabled: false
+      # -- path for customer specific scripts different from instance folder
+      path:
+
+  initContainers:
+    enabled: false
+
+  volumeClaimTemplates:
+    storage: 40Gi  # size of persistency storage of each pod in the statefulset
+    storageClassName: aws-ebs-gp3-csi-delete
+
+configmap:
+  # -- Enable config map for WLX configuration
+  enabled: true
+  # -- The folder name which holds configuration & certification files
+  filesPath: config/wlx/
+  fileGroups:
+    #    db:
+    #      name: "db"
+    #      groupPath: "db/"
+    #      fileList:
+    #        - "odbc.ini"
+    #        - "tnsnames.ora"
+    wlxConfig:
+      name: "config"
+      groupPath: "wlx_config/"
+      fileList:
+        - "AML_WLF_environment.ini"
+        - "AML_WLF_app_gui_items_internal.ini"
+        - "AML_WLF_DJLoadingConfig.ini"
+        - "INFRA_DBQ_EP_internal_config.ini"
+        - "INFRA_DBQ_internal_config.ini"
+        - "AML_WLF_autoRunServicesConfig.ini"
+    #    aisConfig:
+    #      name: 'ais-config'
+    #      groupPath: "ais-config/"
+    #      fileList:
+    #        - "ais_config.xml"
+    entrpntLctn:
+      name: 'entrpnt-lctn'
+      groupPath: "wlx-entrpnt-lctn/"
+      fileList:
+        - "onPodExitSolution.sh"
+        - "onPodStartSolution.sh"
+        - "getProcStat.sh"
+    mxParserConfig:
+      name: "mx-parser-config"
+      groupPath: "mx_parser_config/"
+      fileList:
+        - "AddtlPmtInf.config"
+        - "BkToCstmrDbtCdtNtfctn.config"
+        - "ClmNonRct.config"
+        - "CstmrCdtTrfInitn.config"
+        - "Dplct.config"
+        - "FICdtTrf.config"
+        - "FIToFICstmrCdtTrf.config"
+        - "FIToFICstmrDrctDbt.config"
+        - "FIToFIPmtCxlReq.config"
+        - "FIToFIPmtRvsl.config"
+        - "FIToFIPmtStsRpt.config"
+        - "PmtRtr.config"
+        - "ReqForDplct.config"
+        - "RjctInvstgtn.config"
+        - "RsltnOfInvstgtn.config"
+        - "UblToApply.config"
+
+configmapAis:
+  filesPath: config/ais/
+  fileGroups:
+    webserver:
+      name: "webserver"
+      groupPath: "webserver/"
+      fileList:
+        - "authentication.ini"
+        - "eh.ini"
+        - "mapping.ini"
+    logConfig:
+      name: "logs"
+      groupPath: ""
+      fileList:
+        - "ais_broker_log.config"
+        - "ais_process_log.config"
+    dbConfig:
+      name: "db"
+      groupPath: "db/"
+      fileList:
+        - "odbc.ini"
+        - "tnsnames.ora"
+    amqConfig:
+      name: "amq"
+      groupPath: ""
+      fileList:
+        - "profiles_amq.properties"
+        - "profiles_replication.xml"
+        - "ais_broker_config.xml"
+    #    amqDrainerConfig:
+    #      name: "amq-drainer"
+    #      groupPath: "amq_drainer_vars"
+    #      fileList:
+    #        - "amq_drainer_vars.prop"
+    env:
+      name: "env"
+      groupPath: "k8s_env_vars/"
+      fileList:
+        - "wlx_cnf_env_vars.prop"
+    aisConfig:
+      name: "server"
+      groupPath: ""
+      fileList:
+        - "ais_config.xml"
+        - "ais_environment.xml"
+        - "ais_heartbeat.xml"
+
+
+secret:
+  filesPath: config/ais/
+  fileGroups:
+    license:
+      name: "license"
+      groupPath: "license/"
+      fileList:
+        - "license.lic"
+    keyStore:
+      name: "keystore"
+      groupPath: ""
+      fileList:
+        - "ais.keystore"
+    metaData:
+      name: "metadata"
+      groupPath: "secret_cnf/metadata/"
+      fileList:
+        - "metadata.db"
+        - "users.db"
+    ssl:
+      name: "ssl"
+      groupPath: "secret_cnf/keys/"
+      fileList:
+        - "server.cer"
+        - "server.key"
+        - "client.cer"
+        - "ais.test-wlx-realtime.PEM.keystore"
+        - "ais.test-wlx-realtime.public.pem"
+        - "ais.test-wlx-realtime.private.pem"
+        - "ais.test-wlx-realtime.JKS.keystore"
+        - "rcm.test-wlx-realtime.JKS.truststore"
+  ais_ssl_keystore_secretname_suffix: "ais-keystore"
+  ais_ssl_p12_secretname_suffix: "ais-p12"
+  ais_ssl_truststore_secretname_suffix: "ais-truststore"
+
+tags:
+  budgetTeam: ""
+  createdBy: ""
+  envType: ""
+  environment: ""
+  service: ""
+  team: ""
+
+app:
+  # -- The application name
+  name: "wlx"
+  # -- The customer name for which the deployment is created (mandatory value, must be set before deployment or using --set in Helm install command)
+  wlxCustomerName:  #example sbs489
+  use_ssl: false
+
+service:
+  type: LoadBalancer
+  listenerPort: 2345
+  gsoapPort: 2346
+  webServerPort: 2347
+  aisBrokerPort: 2348
+  http: 80
+  https: 443
+
+ingress:
+  # -- If set to true an ingress object will be created
+  enabled: true
+  # -- Annotations for ingress object <br/>
+  # @default -- <b>Note</b>: For configuring ingress with SSL two additional annotation will be needed,<br/> see the following example (based on AWS ALB ingress): <br/> alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]' <br/> alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:127618451742:certificate/59fb1e58-bc2a-4334-b1d5-2a5c24fe30b4
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/load-balancer-attributes: idle_timeout.timeout_seconds=600
+    # alb.ingress.kubernetes.io/target-group-attributes: stickiness.enabled=true,stickiness.lb_cookie.duration_seconds=3600
+  # -- Optional: Set a custom hostname (should be used with the domain to set the full domain name)
+  host:
+  # -- The domain to use when a setting a custom hostname
+  domain: aml.actimize.cloud
+  # -- If set to yes will enable TLS (https) on the ingress using the tls_secretName Secret that contains a TLS private key and certificate
+  tls_enabled: no
+  # -- Secret that contains a TLS private key and certificate
+  tls_secretName:
+  http:
+    # -- Path for application (default value of '/*' is used in ALB while others might use '/')
+    path: /*
+
+customVolumesMaster:
+customVolumesRt:
+customVolumeMountsMaster:
+customVolumeMountsRt:
+
+mountNFS: false
+mountLicense: false
+mountAISConfig: false
+mountAddOns: true
+mountLogs: true
+kubernetesClusterType: eks
+
+hpa:
+  # -- The minimum number of replicas of the statefulset
+  minReplicas: 1
+  # -- The maximum number of replicas of the statefulset
+  maxReplicas: 5
+  # -- Average cpu utilization before scale out
+  averageCPUUtilization: 70
+
+xse:
+  pod:
+    container:
+      varlog:
+        # -- Enable mount of varlog directory from shared folder
+        enabled: false
+        # -- Host path
+        hostPath: /var/log/ec_monitoring
+        # Example
+        # hostPath: /tmp
+        # -- Mount path
+        mountPath: /var/log/ec_monitoring
+        # Example
+        # mountPath: /var/log

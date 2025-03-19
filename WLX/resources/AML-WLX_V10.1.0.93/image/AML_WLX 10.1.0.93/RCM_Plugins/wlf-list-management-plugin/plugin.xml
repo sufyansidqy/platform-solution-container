@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<plugin id="List Management" version="1.0" includeDoctype="true" classLoaderType="childFirst">
+	<runtime>
+		<lib name="lib/wlf-list-management-plugin.jar" />
+		<extra-lib name="lib/wlf-plugin-common.jar" />
+		<extra-lib name="lib/esapi.jar" />
+		<extra-lib name="lib/json-sanitizer.jar" />
+		<lib name="lib/commons-lang3.jar"/>
+		<lib name="lib/antisamy.jar"/>
+		<lib name="lib/spring-web.jar"/>
+		<lib name="lib/spring-context.jar"/>
+		<lib name="lib/spring-core.jar"/>
+		<lib name="lib/spring-beans.jar"/>
+		<lib name="lib/spring-aop.jar"/>
+		<lib name="lib/commons-codec.jar"/>
+		<lib name="lib/commons-collections.jar"/>
+		<lib name="lib/commons-logging.jar"/>
+		<lib name="lib/xercesImpl.jar" />
+		<lib name="lib/xml-apis.jar"/>
+		<lib name="lib/slf4j-api.jar" />
+		<lib name="lib/slf4j-jdk14.jar"/>
+	</runtime>
+  <module id="publicListManagement">
+    <main-page id="listManagement" controller="com.actimize.wlf.listmgmt.controller.PublicListManagementController" >
+    <controller-action id="displayListDetails" method="displayListDetails"/>
+    <controller-action id="displayEntries" method="displayEntries"/>
+    </main-page>
+    <page id="listDetails" controller="com.actimize.wlf.listmgmt.controller.ListDetailsController" >
+    <controller-action id="displayListEditDetails" method="displayListEditDetails"/>
+    <controller-action id="displayVersionEntries" method="displayVersionEntries"/>
+    <controller-action id="editList" method="editList"/>
+    <controller-action id="removeList" method="removeList"/>
+    <controller-action id="backToList" method="backToList"/>
+	<controller-action id="openUpdateStatusDialog" method="openUpdateStatusDialog"/>
+	<controller-action id="openViewNotesDialog" method="openViewNotesDialog"/>
+	<controller-action id="openAddNoteDialog" method="openAddNoteDialog"/>
+    </page>
+    <page id="listEditDetails" controller="com.actimize.wlf.listmgmt.controller.ListDetailsEditController" >
+    <controller-action id="saveChanges" method="saveChanges"/>
+    <controller-action id="backToListDetails" method="backToListDetails"/>
+    </page>
+    <page id="listCreate" controller="com.actimize.wlf.listmgmt.controller.ListCreateController" >
+    <controller-action id="createList" method="createList"/>
+    </page>
+
+    <page id="removeListPage" controller="com.actimize.wlf.listmgmt.controller.RemoveListController" >
+    	<controller-action id="removeListResult" method="removeListResult"/>
+    	<controller-action id="backToListDetails" method="backToListDetails"/>
+    </page>
+
+    <page id="removeListResultPage" controller="com.actimize.wlf.listmgmt.controller.RemoveListResultController" >
+    </page>	
+        
+    <page id="listEntries" controller="com.actimize.wlf.listmgmt.controller.ListEntriesController" >
+	    <controller-action id="entryIdSelected" method="entryIdSelected"/>
+	    <controller-action id="sortEntries" method="sortEntries"/>
+	    <controller-action id="firstPage" method="firstPage"/>
+	    <controller-action id="nextPage" method="nextPage"/>
+	    <controller-action id="previousPage" method="previousPage"/>
+	    <controller-action id="lastPage" method="lastPage"/>
+	    <controller-action id="changePageSize" method="changePageSize"/>
+		<controller-action id="openFilterEntriesDialog" method="openFilterEntriesDialog"/>
+		<controller-action id="addNewEntry" method="addNewEntry"/>
+	    <controller-action id="approveSelectedEntries" method="approveSelectedEntries"/>
+	    <controller-action id="rejectSelectedEntries" method="rejectSelectedEntries"/>
+	    <controller-action id="deleteRestoreSelectedEntries" method="deleteRestoreSelectedEntries"/>
+		<controller-action id="editEntry" method="editEntry"/>
+	    <controller-action id="backToList" method="backToList"/>
+    	<controller-action id="backToListDetails" method="backToListDetails"/>
+    </page>
+    
+    <page id="entryDetails" controller="com.actimize.wlf.listmgmt.controller.ListEntryDetailsController" >
+	    <controller-action id="nextEntry" method="nextEntry"/>
+	    <controller-action id="previousEntry" method="previousEntry"/>
+	    <controller-action id="backToEntryList" method="backToEntryList"/>
+    </page>
+    <page id="addEditEntryDetails" controller="com.actimize.wlf.listmgmt.controller.AddEditEntryDetailsController" >
+	    <controller-action id="saveEntry" method="saveEntry"/>
+	    <controller-action id="backToEntryList" method="backToEntryList"/>
+    </page>
+    <page id="compareEntryDetails" controller="com.actimize.wlf.listmgmt.controller.CompareEntryController" >
+	    <controller-action id="approveEntry" method="approveEntry"/>
+	    <controller-action id="rejectEntry" method="rejectEntry"/>
+	    <controller-action id="backToEntryList" method="backToEntryList"/>
+    </page>
+  </module>
+  <module id="restrictedListManagement">
+    <main-page id="listManagement" controller="com.actimize.wlf.listmgmt.controller.RestrictedListManagementController" >
+    <controller-action id="displayListDetails" method="displayListDetails"/>
+    <controller-action id="displayEntries" method="displayEntries"/>
+    </main-page>
+    <page id="listDetails" controller="com.actimize.wlf.listmgmt.controller.ListDetailsController" >
+    <controller-action id="displayListEditDetails" method="displayListEditDetails"/>
+    <controller-action id="displayVersionEntries" method="displayVersionEntries"/>
+    <controller-action id="editList" method="editList"/>
+    <controller-action id="removeList" method="removeList"/>
+    <controller-action id="backToList" method="backToList"/>
+	<controller-action id="openUpdateStatusDialog" method="openUpdateStatusDialog"/>
+	<controller-action id="openViewNotesDialog" method="openViewNotesDialog"/>
+	<controller-action id="openAddNoteDialog" method="openAddNoteDialog"/>
+    </page>
+    <page id="listEditDetails" controller="com.actimize.wlf.listmgmt.controller.ListDetailsEditController" >
+    <controller-action id="saveChanges" method="saveChanges"/>
+    <controller-action id="backToListDetails" method="backToListDetails"/>
+    </page>
+    <page id="listCreate" controller="com.actimize.wlf.listmgmt.controller.ListCreateController" >
+    <controller-action id="createList" method="createList"/>
+    </page>
+    
+    <page id="removeListPage" controller="com.actimize.wlf.listmgmt.controller.RemoveListController" >
+    	<controller-action id="removeListResult" method="removeListResult"/>
+    	<controller-action id="backToListDetails" method="backToListDetails"/>
+    </page>
+
+    <page id="removeListResultPage" controller="com.actimize.wlf.listmgmt.controller.RemoveListResultController" >
+    </page>	
+        
+    <page id="listEntries" controller="com.actimize.wlf.listmgmt.controller.ListEntriesController" >
+	    <controller-action id="entryIdSelected" method="entryIdSelected"/>
+	    <controller-action id="sortEntries" method="sortEntries"/>
+	    <controller-action id="firstPage" method="firstPage"/>
+	    <controller-action id="nextPage" method="nextPage"/>
+	    <controller-action id="previousPage" method="previousPage"/>
+	    <controller-action id="lastPage" method="lastPage"/>
+	    <controller-action id="changePageSize" method="changePageSize"/>
+		<controller-action id="openFilterEntriesDialog" method="openFilterEntriesDialog"/>
+		<controller-action id="addNewEntry" method="addNewEntry"/>
+	    <controller-action id="approveSelectedEntries" method="approveSelectedEntries"/>
+	    <controller-action id="rejectSelectedEntries" method="rejectSelectedEntries"/>
+	    <controller-action id="deleteRestoreSelectedEntries" method="deleteRestoreSelectedEntries"/>
+		<controller-action id="editEntry" method="editEntry"/>
+	    <controller-action id="backToList" method="backToList"/>
+    	<controller-action id="backToListDetails" method="backToListDetails"/>
+    </page>
+    
+    <page id="entryDetails" controller="com.actimize.wlf.listmgmt.controller.ListEntryDetailsController" >
+	    <controller-action id="nextEntry" method="nextEntry"/>
+	    <controller-action id="previousEntry" method="previousEntry"/>
+	    <controller-action id="backToEntryList" method="backToEntryList"/>
+    </page>
+    <page id="addEditEntryDetails" controller="com.actimize.wlf.listmgmt.controller.AddEditEntryDetailsController" >
+	    <controller-action id="saveEntry" method="saveEntry"/>
+	    <controller-action id="backToEntryList" method="backToEntryList"/>
+    </page>
+    <page id="compareEntryDetails" controller="com.actimize.wlf.listmgmt.controller.CompareEntryController" >
+	    <controller-action id="approveEntry" method="approveEntry"/>
+	    <controller-action id="rejectEntry" method="rejectEntry"/>
+	    <controller-action id="backToEntryList" method="backToEntryList"/>
+    </page>
+  </module>
+  <module id="confidentialListManagement">
+    <main-page id="listManagement" controller="com.actimize.wlf.listmgmt.controller.ConfidentialListManagementController" >
+    <controller-action id="displayListDetails" method="displayListDetails"/>
+    <controller-action id="displayEntries" method="displayEntries"/>
+    </main-page>
+    <page id="listDetails" controller="com.actimize.wlf.listmgmt.controller.ListDetailsController" >
+    <controller-action id="displayListEditDetails" method="displayListEditDetails"/>
+    <controller-action id="displayVersionEntries" method="displayVersionEntries"/>
+    <controller-action id="editList" method="editList"/>
+    <controller-action id="removeList" method="removeList"/>
+    <controller-action id="backToList" method="backToList"/>
+	<controller-action id="openUpdateStatusDialog" method="openUpdateStatusDialog"/>
+	<controller-action id="openViewNotesDialog" method="openViewNotesDialog"/>
+	<controller-action id="openAddNoteDialog" method="openAddNoteDialog"/>
+    </page>
+    <page id="listEditDetails" controller="com.actimize.wlf.listmgmt.controller.ListDetailsEditController" >
+    <controller-action id="saveChanges" method="saveChanges"/>
+    <controller-action id="backToListDetails" method="backToListDetails"/>
+    </page>
+    <page id="listCreate" controller="com.actimize.wlf.listmgmt.controller.ListCreateController" >
+    <controller-action id="createList" method="createList"/>
+    </page>
+    
+    <page id="removeListPage" controller="com.actimize.wlf.listmgmt.controller.RemoveListController" >
+    	<controller-action id="removeListResult" method="removeListResult"/>
+    	<controller-action id="backToListDetails" method="backToListDetails"/>
+    </page>
+
+    <page id="removeListResultPage" controller="com.actimize.wlf.listmgmt.controller.RemoveListResultController" >
+    </page>	
+        
+    <page id="listEntries" controller="com.actimize.wlf.listmgmt.controller.ListEntriesController" >
+	    <controller-action id="entryIdSelected" method="entryIdSelected"/>
+	    <controller-action id="sortEntries" method="sortEntries"/>
+	    <controller-action id="firstPage" method="firstPage"/>
+	    <controller-action id="nextPage" method="nextPage"/>
+	    <controller-action id="previousPage" method="previousPage"/>
+	    <controller-action id="lastPage" method="lastPage"/>
+	    <controller-action id="changePageSize" method="changePageSize"/>
+		<controller-action id="openFilterEntriesDialog" method="openFilterEntriesDialog"/>
+		<controller-action id="addNewEntry" method="addNewEntry"/>
+	    <controller-action id="approveSelectedEntries" method="approveSelectedEntries"/>
+	    <controller-action id="rejectSelectedEntries" method="rejectSelectedEntries"/>
+	    <controller-action id="deleteRestoreSelectedEntries" method="deleteRestoreSelectedEntries"/>
+		<controller-action id="editEntry" method="editEntry"/>
+	    <controller-action id="backToList" method="backToList"/>
+    	<controller-action id="backToListDetails" method="backToListDetails"/>
+    </page>
+    
+    <page id="entryDetails" controller="com.actimize.wlf.listmgmt.controller.ListEntryDetailsController" >
+	    <controller-action id="nextEntry" method="nextEntry"/>
+	    <controller-action id="previousEntry" method="previousEntry"/>
+	    <controller-action id="backToEntryList" method="backToEntryList"/>
+    </page>
+    <page id="addEditEntryDetails" controller="com.actimize.wlf.listmgmt.controller.AddEditEntryDetailsController" >
+	    <controller-action id="saveEntry" method="saveEntry"/>
+	    <controller-action id="backToEntryList" method="backToEntryList"/>
+    </page>
+    <page id="compareEntryDetails" controller="com.actimize.wlf.listmgmt.controller.CompareEntryController" >
+	    <controller-action id="approveEntry" method="approveEntry"/>
+	    <controller-action id="rejectEntry" method="rejectEntry"/>
+	    <controller-action id="backToEntryList" method="backToEntryList"/>
+    </page>
+  </module>
+    
+  <extension id="extension">
+	<dialog id="ImportListDialog">
+		<main-page id="ImportList" controller="com.actimize.wlf.listmgmt.controller.ImportListController"/>
+	</dialog>
+	<dialog id="UploadFileDialog">
+		<page id="UploadFileController" controller="com.actimize.wlf.listmgmt.controller.UploadFileController">
+    </page>
+    </dialog>
+  </extension>
+  
+	<extension id="FilterEntriesExtension">
+		<dialog id="FilterEntriesDialog">
+			<page id="filterEntries" controller="com.actimize.wlf.listmgmt.controller.FilterEntriesController">
+				<controller-action id="filter" method="filter"/>
+				<controller-action id="clear" method="clear"/>
+			</page>
+		</dialog>
+	</extension>
+	  
+	<extension id="UpdateStatusExtension">
+		<dialog id="UpdateStatusDialog">
+			<page id="updateStatus" controller="com.actimize.wlf.listmgmt.controller.UpdateStatusController">
+				<controller-action id="update" method="update"/>
+			</page>
+		</dialog>
+	</extension>
+
+	<extension id="ViewNotesExtension">
+		<dialog id="ViewNotesDialog">
+			<page id="viewNotes" controller="com.actimize.wlf.listmgmt.controller.ViewNotesController">
+				<controller-action id="openAddNoteDialog" method="openAddNoteDialog"/>
+			</page>
+		</dialog>
+	</extension>
+
+	<extension id="AddNoteExtension">
+		<dialog id="AddNoteDialog">
+			<page id="addNote" controller="com.actimize.wlf.listmgmt.controller.AddNoteController">
+				<controller-action id="add" method="add"/>
+			</page>
+		</dialog>
+	</extension>
+
+</plugin>

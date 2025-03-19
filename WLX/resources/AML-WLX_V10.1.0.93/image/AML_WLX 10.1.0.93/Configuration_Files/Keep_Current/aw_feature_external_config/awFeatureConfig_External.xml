@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<features>
+    <feature>
+        <id>partyFullName</id>
+        <contextReference>party</contextReference>
+        <contextMapping>partyFullName</contextMapping>
+        <indexed>false</indexed>
+        <defaltValue>n/a</defaltValue>
+    </feature>
+    <feature>
+        <id>firstName</id>
+        <contextReference>party</contextReference>
+        <contextMapping>partyFirstName</contextMapping>
+        <indexed>false</indexed>
+        <defaltValue>n/a</defaltValue>
+    </feature>
+</features>

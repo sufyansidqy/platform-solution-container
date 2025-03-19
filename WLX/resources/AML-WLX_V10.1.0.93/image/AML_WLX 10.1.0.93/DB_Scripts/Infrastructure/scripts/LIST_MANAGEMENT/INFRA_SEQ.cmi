@@ -1,0 +1,21 @@
+	create table APP_SEQUENCES (
+		SEQUENCE_ID @string@(50) not null,
+		LATEST_VALUE @number@(10,0) not null,
+		CONSTRAINT app_sequences_pk PRIMARY KEY (SEQUENCE_ID) )
+[oracle
+	pctfree     10
+	initrans    8
+	tablespace @env:tablespace_default@
+	storage   (
+		initial     65536
+		minextents  1
+		maxextents  2147483645
+		buffer_pool default
+	)
+]
+	@go@
+
+	insert into APP_SEQUENCES (SEQUENCE_ID,LATEST_VALUE) values('alertId',0)
+	@go@
+	insert into APP_SEQUENCES (SEQUENCE_ID,LATEST_VALUE) values('jobId',0)
+	@go@

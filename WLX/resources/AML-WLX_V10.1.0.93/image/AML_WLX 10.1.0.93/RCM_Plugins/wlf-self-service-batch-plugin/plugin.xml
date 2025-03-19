@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<plugin id="Self Service Batch" version="1.0" includeDoctype="true" classLoaderType="childFirst">
+  <runtime>
+    	<lib name="lib/wlf-self-service-batch-plugin.jar" />
+    	<extra-lib name="lib/wlf-plugin-common.jar" />
+        <extra-lib name="lib/esapi.jar" />
+        <extra-lib name="lib/json-sanitizer.jar" />
+      <extra-lib name="lib/commons-digester3.jar" />
+      <lib name="lib/commons-lang3.jar"/>
+      <lib name="lib/commons-beanutils.jar"/>
+      <lib name="lib/antisamy.jar"/>
+      <lib name="lib/spring-web.jar"/>
+      <lib name="lib/spring-context.jar"/>
+      <lib name="lib/spring-core.jar"/>
+      <lib name="lib/spring-beans.jar"/>
+      <lib name="lib/spring-aop.jar"/>
+      <lib name="lib/commons-codec.jar"/>
+      <lib name="lib/commons-collections.jar"/>
+      <lib name="lib/commons-logging.jar"/>
+      <lib name="lib/xercesImpl.jar" />
+      <lib name="lib/xml-apis.jar"/>
+      <lib name="lib/xalan.jar"/>
+      <lib name="lib/slf4j-api.jar" />
+      <lib name="lib/slf4j-jdk14.jar"/>
+  </runtime>
+
+  <module id="selfServiceAdmin">
+	<main-page id="SelfServiceListOutputFilesAdminController" controller="com.actimize.wlf.selfservicebatch.controller.SelfServiceListOutputFilesAdminController"/>
+      <page id="SelfServiceDownloadAdminController" controller="com.actimize.wlf.selfservicebatch.controller.SelfServiceDownloadAdminController"/>
+      <page id="SelfServiceCancelJobAdminController" controller="com.actimize.wlf.selfservicebatch.controller.SelfServiceCancelJobAdminController"/>
+  </module>
+
+  <module id="selfServiceMainPage">
+    <main-page id="SelfServiceBatch"
+    controller="com.actimize.wlf.selfservicebatch.controller.SelfServiceBatchController" >
+    </main-page>
+    <page id="UploadFileController" controller="com.actimize.wlf.selfservicebatch.controller.UploadFileController"/>
+    <page id="SelfServiceDownloadController" controller="com.actimize.wlf.selfservicebatch.controller.SelfServiceDownloadController"/>
+    <page id="SelfServiceListOutputFilesController" controller="com.actimize.wlf.selfservicebatch.controller.SelfServiceListOutputFilesController"/>
+    <page id="SelfServiceCancelJobController" controller="com.actimize.wlf.selfservicebatch.controller.SelfServiceCancelJobController"/>
+    <page id="GetConfigXML" controller="com.actimize.wlf.selfservicebatch.controller.ConfigXMLController"/>
+  </module>
+
+</plugin>

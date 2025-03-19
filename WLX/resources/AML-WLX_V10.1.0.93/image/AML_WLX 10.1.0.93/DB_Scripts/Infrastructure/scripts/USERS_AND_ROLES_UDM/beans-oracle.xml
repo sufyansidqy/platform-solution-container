@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans
+xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+       
+	<bean id="oracleAdapter" class="com.actimize.util.dbupgrade.dbadapters.BaseDatabaseAdapter">
+    	<property name="name" value="oracle" />
+		<property name="databaseEnvironment" ref="oracleDatabaseEnvironment"/>
+		<property name="defaultEnvironmentMap" ref="oracleDefaultEnvironmentMap" />
+    	<property name="driverClassName" value="oracle.jdbc.OracleDriver" />
+
+		<property name="reservedWords">
+			<map>
+				<entry key="[msd]{0,3}o[msd]{0,3}:([^@]+)"><value>$1</value></entry>
+				<entry key="[smd]{1,3}:[^@]+"><value/></entry>
+				<entry key="now"><value>sysdate</value></entry>
+				<entry key="soon"><value>sysdate+0.00001</value></entry>
+				<entry key="dbo"><value/></entry>
+				<entry key="go"><value>/&#13;&#10;</value></entry>
+				<entry key="datetime"><value>date</value></entry>
+				<entry key="number"><value>number</value></entry>
+				<entry key="int"><value>number(9,0)</value></entry>
+				<entry key="smallint"><value>number(5,0)</value></entry>
+				<entry key="tinyint"><value>number(1,0)</value></entry>
+				<entry key="string"><value>varchar2</value></entry>
+				<entry key="ustring"><value>varchar2</value></entry>
+				<entry key="clob"><value>clob</value></entry>
+				<entry key="uclob"><value>nclob</value></entry>
+				<entry key="blob"><value>blob</value></entry>
+				<entry key="identity"><value>not null</value></entry>
+				<entry key="nvl"><value>nvl</value></entry>
+				<entry key="concat"><value>||</value></entry>
+				<entry key="bigint"><value>number(18,0)</value></entry>
+				<entry key="char"><value>char</value></entry>
+				<entry key="chr"><value>chr</value></entry>
+				<entry key="datetime2"><value>timestamp</value></entry>
+				<entry key="float"><value>number(15,3)</value></entry>
+				<entry key="local"><value>local</value></entry>
+				<entry key="money"><value>number</value></entry>
+				<entry key="nonclustered"><value></value></entry>
+				<entry key="nonPrecisionNumber"><value>number</value></entry>
+				<entry key="timestamp"><value>timestamp</value></entry>
+				<entry key="convert (.*)[ \t](.*)"><value>$1</value></entry>
+				<entry key="tablespace"><value>tablespace</value></entry>
+				<entry key="create table (.*) as"><value>create table $1 as</value></entry>
+				<entry key="into temp (.*)"><value></value></entry>
+		        <entry key="logsoff[ \t]([^ ]+)"><value>
+-- the cmi token @logsoff@ is not supported for current database type
+
+</value></entry>
+				<entry key="rename table (.*)[ \t](.*)"><value>alter table $1 rename to $2</value></entry>
+				<entry key="rename column (.*)\.(.*)[ \t](.*)"><value>alter table $1 rename column $2 to $3</value></entry>
+				<entry key="modify nullable column type[ \t]([^ ]+)[ \t]([^ ]+)[ \t]([^ ]+)"><value>alter table $1 modify ($2 $3 null)</value></entry>
+				<entry key="modify not null column type[ \t]([^ ]+)[ \t]([^ ]+)[ \t]([^ ]+)"><value>alter table $1 modify ($2 $3 not null)</value></entry>
+				<entry key="change nullable column type[ \t]([^ ]+)[ \t]([^ ]+)[ \t]([^ ]+)">
+		  <value>
+alter table $1 add xyz_temp $3 null
+/
+
+update $1 set xyz_temp = $2
+/
+
+alter table $1 drop column $2
+/
+
+alter table $1 rename column xyz_temp to $2</value>
+				</entry>
+				<entry key="change nullable column type with fk[ \t]([^ ]+)[ \t]([^ ]+)[ \t]([^ ]+)">
+				<value>
+alter table $1 modify ($2 $3 null)</value>
+				</entry>
+				<entry key="change nullable expanded column type[ \t]([^ ]+)[ \t]([^ ]+)[ \t]([^ ]+)">
+		  <value>
+alter table $1 add xyz_temp $3 null
+/
+
+update $1 set xyz_temp = $2
+/
+
+alter table $1 drop column $2
+/
+
+alter table $1 rename column xyz_temp to $2</value>
+		</entry>
+        <entry key="change not null column type[ \t]([^ ]+)[ \t]([^ ]+)[ \t]([^ ]+)">
+		  <value>
+alter table $1 add xyz_temp $3
+/
+
+update $1 set xyz_temp = $2
+/
+
+alter table $1 drop column $2
+/
+
+alter table $1 rename column xyz_temp to $2
+/
+
+alter table $1 modify $2 not null</value>
+		</entry>
+        <entry key="change not null column type with unique constraint[ \t]([^ ]+)[ \t]([^ ]+)[ \t]([^ ]+)[ \t]([^ ]+)">
+		  <value>
+alter table $1 drop constraint $4
+/
+
+alter table $1 add  xyz_temp $3
+/
+
+update $1 set xyz_temp = $2
+/
+
+alter table $1 drop column $2
+/
+
+alter table $1 rename column xyz_temp to $2
+/
+
+alter table $1 modify $2 not null
+/
+
+alter table $1 add constraint $4 unique($2)</value>
+		</entry>
+<entry key="change not null column type with unique index[ \t]([^ ]+)[ \t]([^ ]+)[ \t]([^ ]+)[ \t]([^ ]+)">
+		  <value>
+drop index $4
+/
+
+alter table $1 add  xyz_temp $3
+/
+
+update $1 set xyz_temp = $2
+/
+
+alter table $1 drop column $2
+/
+
+alter table $1 rename column xyz_temp to $2
+/
+
+alter table $1 modify $2 not null
+/
+
+create unique index $4 on $1($2)</value>
+		</entry>
+<entry key="add not null column with values[ \t]([^ ]+)[ \t]([^ ]+)[ \t]([^ ]+)[ \t]([^ ]+)">
+		  <value>
+alter table $1 add $2 $3 default $4 not null
+/
+
+alter table $1 modify $2 $3 default null</value>
+		</entry>
+				<entry key="add default constraint (.*)\.(.*)[ \t](.*)[ \t](.*)"><value>alter table $1 modify $2 default $4</value></entry>
+				<entry key="modify"><value>modify</value></entry>
+				<entry key="nullable"><value>null</value></entry>
+				<entry key="drop column"><value>drop column</value></entry>
+				<entry key="disable trigger (.*)[ \t](.*)"><value>alter trigger $1 disable</value></entry>
+				<entry key="enable trigger (.*)[ \t](.*)"><value>alter trigger $1 enable</value></entry>
+		<entry key="drop trigger if exists[ \t]([^ ]+)">
+			  <value>
+declare
+  cursor c is select null from user_triggers where lower(trigger_name) = lower('$1');
+  x number;
+begin
+  open c;
+  fetch c into x;
+  if (c%NOTFOUND) then dbms_output.put_line('Trigger $1 does not exist');
+  else execute immediate 'drop trigger $1';
+  end if;
+end;</value>
+		</entry>
+		<entry key="drop trigger if exists[ \t]([^ ]+)[ \t]([^ ]+)">
+			  <value>
+declare
+  cursor c is select null from all_triggers where lower(trigger_name) = lower('$1') and lower(owner) = lower('$2');
+  x number;
+begin
+  open c;
+  fetch c into x;
+  if (c%NOTFOUND) then dbms_output.put_line('Trigger $1 does not exist');
+  else execute immediate 'drop trigger $1';
+  end if;
+end;</value>
+		</entry>
+				<entry key="drop view if exists[ \t]([^ ]+)">
+		  <value>
+declare
+  cursor c is select null from user_views where lower(view_name) = '$1';
+  x number;
+begin
+  open c;
+  fetch c into x;
+  if (c%NOTFOUND) then dbms_output.put_line('View $1 does not exist');
+  else execute immediate 'drop view $1';
+  end if;
+end;</value>
+		</entry>
+		<entry key="drop view if exists[ \t]([^ ]+)[ \t]([^ ]+)">
+		  <value>
+declare
+  cursor c is select null from all_views where lower(view_name) = lower('$1') and lower(owner) = lower('$2');
+  x number;
+begin
+  open c;
+  fetch c into x;
+  if (c%NOTFOUND) then dbms_output.put_line('View $1 does not exist');
+  else execute immediate 'drop view $1';
+  end if;
+end;</value>
+		</entry>
+		<entry key="drop index if exists[ \t]([^ ]+)[ \t]([^ ]+)">
+			<value>
+declare
+  cursor c is select null from user_indexes where lower(table_name) = lower('$1') and lower(index_name) = lower('$2');
+  x number;
+begin
+  open c;
+  fetch c into x;
+  if (c%NOTFOUND) then dbms_output.put_line('Index $2 does not exist');
+  else execute immediate 'drop index $2';
+  end if;
+end;</value>
+		</entry>
+		<entry key="drop index if exists[ \t]([^ ]+)[ \t]([^ ]+)[ \t]([^ ]+)">
+			<value>
+declare
+  cursor c is select null from all_indexes where lower(table_name) = lower('$1') and lower(index_name) = lower('$2') and lower(owner) = lower('$3');
+  x number;
+begin
+  open c;
+  fetch c into x;
+  if (c%NOTFOUND) then dbms_output.put_line('Index $2 does not exist');
+  else execute immediate 'drop index $2';
+  end if;
+end;</value>
+		</entry>
+		<entry key="drop fk if exists[ \t]([^ ]+)[ \t]([^ ]+)">
+			<value>
+declare
+  rcount integer;
+begin
+  select count(*) into rcount from user_constraints where lower(table_name) = lower('$1') and lower(constraint_name) = lower('$2') and lower(constraint_type) = 'r';
+  if rcount > 0 then
+    execute immediate 'alter table $1 drop constraint $2';
+  end if;
+end;</value>
+		</entry>
+		<entry key="drop fk if exists[ \t]([^ ]+)[ \t]([^ ]+)[ \t]([^ ]+)">
+			<value>declare
+  rcount integer;
+begin
+  select count(*) into rcount from all_constraints where lower(table_name) = lower('$1') and lower(constraint_name) = lower('$2') and lower(constraint_type) = 'r' and lower(owner) = lower('$3');
+  if rcount > 0 then
+    execute immediate 'alter table $1 drop constraint $2';
+  end if;
+end;</value>
+		</entry>
+		<entry key="drop pk if exists[ \t]([^ ]+)[ \t]([^ ]+)">
+			<value>
+declare
+  rcount integer;
+begin
+  select count(*) into rcount from user_constraints where lower(table_name) = lower('$1') and lower(constraint_name) = lower('$2') and lower(constraint_type) = 'p';
+  if rcount > 0 then
+    execute immediate 'alter table $1 drop constraint $2  drop index';
+  end if;
+end;</value>
+		</entry>
+		<entry key="drop pk if exists[ \t]([^ ]+)[ \t]([^ ]+)[ \t]([^ ]+)">
+			<value>declare
+  rcount integer;
+begin
+  select count(*) into rcount from all_constraints where lower(table_name) = lower('$1') and lower(constraint_name) = lower('$2') and lower(constraint_type) = 'p' and lower(owner) = lower('$3');
+  if rcount > 0 then
+    execute immediate 'alter table $1 drop constraint $2 drop index';
+  end if;
+end;</value>
+		</entry>
+		<entry key="drop unique constraint if exists[ \t]([^ ]+)[ \t]([^ ]+)">
+			<value>
+declare
+  rcount integer;
+begin
+  select count(*) into rcount from user_constraints where lower(table_name) = lower('$1') and lower(constraint_name) = lower('$2');
+  if rcount > 0 then
+    execute immediate 'alter table $1 drop constraint $2 drop index';
+  end if;
+end;</value>
+		</entry>
+		<entry key="drop unique constraint if exists[ \t]([^ ]+)[ \t]([^ ]+)[ \t]([^ ]+)">
+			<value>
+declare
+  rcount integer;
+begin
+  select count(*) into rcount from all_constraints where lower(table_name) = lower('$1') and lower(constraint_name) = lower('$2') and lower(owner) = lower('$3');
+  if rcount > 0 then
+    execute immediate 'alter table $1 drop constraint $2 drop index';
+  end if;
+end;</value>
+		</entry>
+        <entry key="drop index ([^ ]+) ([^ ]+)">
+		  <value>
+drop index $2</value>
+		</entry>
+				<entry key="comment (.*)"><value>-- CHANGELOG: $1</value></entry>
+				<entry key="if not exists ([^.]+)\.([^ ]+) = (.*?) then (.*)">
+<value>DECLARE
+	rcount NUMBER;
+BEGIN
+	select count(*) into rcount from $1 where $2 = $3;
+	IF rcount = 0 THEN
+		$4;
+	END IF;
+END;</value>
+				</entry>
+				<entry key="if not exists \((.*)\) then (.*)">
+<value>DECLARE
+	rcount NUMBER;
+BEGIN
+	select count(*) into rcount from ($1);
+	IF rcount = 0 THEN
+		$2;
+	END IF;
+END;</value>
+				</entry>
+						<entry key="startif not exists \((.*)\)">
+			<value>
+DECLARE
+	rcount NUMBER;
+BEGIN
+	select count(*) into rcount from ($1);
+	IF rcount = 0 THEN
+		BEGIN
+			</value>
+		</entry>	
+		<entry key="endif not exist">
+			<value>
+		END
+	END IF;
+END;
+			</value>
+		</entry>	
+
+		<entry key="if table not exists[ \t]([^ ]+)[ \t]([^ ]+) then do">
+			<value>
+DECLARE
+	rcount NUMBER;
+BEGIN
+	select count(*) into rcount from all_tables where owner=upper('$1') and table_name=upper('$2');
+	IF rcount = 0 THEN
+		execute immediate '</value>
+		</entry>	
+		<entry key="endif table not exist">
+			<value>';
+	END IF;
+END;
+			</value>
+		</entry>	
+			<entry key="fullSchemaName[ \t]+([^ ]+)[ \t]*([^ ]*)"><value>$2</value></entry>
+			<entry key="procedure_param\(([^\)]*)\)"><value>$1</value></entry>
+			<entry key="storage_index_insert_only[ \t]+([^ ]+)[ \t]+([^ ]+)[ \t]*([^ ]*)"><value>tablespace $1
+pctfree     2
+initrans    8
+storage   (buffer_pool $2) $3</value></entry>
+			<entry key="storage_index_insert_update[ \t]+([^ ]+)[ \t]+([^ ]+)[ \t]*([^ ]*)"><value>tablespace $1
+pctfree     10
+initrans    16
+storage   (buffer_pool $2) $3</value></entry>
+			<entry key="storage_index_static_data[ \t]+([^ ]+)[ \t]+([^ ]+)[ \t]*([^ ]*)"><value>tablespace $1
+pctfree     10
+initrans    2
+storage   (buffer_pool $2) $3</value></entry>
+			<entry key="storage_params_insert_only[ \t]+([^ ]+)[ \t]+([^ ]+)"><value>tablespace $1
+pctfree     2
+initrans    8
+storage   (buffer_pool $2)</value></entry>
+			<entry key="storage_params_insert_update[ \t]+([^ ]+)[ \t]+([^ ]+)"><value>tablespace $1 
+pctfree     10
+initrans    8
+storage   (buffer_pool $2)</value></entry>
+			<entry key="storage_params_static_data[ \t]+([^ ]+)[ \t]+([^ ]+)"><value>tablespace $1
+pctfree     2
+initrans    2
+storage   (buffer_pool $2)</value></entry>
+			<entry key="storage_primary_insert_only[ \t]+([^ ]+)[ \t]+([^ ]+)[ \t]*([^ ]*)"><value>USING INDEX 
+tablespace $1
+pctfree     2
+initrans    8
+storage   (buffer_pool $2) $3</value></entry>
+			<entry key="storage_primary_insert_update[ \t]+([^ ]+)[ \t]+([^ ]+)[ \t]*([^ ]*)"><value>USING INDEX
+tablespace $1
+pctfree     10
+initrans    16
+storage   (buffer_pool $2) $3</value></entry>
+			<entry key="storage_primary_static_data[ \t]+([^ ]+)[ \t]+([^ ]+)[ \t]*([^ ]*)"><value>USING INDEX 
+tablespace $1
+pctfree     10
+initrans    2
+storage   (buffer_pool $2) $3</value></entry>
+			<entry key="substring1\(([^\)]*),([^\)]*)\)"><value>SUBSTR($1, $2)</value></entry>
+			<entry key="substring2\(([^\)]*),([^\)]*),([^\)]*)\)"><value>SUBSTR($1, $2, $3)</value></entry>
+			<entry key="trim\(([^\)]*)\)"><value>TRIM($1)</value></entry>
+			</map>
+		</property>
+	</bean>
+
+</beans>

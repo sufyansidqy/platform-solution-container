@@ -1,0 +1,298 @@
+#####################################################################################
+#       __      __.____     ____  ___
+#      /  \    /  \    |    \   \/  /
+#      \   \/\/   /    |     \     /    WLX Nice Actimize
+#       \        /|    |___  /     \
+#        \__/\  / |_______ \/___/\  \
+#             \/          \/      \_/
+#
+#####################################################################################
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Values.app.wlxCustomerName }}-{{ .Values.app.name }}-realtime
+spec:
+  serviceName: {{ .Values.app.wlxCustomerName }}-{{ .Values.app.name }}-realtime
+  replicas: {{ .Values.sts.replicasRT }}
+  selector:
+    matchLabels:
+      app: {{ .Values.app.wlxCustomerName }}-{{ .Values.app.name }}-realtime
+
+  volumeClaimTemplates:
+#    - metadata:
+#        name: logs-shared-storage-volume
+#      spec:
+#        accessModes: [ "ReadWriteOnce" ]
+#        resources:
+#          requests:
+#           storage: {{ .Values.sts.volumeClaimTemplates.storage | quote }}
+#        storageClassName: {{ .Values.sts.volumeClaimTemplates.storageClassName }}
+        
+    - metadata:
+        name: sts-data-storage
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: {{ .Values.sts.volumeClaimTemplates.storage | quote }}
+        storageClassName : {{ .Values.sts.volumeClaimTemplates.storageClassName }}
+        
+#    - metadata:
+#        name: ais-addons
+#      spec:
+#        accessModes: [ "ReadWriteOnce" ]
+#        resources:
+#          requests:
+#            storage: {{ .Values.sts.volumeClaimTemplates.storage | quote }}
+#        storageClassName : {{ .Values.sts.volumeClaimTemplates.storageClassName }}
+
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.app.wlxCustomerName }}-{{ .Values.app.name }}-realtime
+    spec:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        runAsNonRoot: true
+
+# use this setting to specify required node AWS instance type and availability zone
+      nodeSelector:
+{{ if .Values.instanceType }}
+        beta.kubernetes.io/instance-type: {{ .Values.instanceType }}
+{{ end }}
+{{ if .Values.instanceAvailabilityZone }}
+        topology.kubernetes.io/zone: {{ .Values.instanceAvailabilityZone }}
+{{ end }}
+
+      hostAliases:
+        - ip: {{ default "1.2.3.4" .Values.actimizeDatabaseServer }}
+          hostnames:
+            - actimize.database.server
+
+      volumes:
+      {{- $appName := .Values.app.name }}
+        {{- range $solutionFileGroup := .Values.configmap.fileGroups }}
+        - name: {{ $solutionFileGroup.name }}
+          configMap:
+            name: {{ $appName }}-{{ $solutionFileGroup.name }}
+            defaultMode: 0755
+        {{- end }}
+        
+        
+      {{- $appName := .Values.app.name }}
+        {{- range $solutionFileGroup := .Values.configmapAis.fileGroups }}
+        - name: {{ $solutionFileGroup.name }}
+          configMap:
+            name: {{ $appName }}-{{ $solutionFileGroup.name }}
+            defaultMode: 0755
+        {{- end }}
+
+      {{- $appName := .Values.app.name }}
+      {{- range $secretFileGroup := .Values.secret.fileGroups }}
+        {{- if or (not (hasKey $secretFileGroup "enabled")) $secretFileGroup.enabled }}
+        - name: {{ $secretFileGroup.name }}
+          secret:
+            secretName: {{ $appName }}-{{ $secretFileGroup.name }}
+            defaultMode: 0644
+        {{- end }}
+      {{- end }}
+
+      {{- if .Values.xse.pod.container.varlog.enabled }}
+      - name: maint-varlog
+        hostPath:
+          path: {{ .Values.xse.pod.container.varlog.hostPath }}
+          type: ""
+      {{- end }}
+
+
+
+#{{- if .Values.customVolumesMaster }}
+#{{ tpl (include "udm.customVolumesMaster" .) . | indent 8 }}
+#{{- end }}
+
+# make sure that NFS server hostname is correct
+
+{{ if .Values.sts.AddOnsSharedStorage.enabled }}
+
+        - name: ais-addons
+          nfs:
+            server: {{ default "1.2.3.4" .Values.sts.AddOnsSharedStorage.nfsServer }}
+            path: {{ default "/wlx-ci/ais-addons/" .Values.sts.AddOnsSharedStorage.nfsPath }}
+
+{{ end }}
+
+{{ if .Values.sts.logsSharedStorage.enabled }}
+
+        - name: logs-shared-storage-volume
+          nfs:
+            server: {{ default "1.2.3.4" .Values.sts.logsSharedStorage.nfsServer }}
+            path: {{ default "/wlx-ci/logs/" .Values.sts.logsSharedStorage.nfsPath }}
+
+{{ end }}
+
+        - name: ssl-rcm-secret
+          secret:
+            secretName: {{ .Values.secret.ais_ssl_truststore_secretname_suffix }}
+            defaultMode: 0644
+
+        - name: ssl-ais-secrets
+          projected:
+            sources:
+            - secret:
+                name: {{ .Values.secret.ais_ssl_p12_secretname_suffix }}
+            - secret:
+                name: {{ .Values.secret.ais_ssl_keystore_secretname_suffix }}
+
+#{{- if eq .Values.kubernetesClusterType "openshift" }}
+#      serviceAccountName: runasuid1000
+#{{- end }}
+
+      containers:
+        - name: {{ .Values.sts.container.name }}
+
+          image: "{{ .Values.sts.container.image }}:{{ .Values.sts.container.tag }}"
+
+          imagePullPolicy: {{ default "Always" .Values.imagePullPolicy }}
+
+          lifecycle:
+          {{- if .Values.xse.pod.container.varlog.enabled }}
+            postStart:
+              exec:
+                command: ["/bin/sh","-c","mkdir -p /var/log/ec_monitoring"]
+          {{- end }}
+
+
+# use this section to set required machine resources
+
+          resources:
+            requests:
+              memory: {{ .Values.sts.container.resources.requests.memory | quote }}
+              cpu: {{ .Values.sts.container.resources.requests.cpu | quote }}
+            limits:
+              memory: {{ .Values.sts.container.resources.limits.memory | quote }}
+              cpu: {{ .Values.sts.container.resources.limits.cpu | quote }}
+
+          ports:
+            - containerPort: 2345
+              name: ais
+          readinessProbe:
+            httpGet:
+              path: /eh/heartbeat
+              port: 2347
+            # exec:
+            #   command:
+            #     - "/opt/actimize/ais_server/Instances/actimize_server_1/temp/sltn_entrpnt_lctn/getProcStat.sh"
+            initialDelaySeconds: 90
+            periodSeconds: 10
+            timeoutSeconds: 5
+          livenessProbe:
+            tcpSocket:
+              port: 2347
+            initialDelaySeconds: 10
+            periodSeconds: 10
+
+          volumeMounts:
+
+#            - name: db
+#              mountPath: /opt/actimize/ais_server/Instances/actimize_server_1/temp/ais-cnf-db/
+             - name: config
+               mountPath: /opt/actimize/ais_server/Instances/actimize_server_1/temp/wlx-cnf-wlx/
+
+ #           - name: ais-config
+ #             mountPath: /opt/actimize/ais_server/Instances/actimize_server_1/temp/ais-cnf-ais/
+
+             - name: entrpnt-lctn
+               mountPath: /opt/actimize/ais_server/Instances/actimize_server_1/temp/sltn_entrpnt_lctn/
+
+             - name: mx-parser-config
+               mountPath: /opt/actimize/ais_server/Instances/actimize_server_1/temp/wlx_mx_parser_config/
+
+ #           - name: logs
+ #             mountPath: /opt/actimize/ais_server/Instances/actimize_server_1/logs
+ 
+             - name: webserver
+               mountPath: /opt/actimize/ais_server/Instances/actimize_server_1/temp/ais-cnf-webserver/
+             - name: server
+               mountPath: /opt/actimize/ais_server/Instances/actimize_server_1/temp/ais-cnf-server/
+             - name: amq
+               mountPath: /opt/actimize/ais_server/Instances/actimize_server_1/temp/ais-cnf-amq/
+             - name: logs
+               mountPath: /opt/actimize/ais_server/Instances/actimize_server_1/temp/ais-cnf-logs/
+             - name: db
+               mountPath: /opt/actimize/ais_server/Instances/actimize_server_1/temp/ais-cnf-db/
+             - name: sts-data-storage
+               mountPath: /opt/actimize/ais_server/Instances/actimize_server_1/persisted_instance_data
+             - name: metadata
+               mountPath: /opt/actimize/ais_server/Instances/actimize_server_1/temp/ais-secret-db/users.db
+               subPath: users.db
+             - name: metadata
+               mountPath: /opt/actimize/ais_server/Instances/actimize_server_1/temp/ais-secret-db/metadata.db
+               subPath: metadata.db
+             - name: keystore
+               mountPath: /opt/actimize/ais_server/Instances/actimize_server_1/temp/ais-keystore/
+             - name: ais-addons
+               mountPath: /opt/actimize/ais_server/Add-Ons
+             - name: license
+               mountPath: /opt/actimize/ais_server/Instances/actimize_server_1/license/
+             - name: ssl
+               mountPath: /opt/actimize/ais_server/Instances/actimize_server_1/keys/
+             - name: logs-shared-storage-volume
+               mountPath: {{ .Values.sts.logsSharedStorage.mountPath }}
+             - name: ssl-ais-secrets
+               mountPath: {{ .Values.secret.ssl_ais_keys_folder }}
+               readOnly: true
+             - name: ssl-rcm-secret
+               mountPath: {{ .Values.secret.ssl_rcm_keys_folder }}
+               readOnly: true
+             {{- if .Values.xse.pod.container.varlog.enabled }}
+             - name: maint-varlog
+               mountPath: {{ .Values.xse.pod.container.varlog.mountPath }}
+               readOnly: false
+             {{- end }}
+
+              
+
+#{{- if .Values.customVolumeMountsMaster }}
+#{{ tpl (include "udm.customVolumeMountsMaster" .) . | indent 12 }}
+#{{- end }}
+
+# uncomment this parameter if additional AIS configuration files needs to be overwritten with ConfigMaps ,
+# refer to AIS installation guide for creating AIS ConfigMaps
+
+      
+          env:
+            - name: SLTN_ENTRPNT_LCTN
+              value: /opt/actimize/ais_server/Instances/actimize_server_1/temp/sltn_entrpnt_lctn
+            - name: AIS_RUN_UNDER_K8S
+              value: "TRUE"
+            - name: AIS_LOGS_IN_SHARED_STORAGE
+              value: {{ .Values.sts.logsSharedStorage.mountPath }}
+            - name: MY_POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: AIS_BASE_INSTANCE_ID
+              value: "0"
+            - name: MY_POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+              
+      initContainers:
+      - name: sts-data-storage-cleaner
+        image: "{{ .Values.sts.container.image }}:{{ .Values.sts.container.tag }}"
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "4096Mi"
+            cpu: "500m"
+        volumeMounts:
+          - name: sts-data-storage
+            mountPath: /var/sts-data-storage-cleaner
+        command: ["/bin/sh"]
+        args: ["-c", "echo cleanup mode is ${DISK_INIT_CLEANUP_ENABLED} ; ${DISK_INIT_CLEANUP_ENABLED} && find /var/sts-data-storage-cleaner/ -type d | tail -n +2 | xargs rm -fr || true ; ${DISK_INIT_CLEANUP_ENABLED} && find /var/sts-data-storage-cleaner/ | tail -n +2 | xargs rm -f ; ${DISK_INIT_CLEANUP_ENABLED} && echo done && ls -1r /var/sts-data-storage-cleaner/ || true"]

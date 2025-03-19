@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+
+<DisplayConfiguration internalConfigurationFileName = "" infra-version="1.0.0.0">
+    <ExpandedSummary show="true" expanded="false">
+        <Sections>
+            <Section expanded="true" identifier="summarySection" order="1" show="false" width="70%"/>
+            <Section expanded="true" identifier="customerFilteringSummarySection" order="1" show="true" width="70%"/>
+            <Section expanded="true" identifier="descriptionSection" order="2" show="true" width="30%"/>
+        </Sections>
+        <SummaryHighlights>
+            <Fields>
+                <Field dataField="id" format="" label="Item ID" order="1"/>
+                <Field dataField="alertDate" format="" label="Item Date" order="3"/>
+                <Field dataField="owner" format="" label="Owner" order="2"/>
+                <Field dataField="ACT_AML_EWLF_partyFullName" format="" label="Party Name" order="4"/>
+                <Field dataField="score" format="" label="Score" order="5"/>
+                <Field dataField="ACT_AML_EWLF_partyKey" format="" label="Party Key" order="6"/>
+                <Field dataField="ACT_AML_EWLF_numberOfHits" format="" label="Number of Hits" order="7"/>
+            </Fields>
+        </SummaryHighlights>
+    </ExpandedSummary>
+
+    <Presets id="presets">
+        <Preset media="screen" name="Investigation" order="1" show="true" icon="investigation">
+            <Sections>
+                <Section expanded="true" identifier="container1" order="1" show="true" width="100%"/>
+            </Sections>
+        </Preset>
+    </Presets>
+
+    <SectionsConfigurations id="SectionsConfigurations">
+        <SummarySection name="Summary" numOfCols="2" identifier="customerFilteringSummarySection" size="S" alignment="left">
+            <Fields>
+                <Field dataField="id" format="" label="Item ID" order="1"/>
+                <Field dataField="alertDate" format="" label="Item Date" order="3"/>
+                <Field dataField="owner" format="" label="Owner" order="2"/>
+                <Field dataField="ACT_AML_EWLF_partyFullName" format="" label="Party Name" order="4"/>
+                <Field dataField="score" format="" label="Score" order="5"/>
+                <Field dataField="ACT_AML_EWLF_partyKey" format="" label="Party Key" order="6"/>
+                <Field dataField="ACT_AML_EWLF_numberOfHits" format="" label="Number of Hits" order="7"/>
+            </Fields>
+        </SummarySection>
+
+        <RelationsWidget identifier="relationsWidget" infraIdentifier="RelationsWidget" name="Relations" />
+
+        <ContainerSection identifier="container1" name="">
+            <Sections layout="horizontal">
+                <Section identifier="section1" order="1" show="true" width="70%"/>
+                <Section identifier="detailsWidget" order="1" show="true" width="35%" height="100%" enableFullScreen="true" enableSectionDetach="true"/>
+            </Sections>
+        </ContainerSection>
+
+        <ContainerSection identifier="section1" name="">
+            <Sections>
+                <Section identifier="relationsWidget" order="1" show="true" height="100%" width="100%" enableFullScreen="true" enableSectionDetach="true"/>
+            </Sections>
+        </ContainerSection>
+    </SectionsConfigurations>
+</DisplayConfiguration>

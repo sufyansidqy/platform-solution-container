@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<plugin id="wlfWidgetStore" version="1.0" includeDoctype="true" classLoaderType="childFirst">
+    <runtime>
+        <lib name="lib/wlf-widgetStore-plugin.jar" />
+        <lib name="lib/commons-lang3.jar" />
+        <lib name="lib/jackson-annotations.jar" />
+        <lib name="lib/jackson-core.jar" />
+        <lib name="lib/jackson-databind.jar" />
+        <lib name="lib/xml-apis.jar" />
+        <lib name="lib/xercesImpl.jar" />
+        <lib name="lib/joda-time.jar" />
+        <lib name="lib/joda-convert.jar" />
+        <lib name="lib/json-sanitizer.jar" />
+        <lib name="lib/slf4j-api.jar" />
+        <lib name="lib/slf4j-jdk14.jar"/>
+    </runtime>
+
+    <module id="wsCFHitDetails">
+        <main-page id="getCFHitDetails" controller="com.actimize.wlf.widgetStore.hitDetails.component.HitDetailsData" headerless="true"/>
+    </module>
+
+    <module id="wsMSHitDetails">
+        <main-page id="getMSHitDetails" controller="com.actimize.wlf.widgetStore.hitDetails.component.MSHitDetailsData" headerless="true"/>
+    </module>
+
+    <module id="wsDisposition">
+        <main-page id="updateDisposition" controller="com.actimize.wlf.widgetStore.hitDetails.component.HitDispositionController" headerless="true"/>
+    </module>
+
+    <module id="wsDetailsEnrichment">
+        <main-page id="getEnrichmentData" controller="com.actimize.wlf.widgetStore.hitDetails.component.DetailsEnrichmentController" headerless="true"/>
+    </module>
+
+</plugin>

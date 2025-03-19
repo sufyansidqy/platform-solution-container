@@ -1,0 +1,76 @@
+version 1.0.0.0 add {
+[oracle 
+	DECLARE
+	udm_exists INTEGER;
+	wlf_udm_usr_exists INTEGER;
+	BEGIN
+		BEGIN
+			SELECT 1 INTO udm_exists FROM all_users WHERE USERNAME = '@env:udm_cds_schema_name@';
+		EXCEPTION
+			WHEN no_data_found THEN
+				udm_exists := 0;
+		END;
+		IF (NVL(udm_exists,0) = 1) THEN
+			BEGIN  
+				SELECT 1 INTO wlf_udm_usr_exists FROM all_users WHERE USERNAME='@env:wlf_udm_usr@';
+			EXCEPTION
+				WHEN no_data_found THEN
+					wlf_udm_usr_exists:=0;
+			END;
+			IF (NVL(wlf_udm_usr_exists,0) = 0) THEN
+				EXECUTE IMMEDIATE 'CREATE USER @env:wlf_udm_usr@ IDENTIFIED by @env:wlf_udm_usr_password@ DEFAULT TABLESPACE @env:tablespace_default@ TEMPORARY TABLESPACE @env:tablespace_temp@ PROFILE DEFAULT ACCOUNT UNLOCK';
+			END IF;
+			EXECUTE IMMEDIATE 'GRANT CONNECT TO @env:wlf_udm_usr@';
+			EXECUTE IMMEDIATE 'GRANT CREATE SESSION TO @env:wlf_udm_usr@';
+			EXECUTE IMMEDIATE 'GRANT CREATE VIEW TO @env:wlf_udm_usr@';
+			EXECUTE IMMEDIATE 'GRANT SELECT ON @env:udm_cds_schema_name@.V_TRANSACTION_CODE  TO @env:wlf_udm_usr@';
+			EXECUTE IMMEDIATE 'GRANT SELECT ON @env:udm_cds_schema_name@.V_BRANCH_BASE TO @env:wlf_udm_usr@';
+			EXECUTE IMMEDIATE 'GRANT SELECT ON @env:udm_cds_schema_name@.V_PARTY_BASE TO @env:wlf_udm_usr@';
+			EXECUTE IMMEDIATE 'GRANT SELECT ON @env:udm_cds_schema_name@.V_PARTY_TYPE TO @env:wlf_udm_usr@';
+			EXECUTE IMMEDIATE 'GRANT SELECT ON @env:udm_cds_schema_name@.V_PARTY_CLASSIFICATION TO @env:wlf_udm_usr@';
+			EXECUTE IMMEDIATE 'GRANT SELECT ON @env:udm_cds_schema_name@.V_COUNTRY TO @env:wlf_udm_usr@';
+			EXECUTE IMMEDIATE 'GRANT SELECT ON @env:udm_cds_schema_name@.V_ENTITY_COUNTRY_RELATION_BASE TO @env:wlf_udm_usr@';
+			EXECUTE IMMEDIATE 'GRANT SELECT ON @env:udm_cds_schema_name@.V_DOCUMENT_BASE TO @env:wlf_udm_usr@';
+			EXECUTE IMMEDIATE 'GRANT SELECT ON @env:udm_cds_schema_name@.V_ENTITY_DOCUMENT_RELATIO_BASE TO @env:wlf_udm_usr@';
+			EXECUTE IMMEDIATE 'GRANT SELECT ON @env:udm_cds_schema_name@.V_DOCUMENT_TYPE TO @env:wlf_udm_usr@';
+			EXECUTE IMMEDIATE 'GRANT SELECT ON @env:udm_cds_schema_name@.V_ADDRESS_BASE TO @env:wlf_udm_usr@';
+			EXECUTE IMMEDIATE 'GRANT SELECT ON @env:udm_cds_schema_name@.V_ENTITY_ADDRESS_RELATION_BASE TO @env:wlf_udm_usr@';
+			EXECUTE IMMEDIATE 'GRANT SELECT ON @env:udm_cds_schema_name@.V_STATE_PROVINCE TO @env:wlf_udm_usr@';
+			EXECUTE IMMEDIATE 'GRANT SELECT ON @env:udm_cds_schema_name@.V_PARTY_ALIAS_BASE TO @env:wlf_udm_usr@';
+			EXECUTE IMMEDIATE 'GRANT SELECT ON @env:udm_cds_schema_name@.V_PARTY_BUSINESS_UNIT_BASE TO @env:wlf_udm_usr@';
+			EXECUTE IMMEDIATE 'GRANT SELECT ON @env:udm_cds_schema_name@.V_REPRESENTATIVE_BASE TO @env:wlf_udm_usr@';
+			EXECUTE IMMEDIATE 'GRANT SELECT ON @env:udm_cds_schema_name@.V_GENDER TO @env:wlf_udm_usr@';
+			EXECUTE IMMEDIATE 'GRANT SELECT ON @env:udm_cds_schema_name@.V_MESSAGE_BASE TO @env:wlf_udm_usr@';
+			EXECUTE IMMEDIATE 'GRANT SELECT ON @env:udm_cds_schema_name@.V_MESSAGE_BRANCH_BASE TO @env:wlf_udm_usr@';
+			EXECUTE IMMEDIATE 'GRANT SELECT ON @env:udm_cds_schema_name@.V_ORGANIZATION_BASE TO @env:wlf_udm_usr@';
+			EXECUTE IMMEDIATE 'GRANT SELECT ON @env:udm_cds_schema_name@.V_CURRENCY TO @env:wlf_udm_usr@';
+			EXECUTE IMMEDIATE 'GRANT SELECT ON @env:udm_cds_schema_name@.V_SAM_TRANS_TYPE TO @env:wlf_udm_usr@';
+			EXECUTE IMMEDIATE 'GRANT SELECT ON @env:udm_cds_schema_name@.V_PRODUCT_BASE TO @env:wlf_udm_usr@';
+			EXECUTE IMMEDIATE 'GRANT SELECT ON @env:udm_cds_schema_name@.DW_VERSION TO @env:wlf_udm_usr@';
+			EXECUTE IMMEDIATE 'GRANT SELECT ON @env:udm_cds_schema_name@.V_COUNTRY_RELATION_TYPE TO @env:wlf_udm_usr@';
+			EXECUTE IMMEDIATE 'GRANT SELECT ON @env:udm_cds_schema_name@.V_ENTITY TO @env:wlf_udm_usr@';
+		END IF;
+	END;
+]
+[mssql  
+  USE @env:udm_db_name@;
+  @go@
+  
+	IF NOT EXISTS(SELECT name FROM sys.schemas WHERE name = '@env:udm_wlf_schema@')
+	BEGIN	
+		EXEC sys.sp_executesql N'CREATE SCHEMA @env:udm_wlf_schema@;'
+	END 
+  	IF NOT EXISTS(SELECT name FROM master.dbo.syslogins WHERE name = '@env:wlf_udm_usr@')
+  	BEGIN
+  		CREATE LOGIN @env:wlf_udm_usr@ WITH password = '@env:wlf_udm_usr_password@', DEFAULT_DATABASE = @env:udm_db_name@, CHECK_POLICY=OFF;
+	END
+	IF  NOT EXISTS (select * from sys.database_principals where name = '@env:wlf_udm_usr@')
+		CREATE USER [@env:wlf_udm_usr@] FOR LOGIN [@env:wlf_udm_usr@] WITH DEFAULT_SCHEMA = [@env:udm_wlf_schema@];
+  	EXEC sp_addrolemember db_owner, [@env:udm_wlf_schema@];
+	GO
+
+	GRANT SELECT ON SCHEMA :: @env:udm_wlf_schema@ TO @env:wlf_udm_usr@
+
+]
+}
+

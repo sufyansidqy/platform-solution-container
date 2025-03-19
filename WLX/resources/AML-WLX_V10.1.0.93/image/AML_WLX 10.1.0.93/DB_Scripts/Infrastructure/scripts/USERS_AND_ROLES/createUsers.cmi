@@ -1,0 +1,88 @@
+version 1.0.0.0 add {
+[oracle
+
+
+	----------------------------------- USERS -----------------------------------
+	---- EACH USER IS CREATED WITH THE RELEVANT ROLE ASSIGNED.
+	---- AN ATFER LOGON TRIGGER IS CREATED TO SET THE CURRENT SCHEMA
+	---- TO THE SOLUTION SCHEMA WHEN EACH USER LOGS ON.
+	---- THE FOLLOWING USERS ARE CREATED:
+	---- * BATCH USER: @env:batch_username (password: @env:batch_password)
+	---------- Create PROFILE Batch user, logon trigger and permissions -----------
+
+	DECLARE
+	USER_EXISTS INTEGER;
+    BEGIN
+		begin
+			select 1 into USER_EXISTS from ALL_USERS where USERNAME='@env:batch_username@';
+            exception
+            when no_data_found then
+            USER_EXISTS:=0;
+		end;
+        if (nvl(USER_EXISTS,0) = 0) then
+			execute immediate 'create user @env:batch_username@ identified by @env:batch_password@ DEFAULT TABLESPACE @env:tablespace_default@ TEMPORARY TABLESPACE @env:tablespace_temp@ PROFILE DEFAULT ACCOUNT UNLOCK';
+        end if;
+	END;
+	/
+	GRANT CONNECT TO @env:batch_username@ ;
+	GRANT CREATE TRIGGER TO @env:batch_username@ ;
+	GRANT CREATE PROCEDURE TO @env:batch_username@ ;
+	GRANT CREATE VIEW TO @env:batch_username@ ;
+	GRANT CREATE SEQUENCE TO @env:batch_username@ ;
+	GRANT CREATE TABLE TO @env:batch_username@ ;
+	GRANT CREATE SYNONYM  TO @env:batch_username@ ;
+	GRANT CREATE TYPE TO @env:batch_username@ ;
+	GRANT UNLIMITED TABLESPACE TO @env:batch_username@ ;
+	GRANT EXECUTE ON DBMS_LOB TO @env:batch_username@ ;
+
+	GRANT RESOURCE TO @env:batch_username@ ;
+	GRANT CREATE SESSION TO @env:batch_username@ ;
+	GRANT SELECT_CATALOG_ROLE TO @env:batch_username@ ;
+	GRANT EXECUTE_CATALOG_ROLE TO @env:batch_username@ ;
+	GRANT ALTER ANY TABLE TO @env:batch_username@ ;
+	GRANT CREATE ANY TABLE TO @env:batch_username@ ;
+	GRANT DROP ANY TABLE TO @env:batch_username@ ;
+	GRANT LOCK ANY TABLE TO @env:batch_username@ ;
+	GRANT SELECT ANY TABLE TO @env:batch_username@ ;
+	GRANT CREATE ANY INDEX TO @env:batch_username@ ;
+
+	ALTER USER @env:batch_username@ QUOTA UNLIMITED ON @env:tablespace_default@
+	/
+
+	create or replace trigger @env:batch_username@.after_profile_logon_trg
+	after logon on @env:batch_username@.SCHEMA
+	begin
+	  dbms_application_info.set_module(USER, 'Initialized');
+	  execute immediate 'alter session set current_schema=@env:lm_schema_name@';
+	end;
+	/
+	grant @env:role_batch_lm@ to @env:batch_username@;
+	ALTER USER @env:batch_username@  DEFAULT ROLE ALL
+	/
+]
+[mssql
+  IF NOT EXISTS(SELECT name FROM master.dbo.syslogins WHERE name = '@env:batch_username@')
+  BEGIN
+    create login @env:batch_username@ with PASSWORD ='@env:batch_password@', CHECK_POLICY=OFF;
+    create user @env:batch_username@ for login @env:batch_username@;
+    exec sp_addrolemember '@env:role_batch_lm@', '@env:batch_username@';
+  END;
+]
+}
+version 3.5.1.2 add {
+[oracle
+	declare v number;
+	begin
+		select count(*) into v from dba_sys_privs  where grantee = '@env:batch_username@' and privilege = 'CREATE ANY TRIGGER';
+		if v > 0 then
+		  execute immediate 'REVOKE CREATE ANY TRIGGER FROM @env:batch_username@' ;
+		end if;
+	end;
+	/
+]
+
+[oracle
+    GRANT EXECUTE ON DBMS_LOCK TO @env:batch_username@ ;
+]
+
+}

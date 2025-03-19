@@ -1,0 +1,48 @@
+###############################################
+## AIS Properties
+###############################################
+
+
+## Path to the AIS server.
+## This is the path to the local AIS server folder
+ais.server.path=<Server Path>
+
+## Path to the single AIS instance
+ais.instance.path=<Instance Path>
+
+## IP address or domain name of the machine hosting the AIS instance
+## The IP address should be enclosed in double quotes ()
+ais.host=<Host Name or IP address>
+
+## Listener port of the single AIS instance
+ais.port=2345
+
+## Encrypted password of the AIS instance user
+^ais.password=<Password>
+
+## Name of the authorized user the AIS instance
+ais.user=<AIS User>
+
+##SSL configuration. Valid values: true, yes, 1, false. Default value: false
+ais.use-ssl=false
+
+## Path and file name of SSL public certificate for encrypted communication.
+#ais.certificate=D:\ais-ssl\generate_keys\generated_modeler\ca-cert.pem
+
+## Path and file name of SSL private certificate for encrypted communication
+#ais.private-key.filename=D:\ais-ssl\generate_keys\generated_modeler\ca-priv.pem
+
+## A parameter for indicating the encrypted password for the Private Key Filename.
+#^ais.private-key.password=DA8cG6vFJBMzyDjuI+kRjQ==
+
+## Path and file name of SSL trusted certificate for encrypted communication.
+#ais.trusted-certificates=D:\ais-ssl\generate_keys\generated_modeler\truststore.pem
+
+## Group configuration. Valid values: true, false.
+ais.group=false
+
+## A path to the password manager keystore file.
+ais.passwordManager.keystorePath=
+
+##  An access password to the password manager keystore file.
+^ais.passwordManager.keystoreAccess=

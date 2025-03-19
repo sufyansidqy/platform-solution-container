@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Heartbeat>
+    <!--List of Connectors that are tested as part of the Heartbeat request-->
+    <Connectors>
+        <!-- <Connector Name="ioracle9"/> -->
+    </Connectors>
+    <!--List of Processes that are tested to be up as part of the Heartbeat request-->
+    <Processes>
+        <!-- <Process Name="Process_x"/> -->
+    </Processes>
+    <!--List of Services that are to be checked against error thresholds (global or specific) as part of the Heartbeat request-->
+    <Services>
+        <!-- <Service Name="Service_x"/> -->
+    </Services>
+    <!--List of Queues and/or Topics that are tested as part of the Heartbeat request-->
+    <!--The Message Broker is tested as part of the Heartbeat request when at least one Queue or Topic is configured-->
+    <MessagingDestinations StoragePercentHighWaterMark="99">
+        <!-- <MessagingDestination Name="Queue_x" NumberOfPendingMessagesHighWaterMark="1000000"/> -->
+        <!-- <MessagingDestination Name="Topic_x" NumberOfPendingMessagesHighWaterMark="1000000"/> -->
+    </MessagingDestinations>
+    <!--Specific response text to be used instead of the standard OK HTTP response (200). Relevant only for the GSOAP heartbeat request-->
+    <OkResponse>&lt;HTML&gt;&lt;HEAD&gt;&lt;TITLE&gt;Ok&lt;/TITLE&gt;&lt;/HEAD&gt;&lt;BODY&gt;Ok&lt;/BODY&gt;&lt;/HTML&gt;</OkResponse>
+</Heartbeat>

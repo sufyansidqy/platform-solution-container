@@ -1,0 +1,41 @@
+{{- if .Values.ingress.enabled -}}
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: {{ .Values.app.wlxCustomerName }}-{{ .Values.app.name }}
+  {{- if .Values.ingress.annotations }}
+  annotations:
+    {{- range $key, $value := .Values.ingress.annotations }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+  {{- end }}
+  labels:
+    {{- include "ais.labels" . | nindent 4 }}
+spec:
+  {{- if .Values.ingress.tls_enabled }}
+  tls:
+    - hosts:
+        {{- if .Values.ingress.host }}
+        - "{{ .Values.ingress.host }}.{{ .Values.ingress.domain }}"
+        {{- else }}
+        - "{{ .Values.app.name }}-{{ .Values.app.wlxCustomerName }}-{{ .Release.Namespace }}.{{ .Values.ingress.domain }}"
+        {{- end }}
+      secretName: {{ .Values.ingress.tls_secretName }}
+  {{- end }}
+  rules:
+    {{- if .Values.ingress.host }}
+    - host: - "{{ .Values.ingress.host }}.{{ .Values.ingress.domain }}"
+    {{- else }}
+    - host: "{{ .Values.app.name }}-{{ .Values.app.wlxCustomerName }}-{{ .Release.Namespace }}.{{ .Values.ingress.domain }}"
+    {{- end }}
+      http:
+        paths:
+          - path: {{ .Values.ingress.http.path }}
+            backend:
+              serviceName: wlx-batch
+              {{- if .Values.app.use_ssl }}
+              servicePort: 443
+              {{- else }}
+              servicePort: 80
+              {{- end }}
+{{- end }}

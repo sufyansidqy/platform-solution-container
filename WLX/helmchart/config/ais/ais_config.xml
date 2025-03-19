@@ -1,0 +1,358 @@
+
+<Configuration_List>
+
+  <Configuration_Entry Key="ConfigurationVersion" Value="96"/>
+
+  <Configuration_Entry Key="Server Name" Value="actimize_server_1"/>
+
+  <Configuration_Entry Key="Group Name" Value=""/>
+
+  <Configuration_Entry Key="Instance ID" Value="1"/>
+
+  <Configuration_Entry Key="Listener port" Value="2345"/>
+
+  <Configuration_Entry Key="GSOAP Web Services Port" Value="2346"/>
+
+  <Configuration_Entry Key="Web Server Port" Value="2347"/>
+
+  <Configuration_Entry Key="Metadata Environment Directory" Value="/opt/actimize/ais_server/Instances/actimize_server_1/metadata"/>
+
+  <Configuration_Entry Key="Metadata Environment Configuration" Value=""/>
+
+  <Configuration_Entry Key="Metadata Cache Size" Value="20"/>
+
+  <Configuration_Entry Key="Temporary Directory" Value="/opt/actimize/ais_server/Instances/actimize_server_1/temp"/>
+
+  <Configuration_Entry Key="Data Environment Directory" Value="/opt/actimize/ais_server/Instances/actimize_server_1/data"/>
+
+  <Configuration_Entry Key="Application Log Directory" Value="/opt/actimize/ais_server/Instances/actimize_server_1/logs"/>
+
+  <Configuration_Entry Key="Access Log Directory" Value="/opt/actimize/ais_server/Instances/actimize_server_1/logs"/>
+
+  <Configuration_Entry Key="Data Environment Log Directory" Value="/opt/actimize/ais_server/Instances/actimize_server_1/data/DBLog"/>
+
+  <Configuration_Entry Key="Java Solutions Path" Value="/opt/actimize/ais_server/Instances/actimize_server_1/java_solutions"/>
+
+  <Configuration_Entry Key="External Configuration - Key Store File Path" Value="/opt/actimize/ais_server/Instances/actimize_server_1/ais.keystore"/>
+
+  <Configuration_Entry Key="Data Environment Configuration" Value="db_page_size=4096;"/>
+
+  <Configuration_Entry Key="Data Cache Size" Value="100"/>
+
+  <Configuration_Entry Key="Parser Default Date Format" Value="dd/MM/yy"/>
+
+  <Configuration_Entry Key="Parser Default First Day Of Week" Value="1"/>
+
+  <Configuration_Entry Key="Parser Default First Week Of Year" Value="0"/>
+
+  <Configuration_Entry Key="Parser Default Work Week" Value="1111100"/>
+
+  <Configuration_Entry Key="Minimal Password Length" Value="6"/>
+
+  <Configuration_Entry Key="Password Must Contain At Least One Digit" Value="0"/>
+
+  <Configuration_Entry Key="Password Must Contain At Least One Letter" Value="1"/>
+
+  <Configuration_Entry Key="GSOAP Web Services Accept Timeout" Value="2"/>
+
+  <Configuration_Entry Key="GSOAP Web Services Inactivity Timeout" Value="900"/>
+
+  <Configuration_Entry Key="Web Services Thread Pool Size" Value="5"/>
+
+  <Configuration_Entry Key="GSOAP Web Services Simultaneous Connected Users" Value="100"/>
+
+  <Configuration_Entry Key="Expiration Date" Value="GdQXjaoouxRha6yQex+l6qVLd4MnrvBD24ndkNB66wKwl/E/MSbwn7GBsbSYBDlZ"/>
+
+  <Configuration_Entry Key="Case Manager Alerts Min XML Size to Zip (KB)" Value="20"/>
+
+  <Configuration_Entry Key="ISO8601 Date Parser - Time Zone Settings" Value=""/>
+
+  <Configuration_Entry Key="ISO8601 Date Parser - Time Zone Settings Legacy Parsing" Value="0"/>
+
+  <Configuration_Entry Key="Max Ulps For Double Comparison" Value="3"/>
+
+  <Configuration_Entry Key="Plug-in Libraries" Value=""/>
+
+  <Configuration_Entry Key="SSL - Certificate Filename" Value=""/>
+
+  <Configuration_Entry Key="SSL - Enable?" Value="0"/>
+
+  <Configuration_Entry Key="SSL - Private Key Filename" Value=""/>
+
+  <Configuration_Entry Key="SSL - Private Key Password" Value=""/>
+
+  <Configuration_Entry Key="SSL - Trusted Certificates Filename" Value=""/>
+
+  <Configuration_Entry Key="SSL - Authentication Mode" Value=""/>
+
+  <Configuration_Entry Key="LDAP - Support" Value="0"/>
+
+  <Configuration_Entry Key="LDAP - Server" Value=""/>
+
+  <Configuration_Entry Key="LDAP - User" Value=""/>
+
+  <Configuration_Entry Key="LDAP - Password" Value=""/>
+
+  <Configuration_Entry Key="LDAP - Port" Value="389"/>
+
+  <Configuration_Entry Key="LDAP - GC Port" Value="3268"/>
+
+  <Configuration_Entry Key="LDAP - Case Sensitive" Value="1"/>
+
+  <Configuration_Entry Key="LDAP - Config File Path" Value=""/>
+
+  <Configuration_Entry Key="LDAP - Enable SSL" Value="0"/>
+
+  <Configuration_Entry Key="License File Path" Value="/opt/actimize/ais_server/Instances/actimize_server_1/license/license.lic"/>
+
+  <Configuration_Entry Key="Default String Storage Type" Value="Unicode"/>
+
+  <Configuration_Entry Key="Interval of progress log message (transactions)" Value="0"/>
+
+  <Configuration_Entry Key="ODBC Configuration" Value="DisablePooling=0;LinuxOracleUseDefaultLoginTimeout=1"/>
+
+  <Configuration_Entry Key="List Matcher Algorithm Thresholds" Value="Person Name=85;Organization Name=80;Edit Distance=90;ID MATCH=75"/>
+
+  <Configuration_Entry Key="Edit Distance - List Configurations" Value="Filter Type=1;Max Value=60;Fanout=60;Max Results=10000"/>
+
+  <Configuration_Entry Key="Add-On - Enable Name Analytics" Value="1"/>
+
+  <Configuration_Entry Key="Add-On - Enable Geographic Add-On" Value="1"/>
+
+  <Configuration_Entry Key="Add-On - Enable Financial Institutions" Value="0"/>
+
+  <Configuration_Entry Key="Add-On - Enable IP Enrichment" Value="0"/>
+
+  <Configuration_Entry Key="Add-On - Enable Address Parsing Engine" Value="0"/>
+
+  <Configuration_Entry Key="Add-On - Name Analytics Parallel Search Threads Pool Size" Value="1"/>
+
+  <Configuration_Entry Key="Add-On - Enable PMML functionality" Value="0"/>
+
+  <Configuration_Entry Key="GSOAP Web Services SSL Mode" Value="0"/>
+
+  <Configuration_Entry Key="GSOAP Web Services SSL Key Store File Path" Value=""/>
+
+  <Configuration_Entry Key="GSOAP Web Services SSL Key Store File Password" Value=""/>
+
+  <Configuration_Entry Key="GSOAP Web Services SSL Trust Store File Path" Value=""/>
+
+  <Configuration_Entry Key="AIS Internal Error Mode" Value="small"/>
+
+  <Configuration_Entry Key="Web Services Client Implementation" Value="java"/>
+
+  <Configuration_Entry Key="Web Services - Java Client Trust All Certificates" Value="0"/>
+
+  <Configuration_Entry Key="Database Source - Enable Partial Retrieval of Fields" Value="0"/>
+
+  <Configuration_Entry Key="Database Integration - Enable Case Insensitivity" Value="0"/>
+
+  <Configuration_Entry Key="Database Integration - Support Field Name With Maximum Length" Value="0"/>
+
+  <Configuration_Entry Key="External Configuration - Key Store Access Password" Value="Qlj5C/zYQKf9zjILqBiwT/+iRHqd5OoIMOZR8iqIQLkDKv5A6kAVYUGGXdFo\n9j3U\n"/>
+
+  <Configuration_Entry Key="External Configuration Files" Value="AML_WLF_app_gui_items_internal.ini;INFRA_DBQ_EP_internal_config.ini;INFRA_DBQ_internal_config.ini;INFRA_SEQ_external_config.ini;AML_WLF_DJLoadingConfig.ini;AML_WLF_environment.ini;webserver/eh.ini;webserver/mapping.ini"/>
+
+  <Configuration_Entry Key="Remote Process Bundles Buffer Size" Value="100"/>
+
+  <Configuration_Entry Key="Java Max Heap Size (MB)" Value="2560"/>
+
+  <Configuration_Entry Key="Additional JVM Settings" Value="-Xms512M;-Xss256K;-XX:+UseConcMarkSweepGC;-XX:+UseTLAB;-Xrs;-Djava.protocol.handler.pkgs=com.sun.net.ssl.internal.www.protocol"/>
+
+  <Configuration_Entry Key="Enable Embedded Web-Server" Value="1"/>
+
+  <Configuration_Entry Key="Enable Embedded Message Broker" Value="1"/>
+
+  <Configuration_Entry Key="Web Server Max Listener Threads" Value="150"/>
+
+  <Configuration_Entry Key="Web Server SSL" Value="0"/>
+
+  <Configuration_Entry Key="Java SSL Key Store File Path" Value=""/>
+
+  <Configuration_Entry Key="Java SSL Key Store File Password" Value=""/>
+
+  <Configuration_Entry Key="Java SSL Key Store Type" Value=""/>
+
+  <Configuration_Entry Key="Java SSL Trust Store File Path" Value=""/>
+
+  <Configuration_Entry Key="Java SSL Trust Store File Password" Value=""/>
+
+  <Configuration_Entry Key="Java SSL Trust Store Type" Value=""/>
+
+  <Configuration_Entry Key="Profile Readers - Minimum Pool Size per Process" Value="1"/>
+
+  <Configuration_Entry Key="Profile Readers - Maximum Pool Size per Process" Value="10"/>
+
+  <Configuration_Entry Key="Profile Readers - Number of Profiles Data Processing Threads per Process" Value="0"/>
+
+  <Configuration_Entry Key="Add-On Name Analytics - Load Main Lists To Memory" Value="0"/>
+
+  <Configuration_Entry Key="Communication protocol timeout (sec)" Value="30"/>
+
+  <Configuration_Entry Key="Communication protocol - Enable KeepAlive" Value="1"/>
+
+  <Configuration_Entry Key="Communication protocol - KeepAlive Interval (sec)" Value="120"/>
+
+  <Configuration_Entry Key="Communication protocol - KeepAlive Retry Interval (sec)" Value="1"/>
+
+  <Configuration_Entry Key="Profile Initialization - Memory Limit" Value="1024"/>
+
+  <Configuration_Entry Key="Profile Initialization - Segment Factor" Value="1"/>
+
+  <Configuration_Entry Key="Profile Initialization - Oracle SQL Loader Path" Value=""/>
+
+  <Configuration_Entry Key="Profile Initialization - MSSQL BCP Path" Value=""/>
+
+  <Configuration_Entry Key="User Information Persistence Mode" Value="1"/>
+
+  <Configuration_Entry Key="MQ Distribution - Specify Encoding In Message" Value="1"/>
+
+  <Configuration_Entry Key="Dynamic Configuration Reset Time (Sec)" Value="120"/>
+
+  <Configuration_Entry Key="Maximum number of queue listener threads (dialogs)" Value="20"/>
+
+  <Configuration_Entry Key="Auto-run Execution Plans" Value=""/>
+
+  <Configuration_Entry Key="Auto-run Execution Plans Username" Value=""/>
+
+  <Configuration_Entry Key="Server Counters Log Sampling Interval (Seconds)" Value="10"/>
+
+  <Configuration_Entry Key="AIS Internal Error - Maximum Number Of Files Allowed" Value="50"/>
+
+  <Configuration_Entry Key="AIS Internal Error - Multiple File Creation Time Window (Seconds)" Value="1800"/>
+
+  <Configuration_Entry Key="Server Global Locale Name" Value=""/>
+
+  <Configuration_Entry Key="MQ Service - Remove Invalid Messages From Queue" Value="0"/>
+
+  <Configuration_Entry Key="Case Manager Query - Support JDBC bit Type" Value="1"/>
+
+  <Configuration_Entry Key="Java Class Loaders Lifetime Strategy" Value="Create-Once"/>
+
+  <Configuration_Entry Key="Enable UTF-8 Conversion Mechanism" Value="1"/>
+
+  <Configuration_Entry Key="Process summary report - Maximum number of errors" Value="50"/>
+
+  <Configuration_Entry Key="SQL User function exec before describe" Value="0"/>
+
+  <Configuration_Entry Key="Folder Source - File List Caching Time (Milliseconds)" Value="0"/>
+
+  <Configuration_Entry Key="Case Manager Transaction Destination - Use Legacy Formatting" Value="0"/>
+
+  <Configuration_Entry Key="Release Free Memory Threshold MB" Value="500"/>
+
+  <Configuration_Entry Key="Max Total Thread Caches MB" Value="512"/>
+
+  <Configuration_Entry Key="Log Maintenance - Enable" Value="1"/>
+
+  <Configuration_Entry Key="Log Maintenance - Number Of Days To Keep" Value="90"/>
+
+  <Configuration_Entry Key="Log Maintenance - Scheduled Time (HH:mm)" Value="21:00"/>
+
+  <Configuration_Entry Key="Log Maintenance - Run Time Limit (Minutes)" Value="60"/>
+
+  <Configuration_Entry Key="Case Manager Alert Destination - Optional Fields Update Behavior on NULL value" Value="skip"/>
+
+  <Configuration_Entry Key="Parser maximum row length (bytes)" Value="10485760"/>
+
+  <Configuration_Entry Key="Profiler for Java Block - Enable profiling by Annotations and Configuration" Value="1"/>
+
+  <Configuration_Entry Key="SSL - Enabled protocols" Value="SSLv2Hello,TLSv1.2,TLSv1.3"/>
+
+  <Configuration_Entry Key="SSL - GSOAP and Listener Ports - OpenSSL Supported Cipher Suites" Value=""/>
+
+  <Configuration_Entry Key="SSL - Web Server Port - Supported Cipher Suites" Value=""/>
+
+  <Configuration_Entry Key="Policy Manager - Views to exclude from code generation" Value=""/>
+
+  <Configuration_Entry Key="Case Manager Distribution - Multi-threaded" Value="0"/>
+
+  <Configuration_Entry Key="Java - Enable JavaScript engine backward compatibility for SAM and UDM" Value="0"/>
+
+  <Configuration_Entry Key="Test Connection - Timeout value (Seconds)" Value="10"/>
+
+  <Configuration_Entry Key="Java Solutions - Files Excluded from Classpath" Value="DW/xmlParserAPIs-2.6.2.jar;DW/xercesImpl-2.6.2.jar;SAM8/sqljdbc4.4.jar;SAM8/sqljdbc4-4.jar;DW/sqljdbc4.4.jar;DW/sqljdbc4-4.jar;GRU/sqljdbc4.4.jar;GRU/sqljdbc4-4.jar;FFPOC/sqljdbc4.4.jar;FFPOC/sqljdbc4-4.jar;FF/sqljdbc4.4.jar;FF/sqljdbc4-4.jar"/>
+
+  <Configuration_Entry Key="Java Block - Errors occurred during dispose affect the process finish status" Value="1"/>
+
+  <Configuration_Entry Key="Database Integration - Fail Multiple Statements Batch Execution on any erroneous result" Value="1"/>
+
+  <Configuration_Entry Key="Global ODBC Reconnect Threads Interval (Seconds)" Value="600"/>
+
+  <Configuration_Entry Key="Minimum Idle Time For Global ODBC Reconnect Validation (Seconds)" Value="1800"/>
+
+  <Configuration_Entry Key="Lazy Policy Evaluation" Value="1"/>
+
+  <Configuration_Entry Key="AIS Admin - Export Files Max Size (MB)" Value="100"/>
+
+  <Configuration_Entry Key="Query Rules validation strictness level" Value="1"/>
+
+  <Configuration_Entry Key="Sparse Tuple - Minimal Attributes in Tuple" Value="0"/>
+
+  <Configuration_Entry Key="Reuse ODBC Connections on process initialization" Value="1"/>
+
+  <Configuration_Entry Key="Database Source - Use Column Bindings" Value="1"/>
+
+  <Configuration_Entry Key="SQL User Function - Share ODBC Connection" Value="1"/>
+
+  <Configuration_Entry Key="Query Rules - Use JDBC by default" Value="1"/>
+
+  <Configuration_Entry Key="Query Rules - Use national character" Value="0"/>
+
+  <Configuration_Entry Key="Profiles Queue Listener - Consolidate Updates of Recurring Entities Enabled" Value="0"/>
+
+  <Configuration_Entry Key="Profiles Queue Listener - Consolidate Updates of Recurring Entities - Scope" Value="1000"/>
+
+  <Configuration_Entry Key="Profiles Queue Listener - Consolidate Updates of Recurring Entities - Timeout (sec)" Value="10"/>
+
+  <Configuration_Entry Key="Profiles Queue Listener - Consolidate Updates of Recurring Entities - Number of Threads" Value="1"/>
+
+  <Configuration_Entry Key="Profiles Queue Listener - Number of Updates Writing Threads" Value="1"/>
+
+  <Configuration_Entry Key="Profiles Real-time updates - Queuing system type" Value="ActiveMQ"/>
+
+  <Configuration_Entry Key="Profiles Real-time updates - Synchronization Period (Milliseconds)" Value="2000"/>
+
+  <Configuration_Entry Key="Profiles Real-time updates - Profile Update TTL (Seconds)" Value="604800"/>
+
+  <Configuration_Entry Key="Profiles Real-time updates - Maximum Profile Update Rows to Retrieve" Value="50000"/>
+
+  <Configuration_Entry Key="Profiles Real-time updates - Synchronous Mode" Value="0"/>
+
+  <Configuration_Entry Key="Profiles Real-time updates - Synchronous Mode - Maximum Profile Update Rows to Apply" Value="100"/>
+
+  <Configuration_Entry Key="Profiles - Default Connector Name" Value="PROFILES_CONNECTOR"/>
+
+  <Configuration_Entry Key="Use External Credential Provider" Value="0"/>
+
+  <Configuration_Entry Key="External Credential Provider Classpath" Value=""/>
+
+  <Configuration_Entry Key="External Credential Provider Main Class Name" Value=""/>
+
+  <Configuration_Entry Key="Database Integration - Disable Oracle Command Timeout" Value="0"/>
+
+  <Configuration_Entry Key="Kerberos Client KeyTab File" Value=""/>
+
+  <Configuration_Entry Key="Completed Process Display Period (sec)" Value="120"/>
+
+  <Configuration_Entry Key="Bind Numeric Param as Declared - MsSQL" Value="0"/>
+
+  <Configuration_Entry Key="Generate Java Class Wrappers - Java type for AIS Date" Value="java.util.Calendar"/>
+
+  <Configuration_Entry Key="Appearance Of Data In Specific Log Messages" Value="1"/>
+
+  <Configuration_Entry Key="External Credential Provider Values Cache TTL (Seconds)" Value="60"/>
+
+  <Configuration_Entry Key="Enable IPV6" Value="0"/>
+
+  <Configuration_Entry Key="Prioritize IPV6" Value="0"/>
+
+  <Configuration_Entry Key="Embedded Web Application Type" Value="Both"/>
+
+  <Configuration_Entry Key="Enable Always Encrypted - MSSQL" Value="0"/>
+
+  <Configuration_Entry Key="Policy Manager - Execution log sample rate percentage" Value="0"/>
+
+  <Configuration_Entry Key="Add-On - Name Analytics Parallel Sub Lists And Segments Loading - Bucket Size" Value="1000"/>
+
+</Configuration_List>

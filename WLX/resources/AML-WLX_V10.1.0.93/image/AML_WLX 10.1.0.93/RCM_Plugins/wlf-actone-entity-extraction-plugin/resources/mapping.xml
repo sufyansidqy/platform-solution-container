@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ExternalEntityMapping>
+	<AlertType identifier="ACT_AML_WLF_SCA">
+	  <Entities>
+	    <Entity type="Actimize_Unified_Party" source="CDS">
+	      <Mapping type="customField" from="ACT_AML_EWLF_partyKey"/>
+	      <Relation type="ACT_EXT_PRT_2_WLF"/>
+	    </Entity>
+	  </Entities>
+	</AlertType>
+	<AlertType identifier="ACT_AML_WLF_MSGA">
+	  <Entities>
+	    <Entity type="Actimize_Unified_Party" source="CDS">
+	      <Mapping type="customField" from="ACT_AML_EWLF_partyKey"/>
+	      <Relation type="ACT_EXT_PRT_2_WLF"/>
+	    </Entity>
+	  </Entities>
+	</AlertType>
+	<AlertType identifier="ACT_AML_WLF_RTA">
+	  <Entities>
+	    <Entity type="Actimize_Unified_Party" source="CDS">
+	      <Mapping type="customField" from="ACT_AML_EWLF_partyKey"/>
+	      <Relation type="ACT_EXT_PRT_2_WLF"/>
+	    </Entity>
+	  </Entities>
+	</AlertType>
+	<AlertType identifier="ACT_AML_WLF_RT_MSGA">
+	  <Entities>
+	    <Entity type="Actimize_Unified_Party" source="CDS">
+	      <Mapping type="customField" from="ACT_AML_EWLF_partyKey"/>
+	      <Relation type="ACT_EXT_PRT_2_WLF"/>
+	    </Entity>
+	  </Entities>
+	</AlertType>
+</ExternalEntityMapping>

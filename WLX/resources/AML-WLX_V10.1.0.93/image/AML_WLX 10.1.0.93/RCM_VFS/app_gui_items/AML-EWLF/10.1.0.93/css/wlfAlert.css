@@ -1,0 +1,59 @@
+.score_LOW {
+	text-align:center;
+	background-color:#ffffff;
+	font-weight:bold;
+	color:green;
+}
+.score_MEDIUM {
+	text-align:center;
+	background-color:#ffffff;
+	font-weight:bold;
+	color:orange;
+}
+.score_HIGH {
+	text-align:center;
+	background-color:#ffffff;
+	font-weight:bold;
+	text-decoration:underline;
+	color:red;
+}
+.score_CORRECTIVE {
+	text-align:center;
+	background-color:#ffffff;
+	font-weight:bold;
+	color:blue;
+}
+td {
+	font-size: 11px;
+	color: #000000;
+}
+.graycell {
+	background-color:#efefef;
+	font-weight:bold;
+	text-align:center;
+	padding: 3px;
+	border-right: 1px dotted gray;
+	border-bottom: 1px dotted gray;
+}
+.datacell {
+	padding: 3px;
+	border-right: 1px dotted gray;
+	border-bottom: 1px dotted gray;
+}
+
+.sortHitDiv {
+	width:100%; 
+	text-align:right; 
+	background-color:#84AEE7;
+}
+
+.hitBody {
+	border:1px solid #84AEE7;
+	width: 100%;
+}
+.bottomBorder {
+	border-bottom: #d7d7d7 1px solid;
+}
+.rightBorder {
+	border-right: #d8e0eb 1px dashed;
+}

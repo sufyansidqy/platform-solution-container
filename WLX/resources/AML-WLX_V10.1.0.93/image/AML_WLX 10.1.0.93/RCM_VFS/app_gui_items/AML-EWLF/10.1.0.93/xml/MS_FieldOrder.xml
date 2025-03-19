@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fields>
+	<alert-header>
+		<field-group labelKey="jobDetails" cols="2">
+			<row>
+				<field>jobName</field>
+				<field>totalScore</field>
+			</row>
+			<row>
+				<field>numberOfHits</field>
+				<field>jobId</field>
+			</row>
+			<row>
+				<field>alertDate</field>
+				<field></field>
+			</row>
+		</field-group>
+		<field-group labelKey="msgData" cols="3">
+			<row>
+				<field>msgKey</field>
+				<field>msgInstNbr</field>
+				<field>msgRefNbr</field>
+			</row>
+			<row>
+				<field>msgSrcType</field>
+				<field>msgTypeCd</field>
+				<field>msgDateTime</field>
+			</row>
+			<row>
+				<field>msgAmount</field>
+				<field>msgCurrCd</field>
+				<field>msgProdKey</field>
+			</row>
+			<row>
+				<field>msgDir</field>
+				<field>msgInstr</field>
+				<field>msgAddlInfo</field>
+			</row>
+			<row>
+				<field>msgText</field>
+				<field>msgOrigtorName</field>
+				<field>msgOrigtorAddr1</field>
+			</row>
+			<row>
+				<field>msgOrigtorAddr2</field>
+				<field>msgOrigtorAddr3</field>
+				<field>msgOrigtorCity</field>
+			</row>
+			<row>
+				<field>msgOrigtorCountryCd</field>
+				<field>msgOrigtorPartyTypeCd</field>
+				<field>msgOrigtorPOB</field>
+			</row>
+			<row>
+				<field>msgOrigtorStateProvince</field>
+				<field>msgOrigtorPostalCd</field>
+				<field>msgOrigtorAddlInfo</field>
+			</row>
+			<row>
+				<field>msgOrigFICd</field>
+				<field>msgOrigFICountryCd</field>
+				<field>msgOrigFIOrgName</field>
+			</row>
+			<row>
+				<field>msgOrigtorIds</field>
+				<field>msgBenFIOrgName</field>
+				<field>msgBenFICd</field>
+			</row>
+			<row>
+				<field>msgBenFIPartyTypeCd</field>
+				<field>msgBenFICountryCd</field>
+				<field>msgBenName</field>				
+			</row>
+			<row>
+				<field>msgBenAddr1</field>
+				<field>msgBenAddr2</field>
+				<field>msgBenAddr3</field>
+			</row>
+			<row>
+				<field>msgBenPOB</field>
+				<field>msgBenCity</field>
+				<field>msgBenStateProvince</field>
+			</row>
+			<row>
+				<field>msgBenPostalCd</field>
+				<field>msgBenCountryCd</field>
+				<field>msgBenAddlInfo</field>
+			</row>
+			<row>
+				<field>msgBenIds</field>
+				<field>msgSendFIAddlInfo</field>
+				<field>msgSendFICd</field>
+			</row>
+			<row>
+				<field>msgSendFICountryCd</field>
+				<field>msgSendFIOrgName</field>
+				<field>msgRecvFIAddlInfo</field>
+			</row>
+			<row>
+				<field>msgRecvFICd</field>
+				<field>msgRecvFICountryCd</field>			
+				<field>msgRecvFIOrgName</field>
+			</row>
+			<row>
+				<field>msgIntermed</field>
+				<field>msgFItoFIInfo</field>
+				<field></field>
+			</row>
+		</field-group>
+	</alert-header>
+	<alert-header-swift>
+		<field-group labelKey="jobDetails" cols="2">
+			<row>
+				<field>jobName</field>
+				<field>totalScore</field>
+			</row>
+			<row>
+				<field>numberOfHits</field>
+				<field>jobId</field>
+			</row>
+			<row>
+				<field>alertDate</field>
+				<field></field>
+			</row>
+		</field-group>
+		<field-group labelKey="msgDetails" cols="2">
+			<row>
+				<field>swiftInstNbr</field>
+				<field>swiftType</field>
+			</row>
+			<row>
+				<field>swiftDir</field>
+				<field>swiftSenderAddr</field>
+			</row>
+			<row>
+				<field>swiftFormat</field>
+				<field>swiftRecvAddr</field>
+			</row>
+		</field-group>
+		<field-group labelKey="swiftBlock4" cols="1">
+			<row>
+				<field>msgText</field>
+			</row>
+		</field-group>
+	</alert-header-swift>
+	<alert-header-swiftmx>
+		<field-group labelKey="jobDetails" cols="2">
+			<row>
+				<field>jobName</field>
+				<field>totalScore</field>
+			</row>
+			<row>
+				<field>numberOfHits</field>
+				<field>jobId</field>
+			</row>
+			<row>
+				<field>alertDate</field>
+				<field></field>
+			</row>
+		</field-group>
+		<field-group labelKey="mxMessageDetails" cols="3">
+		</field-group>
+		<field-group labelKey="mxOriginatorInformation" cols="3">
+		</field-group>
+		<field-group labelKey="mxBeneficiaryInformation" cols="3">
+		</field-group>
+		<field-group labelKey="mxAdditionalInfo" cols="3">
+		</field-group>
+	</alert-header-swiftmx>
+	<alert-detail>
+	</alert-detail>
+	<hit-header>
+		<field-group labelKey="alertDetails" cols="2">
+			<row>
+				<field>score</field>
+				<field>matchType</field>
+			</row>
+			<row>
+				<field>listId</field>
+				<field>keywords</field>
+			</row>
+		</field-group>
+	</hit-header>
+	<hit-detail>
+		<field-section set="aliasesAndIds"/>
+		<field-section set="dobAndAddresses"/>
+	</hit-detail>
+	<hit-addl-detail>
+		<field-section set="miscSection"/>
+		<field-section labelKey="scoreFactors" set="scoreFactors"/>
+		<field-section labelKey="additionalInfo" set="additionalInfo"/>
+		<field-section labelKey="customFields" set="customFields"/>
+	</hit-addl-detail>
+	<misc-sections>
+		<field-group cols="2">
+			<row>
+				<field>title</field>
+				<field>position</field>
+			</row>
+			<row>
+				<field>gender</field>
+				<field>deceasedDate</field>
+			</row>
+		</field-group>
+	</misc-sections>
+</fields>

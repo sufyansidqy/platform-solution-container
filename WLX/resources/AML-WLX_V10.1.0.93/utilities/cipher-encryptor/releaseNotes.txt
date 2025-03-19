@@ -1,0 +1,10 @@
+A command line tool that get a string for encryption and return an encrypted value.
+
+Syntax: encryptor <The string for encryption>
+Return: The string encrypted value.
+
+Example:
+encryptor string_for_encryption
+returns: 9qR6vau4EWq5BuhRgpCK2MfRru1cunuRMguBpuq4EGM=
+
+The command line supports both windows and linux.

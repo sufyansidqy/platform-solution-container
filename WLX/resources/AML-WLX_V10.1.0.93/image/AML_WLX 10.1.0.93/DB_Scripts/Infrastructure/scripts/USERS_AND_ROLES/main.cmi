@@ -1,0 +1,46 @@
+#WLF
+prologue {
+[oracle
+	/***************************
+	This enclosed block is specific to SQLPlus.
+	It ensures that the script output is logged,
+	and that the script will abort immediately if
+	an error occurs.
+	If you are using another tool please remove this block
+	And its corresponding block at script end, and ensure
+	that you are logging the output and that the script will
+	abort when it encounters an error
+	BEGIN SQL*PLUS-specific code
+	****************************/
+	Whenever SQLERROR EXIT SQL.SQLCODE;
+	SPOOL @env:usr_script_logfilename@;
+	/****************************
+	END SQL*PLUS-specific code
+	****************************/
+
+	set define off
+]
+[mssql
+	SET ANSI_NULL_DFLT_ON ON
+	SET QUOTED_IDENTIFIER ON
+	SET NOCOUNT ON
+	:On Error exit
+
+]
+}
+
+import 99 createRoles.cmi
+import 99 createUsers.cmi
+
+         		  
+[oracle
+	commit;
+	/****************************
+	BEGIN SQL*PLUS-specific code
+	****************************/
+	SPOOL OFF;
+	quit
+	/****************************
+	END SQL*PLUS-specific code
+	****************************/
+]

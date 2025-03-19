@@ -1,0 +1,23 @@
+{{- $appName := .Values.app.name -}}
+  {{- range $fileGroup := .Values.configmapAis.fileGroups }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $appName }}-{{ $fileGroup.name }}
+data:
+  {{- range $file := $fileGroup.fileList }}
+    {{- $filePath := printf "%s%s%s" $.Values.configmapAis.filesPath $fileGroup.groupPath $file }}
+    {{- if ne $fileGroup.name "env" }}
+    {{- . | nindent 2 }}: |
+    {{- $.Files.Get $filePath | nindent 4 }}
+    {{- else }}
+    {{- range $.Files.Lines $filePath }}
+    {{- if ne . "" }}
+    {{- $parts := splitn "=" 2 . }}
+    {{- $parts._0 | nindent 2 }}: {{ $parts._1 | quote }}
+    {{- end }}
+    {{- end }}
+    {{- end }}
+    {{- end }}
+  {{- end }}

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<plugin id="wlf-ondemand-search-plugin" version="1.0" includeDoctype="true" classLoaderType="childFirst">
+  <runtime>
+    	<lib name="lib/wlf-ondemand-search-plugin.jar" />
+		<extra-lib name="lib/wlf-plugin-common.jar" />
+		<extra-lib name="lib/commons-digester3.jar" />
+	  	<extra-lib name="lib/esapi.jar" />
+	    <extra-lib name="lib/json-sanitizer.jar" />
+	  <lib name="lib/commons-lang3.jar"/>
+	  <lib name="lib/commons-beanutils.jar"/>
+	  <lib name="lib/antisamy.jar"/>
+	  <lib name="lib/spring-web.jar"/>
+	  <lib name="lib/spring-context.jar"/>
+	  <lib name="lib/spring-core.jar"/>
+	  <lib name="lib/spring-beans.jar"/>
+	  <lib name="lib/spring-aop.jar"/>
+	  <lib name="lib/commons-codec.jar"/>
+	  <lib name="lib/commons-collections.jar"/>
+	  <lib name="lib/commons-logging.jar"/>
+	  <lib name="lib/xercesImpl.jar" />
+	  <lib name="lib/xml-apis.jar"/>
+	  <lib name="lib/xalan.jar"/>
+	  <lib name="lib/slf4j-api.jar" />
+	  <lib name="lib/slf4j-jdk14.jar"/>
+  </runtime>
+  <module id="wlfOndemandSearch">
+    <main-page id="onDemandPage" controller="com.actimize.wlf.ondemand.controller.OnDemandController" >
+    	<controller-action id="doSearch" method="doSearch"/>
+    	<controller-action id="clearAll" method="clearAll"/>
+    </main-page>
+    <page id="GetConfigXML" controller="com.actimize.wlf.ondemand.controller.ConfigXMLController"/>
+    <page id="CheckDateFormatXML" controller="com.actimize.wlf.ondemand.controller.CheckDateFormatXMLController"/>    
+  </module>
+	<extension id="alertService">
+		<dialog id="alertService">
+			<page id="eliminatedHit" controller="com.actimize.wlf.ondemand.controller.TestController">
+			</page>
+		</dialog>
+	</extension>
+</plugin>
